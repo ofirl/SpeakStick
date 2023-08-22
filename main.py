@@ -68,9 +68,9 @@ chan1 = AnalogIn(mcp, MCP.P1)
 
 # Define grid layout and cell numbers
 GRID = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
+    ["1", "2", "3"],
+    ["4", "5", "6"],
+    ["7", "8", "9"]
 ]
 
 # Define stick position thresholds
@@ -89,14 +89,13 @@ def read_route_mapping(filename):
     with open(filename, "r") as file:
         for line in file:
             parts = line.strip().split()
-            route = [int(cell) for cell in parts[:-1]]
+            route = [str(cell) for cell in parts[:-1]]
             filename = parts[-1]
-            route_mapping[tuple(route)] = filename
+            route_mapping["-".join(route)] = filename
     return route_mapping
 
 # Load the route-to-filename mapping from the file
-# route_to_filename = read_route_mapping(ROUTE_MAPPING_FILE)
-route_to_filename = {}
+route_to_filename = read_route_mapping(ROUTE_MAPPING_FILE)
 
 def get_cell(position):
     if position < POSITION_LOW:
@@ -113,8 +112,8 @@ def main():
     
     try:
         while True:
-            horizontal_position = chan1.value
-            vertical_position = chan0.value
+            horizontal_position = chan1.voltage
+            vertical_position = chan0.voltage
             
             new_row = get_cell(vertical_position)
             new_col = get_cell(horizontal_position)
@@ -124,11 +123,10 @@ def main():
                 current_col = new_col
                 if GRID[current_row][current_col] != 5:
                     recorded_cells.append(GRID[current_row][current_col])
-                    print(recorded_cells)
             
             if GRID[current_row][current_col] == 5 and recorded_cells:
                 print(recorded_cells)
-                route_filename = route_to_filename.get(tuple(recorded_cells))
+                route_filename = route_to_filename.get("-".join(recorded_cells))
                 if route_filename:
                     print("Playing audio:", route_filename)
                     # play_audio(route_filename)
