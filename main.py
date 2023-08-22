@@ -19,17 +19,6 @@ mcp = MCP.MCP3008(spi, cs)
 chan0 = AnalogIn(mcp, MCP.P0)
 chan1 = AnalogIn(mcp, MCP.P1)
 
-# print('Raw ADC Value0: ', chan0.value)
-# print('ADC Voltage0: ' + str(chan0.voltage) + 'V')
-
-# print('Raw ADC Value1: ', chan1.value)
-# print('ADC Voltage1: ' + str(chan1.voltage) + 'V')
-
-last_read = 0       # this keeps track of the last potentiometer value
-tolerance = 250     # to keep from being jittery we'll only change
-                    # volume when the pot has moved a significant amount
-                    # on a 16-bit ADC
-
 # def remap_range(value, left_min, left_max, right_min, right_max):
 #     # this remaps a value from original (left) range to new (right) range
 #     # Figure out how 'wide' each range is
@@ -42,37 +31,112 @@ tolerance = 250     # to keep from being jittery we'll only change
 #     # Convert the 0-1 range into a value in the right range.
 #     return int(right_min + (valueScaled * right_span))
 
-while True:
-    print('Raw ADC Value0: ', chan0.value)
-    print('ADC Voltage0: ' + str(chan0.voltage) + 'V')
+# while True:
+#     print('Raw ADC Value0: ', chan0.value)
+#     print('ADC Voltage0: ' + str(chan0.voltage) + 'V')
 
-    print('Raw ADC Value1: ', chan1.value)
-    print('ADC Voltage1: ' + str(chan1.voltage) + 'V')
+#     print('Raw ADC Value1: ', chan1.value)
+#     print('ADC Voltage1: ' + str(chan1.voltage) + 'V')
 
-    # we'll assume that the pot didn't move
-    # trim_pot_changed = False
+#     # we'll assume that the pot didn't move
+#     # trim_pot_changed = False
 
-    # # read the analog pin
-    # trim_pot = chan0.value
+#     # # read the analog pin
+#     # trim_pot = chan0.value
 
-    # # how much has it changed since the last read?
-    # pot_adjust = abs(trim_pot - last_read)
+#     # # how much has it changed since the last read?
+#     # pot_adjust = abs(trim_pot - last_read)
 
-    # if pot_adjust > tolerance:
-    #     trim_pot_changed = True
+#     # if pot_adjust > tolerance:
+#     #     trim_pot_changed = True
 
-    # if trim_pot_changed:
-    #     # convert 16bit adc0 (0-65535) trim pot read into 0-100 volume level
-    #     set_volume = remap_range(trim_pot, 0, 65535, 0, 100)
+#     # if trim_pot_changed:
+#     #     # convert 16bit adc0 (0-65535) trim pot read into 0-100 volume level
+#     #     set_volume = remap_range(trim_pot, 0, 65535, 0, 100)
 
-    #     # set OS volume playback volume
-    #     print('Volume = {volume}%' .format(volume = set_volume))
-    #     set_vol_cmd = 'sudo amixer cset numid=1 -- {volume}% > /dev/null' \
-    #     .format(volume = set_volume)
-    #     os.system(set_vol_cmd)
+#     #     # set OS volume playback volume
+#     #     print('Volume = {volume}%' .format(volume = set_volume))
+#     #     set_vol_cmd = 'sudo amixer cset numid=1 -- {volume}% > /dev/null' \
+#     #     .format(volume = set_volume)
+#     #     os.system(set_vol_cmd)
 
-    #     # save the potentiometer reading for the next loop
-    #     last_read = trim_pot
+#     #     # save the potentiometer reading for the next loop
+#     #     last_read = trim_pot
 
-    # hang out and do nothing for a half second
-    time.sleep(0.5)
+#     # hang out and do nothing for a half second
+#     time.sleep(0.5)
+
+# Define grid layout and cell numbers
+GRID = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+# Define stick position thresholds
+VREF = 3.3
+POSITION_LOW = VREF * 0.33
+POSITION_MEDIUM = VREF * 0.66
+
+# Define filenames for stick routes
+ROUTE_MAPPING_FILE = "route_mapping.txt"
+
+# Define sleep duration
+SLEEP_DURATION = 0.1
+
+def read_route_mapping(filename):
+    route_mapping = {}
+    with open(filename, "r") as file:
+        for line in file:
+            parts = line.strip().split()
+            route = [int(cell) for cell in parts[:-1]]
+            filename = parts[-1]
+            route_mapping[tuple(route)] = filename
+    return route_mapping
+
+# Load the route-to-filename mapping from the file
+# route_to_filename = read_route_mapping(ROUTE_MAPPING_FILE)
+route_to_filename = {}
+
+def get_cell(position):
+    if position < POSITION_LOW:
+        return 0
+    elif position < POSITION_MEDIUM:
+        return 1
+    else:
+        return 2
+
+def main():
+    current_row = 1
+    current_col = 1
+    recorded_cells = []
+    
+    try:
+        while True:
+            horizontal_position = chan1.value
+            vertical_position = chan0.value
+            
+            new_row = get_cell(vertical_position)
+            new_col = get_cell(horizontal_position)
+            
+            if new_row != current_row or new_col != current_col:
+                current_row = new_row
+                current_col = new_col
+                if GRID[current_row][current_col] != 5:
+                    recorded_cells.append(GRID[current_row][current_col])
+            
+            if GRID[current_row][current_col] == 5 and recorded_cells:
+                print(recorded_cells)
+                route_filename = route_to_filename.get(tuple(recorded_cells))
+                if route_filename:
+                    print("Playing audio:", route_filename)
+                    # play_audio(route_filename)
+                recorded_cells = []
+            
+            time.sleep(SLEEP_DURATION)  # Adjust sleep duration as needed
+            
+    except:
+        print("Something went wrong")
+
+if __name__ == "__main__":
+    main()
