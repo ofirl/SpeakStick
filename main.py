@@ -128,6 +128,7 @@ def main():
             
             if GRID[current_row][current_col] == "5" and recorded_cells:
                 print(recorded_cells)
+                print("-".join(recorded_cells))
                 route_filename = route_to_filename.get("-".join(recorded_cells))
                 if route_filename:
                     print("Playing audio:", route_filename)
