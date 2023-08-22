@@ -91,7 +91,7 @@ def read_route_mapping(filename):
             parts = line.strip().split()
             route = [str(cell) for cell in parts[:-1]]
             filename = parts[-1]
-            route_mapping["-".join(route)] = filename
+            route_mapping["".join(route)] = filename
     return route_mapping
 
 # Load the route-to-filename mapping from the file
@@ -129,7 +129,7 @@ def main():
             if GRID[current_row][current_col] == "5" and recorded_cells:
                 print(recorded_cells)
                 print("-".join(recorded_cells))
-                route_filename = route_to_filename.get("-".join(recorded_cells))
+                route_filename = route_to_filename.get("".join(recorded_cells))
                 if route_filename:
                     print("Playing audio:", route_filename)
                     # play_audio(route_filename)
