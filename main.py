@@ -122,11 +122,11 @@ def main():
             if new_row != current_row or new_col != current_col:
                 current_row = new_row
                 current_col = new_col
-                if GRID[current_row][current_col] != 5:
+                if GRID[current_row][current_col] != "5":
                     recorded_cells.append(GRID[current_row][current_col])
                     print(recorded_cells)
             
-            if GRID[current_row][current_col] == 5 and recorded_cells:
+            if GRID[current_row][current_col] == "5" and recorded_cells:
                 print(recorded_cells)
                 route_filename = route_to_filename.get("-".join(recorded_cells))
                 if route_filename:
