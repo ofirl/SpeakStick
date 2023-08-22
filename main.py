@@ -96,6 +96,7 @@ def read_route_mapping(filename):
 
 # Load the route-to-filename mapping from the file
 route_to_filename = read_route_mapping(ROUTE_MAPPING_FILE)
+print(route_to_filename)
 
 def get_cell(position):
     if position < POSITION_LOW:
@@ -123,6 +124,7 @@ def main():
                 current_col = new_col
                 if GRID[current_row][current_col] != 5:
                     recorded_cells.append(GRID[current_row][current_col])
+                    print(recorded_cells)
             
             if GRID[current_row][current_col] == 5 and recorded_cells:
                 print(recorded_cells)
