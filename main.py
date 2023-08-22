@@ -5,6 +5,7 @@ import digitalio
 import board
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
+from pygame import mixer
 
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
@@ -66,6 +67,8 @@ chan1 = AnalogIn(mcp, MCP.P1)
 #     # hang out and do nothing for a half second
 #     time.sleep(0.5)
 
+mixer.init()
+
 # Define grid layout and cell numbers
 GRID = [
     ["1", "2", "3"],
@@ -97,6 +100,10 @@ def read_route_mapping(filename):
 # Load the route-to-filename mapping from the file
 route_to_filename = read_route_mapping(ROUTE_MAPPING_FILE)
 print(route_to_filename)
+
+def play_audio(file):
+    sound = mixer.Sound(file)
+    sound.play()
 
 def get_cell(position):
     if position < POSITION_LOW:
@@ -132,7 +139,7 @@ def main():
                 route_filename = route_to_filename.get("".join(recorded_cells))
                 if route_filename:
                     print("Playing audio:", route_filename)
-                    # play_audio(route_filename)
+                    play_audio(route_filename)
                 recorded_cells = []
             
             time.sleep(SLEEP_DURATION)  # Adjust sleep duration as needed
