@@ -124,6 +124,7 @@ def main():
                 current_col = new_col
                 if GRID[current_row][current_col] != 5:
                     recorded_cells.append(GRID[current_row][current_col])
+                    print(recorded_cells)
             
             if GRID[current_row][current_col] == 5 and recorded_cells:
                 print(recorded_cells)
@@ -135,6 +136,8 @@ def main():
             
             time.sleep(SLEEP_DURATION)  # Adjust sleep duration as needed
             
+    except KeyboardInterrupt:
+        print("Exiting on keyboard interrupt")
     except:
         print("Something went wrong")
 
