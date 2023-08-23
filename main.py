@@ -1,5 +1,6 @@
 import os
 import time
+from tkinter import E
 import busio
 import digitalio
 import board
@@ -148,8 +149,8 @@ def main():
             
     except KeyboardInterrupt:
         print("Exiting on keyboard interrupt")
-    except:
-        print("Something went wrong")
+    except Exception as error:
+        print("An exception occurred:", type(error).__name__, ":", error)
 
 if __name__ == "__main__":
     main()
