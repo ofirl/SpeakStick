@@ -1,4 +1,4 @@
-# Define sleep duration
+# Define main loop sleep duration
 SLEEP_DURATION = 0.1
 
 # Define cell change delay
