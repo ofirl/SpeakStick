@@ -89,7 +89,7 @@ def main():
                 current_col = new_col
                 cell_update_time = datetime.datetime.now()
 
-            if datetime.datetime.now() > cell_update_time + datetime.timedelta(milliseconds=config.CELL_CHANGE_DELAY) & GRID[current_row][current_col] != "5":
+            if datetime.datetime.now() > cell_update_time + datetime.timedelta(milliseconds=config.CELL_CHANGE_DELAY) and GRID[current_row][current_col] != "5":
                 recorded_cells.append(GRID[current_row][current_col])
                 print(recorded_cells)
             
