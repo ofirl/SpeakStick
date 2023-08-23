@@ -142,7 +142,7 @@ def main():
                 route_filename = route_to_filename.get("".join(recorded_cells))
                 if route_filename:
                     print("Playing audio:", route_filename)
-                    play_audio(SOURCE_DIR + route_filename)
+                    play_audio(SOURCE_DIR + "/" + route_filename)
                 recorded_cells = []
             
             time.sleep(SLEEP_DURATION)  # Adjust sleep duration as needed
