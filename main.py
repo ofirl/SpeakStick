@@ -81,8 +81,10 @@ VREF = 3.3
 POSITION_LOW = VREF * 0.33
 POSITION_MEDIUM = VREF * 0.66
 
+SOURCE_DIR = os.path.dirname(__file__)
+
 # Define filenames for stick routes
-ROUTE_MAPPING_FILE = os.path.dirname(__file__) + "/route_mapping.txt"
+ROUTE_MAPPING_FILE = SOURCE_DIR + "/route_mapping.txt"
 
 # Define sleep duration
 SLEEP_DURATION = 0.1
@@ -139,7 +141,7 @@ def main():
                 route_filename = route_to_filename.get("".join(recorded_cells))
                 if route_filename:
                     print("Playing audio:", route_filename)
-                    play_audio(route_filename)
+                    play_audio(SOURCE_DIR + route_filename)
                 recorded_cells = []
             
             time.sleep(SLEEP_DURATION)  # Adjust sleep duration as needed
