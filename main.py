@@ -82,7 +82,7 @@ POSITION_LOW = VREF * 0.33
 POSITION_MEDIUM = VREF * 0.66
 
 # Define filenames for stick routes
-ROUTE_MAPPING_FILE = "route_mapping.txt"
+ROUTE_MAPPING_FILE = os.path.dirname(__file__) + "/route_mapping.txt"
 
 # Define sleep duration
 SLEEP_DURATION = 0.1
