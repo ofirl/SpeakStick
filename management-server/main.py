@@ -12,8 +12,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-        self.end_headers()
+        BaseHTTPRequestHandler.end_headers()
 
     def do_GET(self):
         if self.path == BASE_ROUTE + "/configs":
@@ -22,12 +21,12 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.send_header("Content-type", "application/json")
-                self.end_headers()
+                self.end_headers(self)
                 self.wfile.write(json.dumps(configs).encode())
             else:
                 self.send_response(500)
                 self.send_header("Content-type", "text/html")
-                self.end_headers()
+                self.end_headers(self)
                 self.wfile.write(b"500 internal server error")
             
         elif self.path == BASE_ROUTE + "/words":
@@ -35,18 +34,18 @@ class RequestHandler(BaseHTTPRequestHandler):
             if words:
                 self.send_response(200)
                 self.send_header("Content-type", "application/json")
-                self.end_headers()
+                self.end_headers(self)
                 self.wfile.write(json.dumps(words).encode())
             else:
                 self.send_response(500)
                 self.send_header("Content-type", "text/html")
-                self.end_headers()
+                self.end_headers(self)
                 self.wfile.write(b"500 internal server error")
             
         else:
             self.send_response(404)
             self.send_header("Content-type", "text/html")
-            self.end_headers()
+            self.end_headers(self)
             self.wfile.write(b"404 Not Found")
 
     def do_POST(self):
@@ -62,7 +61,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.send_response(200)
             else:
                 self.send_response(500)
-            self.end_headers()
+            self.end_headers(self)
             
         elif self.path == BASE_ROUTE + "/word":
             position = parsed_data.get('position', [''])[0]
@@ -72,7 +71,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.send_response(200)
             else:
                 self.send_response(500)
-            self.end_headers()
+            self.end_headers(self)
 
 # Run the HTTP server
 def run():
