@@ -10,6 +10,7 @@ from adafruit_mcp3xxx.analog_in import AnalogIn
 from pygame import mixer
 
 from config import configs
+from words import get_word_by_position
 
 print("configs:")
 print(configs)
@@ -42,6 +43,7 @@ POSITION_LOW = VREF * 0.33
 POSITION_MEDIUM = VREF * 0.66
 
 SOURCE_DIR = os.path.dirname(__file__)
+WORDS_SOUND_FILES_DIR = SOURCE_DIR + "/words/"
 
 # Define filenames for stick routes
 ROUTE_MAPPING_FILE = SOURCE_DIR + "/route_mapping.txt"
@@ -49,20 +51,6 @@ ROUTE_MAPPING_FILE = SOURCE_DIR + "/route_mapping.txt"
 STARTUP_SOUND = SOURCE_DIR + "/sfx/startup.wav"
 POWERDOWN_SOUND = SOURCE_DIR + "/sfx/powerdown.wav"
 ERROR_SOUND = SOURCE_DIR + "/sfx/error.wav"
-
-def read_route_mapping(filename):
-    route_mapping = {}
-    with open(filename, "r") as file:
-        for line in file:
-            parts = line.strip().split()
-            route = [str(cell) for cell in parts[:-1]]
-            filename = parts[-1]
-            route_mapping["".join(route)] = filename
-    return route_mapping
-
-# Load the route-to-filename mapping from the file
-route_to_filename = read_route_mapping(ROUTE_MAPPING_FILE)
-print(route_to_filename)
 
 def play_audio(file):
     sound = mixer.Sound(file)
@@ -111,12 +99,13 @@ def main():
                 print(recorded_cells)
             
             if GRID[current_row][current_col] == "5" and recorded_cells:
-                print(recorded_cells)
+                print("positions:")
                 print("-".join(recorded_cells))
-                route_filename = route_to_filename.get("".join(recorded_cells))
-                if route_filename:
+
+                route_filename = get_word_by_position("".join(recorded_cells))
+                if route_filename != None:
                     print("Playing audio:", route_filename)
-                    play_audio(SOURCE_DIR + "/" + route_filename)
+                    play_audio(WORDS_SOUND_FILES_DIR + route_filename)
                 recorded_cells = []
             
             time.sleep(float(configs["SLEEP_DURATION"]))

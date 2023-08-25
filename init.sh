@@ -25,3 +25,5 @@ sudo apt -y install nodejs
 # 1. change those lines in '/etc/nginx/sites-enabled/default':
 # root /var/www/html; -> root /opt/SpeakStick/management-console/dist;
 # server_name _; -> server_name speakstick.local;
+
+# https://cloudconvert.com/
