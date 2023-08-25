@@ -5,12 +5,13 @@ import json
 import db
 
 port = 8080
+BASE_ROUTE = "/api"
 
 # Define the HTTP request handler class
 class RequestHandler(BaseHTTPRequestHandler):
     
     def do_GET(self):
-        if self.path == "/configs":
+        if self.path == BASE_ROUTE + "/configs":
             configs = db.get_configs()
             if configs:
                 self.send_response(200)
@@ -23,7 +24,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"500 internal server error")
             
-        elif self.path == "/words":
+        elif self.path == BASE_ROUTE + "/words":
             words = db.get_words()
             if words:
                 self.send_response(200)
@@ -47,7 +48,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length).decode('utf-8')
         parsed_data = parse_qs(post_data)
         
-        if self.path == "/config":
+        if self.path == BASE_ROUTE + "/config":
             key = parsed_data.get('key', [''])[0]
             value = parsed_data.get('value', [''])[0]
             success = db.update_config(key, value)
@@ -57,7 +58,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.send_response(500)
             self.end_headers()
             
-        elif self.path == "/word":
+        elif self.path == BASE_ROUTE + "/word":
             position = parsed_data.get('position', [''])[0]
             new_word = parsed_data.get('word', [''])[0]
             success = db.update_word(position, new_word)
