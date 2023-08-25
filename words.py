@@ -1,5 +1,5 @@
 import sqlite3
-from db_default import db_file
+from consts import db_file
 
 def get_word_by_position(position):
     word = None

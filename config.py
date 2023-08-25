@@ -1,5 +1,5 @@
 import sqlite3
-import db_default
+from consts import db_file
 
 defaultConfigs = {
     "SLEEP_DURATION": 0.1, # Define main loop sleep duration
@@ -37,4 +37,4 @@ def read_configs_from_db(database_file):
     
     return configs
 
-configs = read_configs_from_db(db_default.db_file)
+configs = read_configs_from_db(db_file)
