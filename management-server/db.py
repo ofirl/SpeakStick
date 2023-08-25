@@ -55,6 +55,8 @@ def get_words():
             poistions, word = row
             words[poistions] = word
             
+        print("words:", words)
+        
     except sqlite3.Error as e:
         print("An error occurred:", e)
         
