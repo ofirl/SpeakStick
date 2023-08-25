@@ -25,7 +25,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable speakstick
 
 # SpeakStick management server service
-cp ./speakstick.service /usr/lib/systemd/system/speakstick-management-server.service
+cp ./speakstick-management-server.service /usr/lib/systemd/system/speakstick-management-server.service
 sudo systemctl daemon-reload
 sudo systemctl enable speakstick-management-server
 
