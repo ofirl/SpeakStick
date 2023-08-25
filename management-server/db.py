@@ -2,7 +2,6 @@ import sqlite3
 
 from consts import db_file
 print("db file:", db_file)
-# print(db_file)
 
 def get_configs():
     configs = {}
