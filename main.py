@@ -11,6 +11,9 @@ from pygame import mixer
 
 from config import configs
 
+print("configs:")
+print(configs)
+
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
 
