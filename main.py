@@ -9,7 +9,7 @@ import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 from pygame import mixer
 
-import config
+from config import configs
 
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
@@ -89,7 +89,7 @@ def main():
                 current_col = new_col
                 cell_update_time = datetime.datetime.now()
 
-            if datetime.datetime.now() > cell_update_time + datetime.timedelta(milliseconds=config.CELL_CHANGE_DELAY):
+            if datetime.datetime.now() > cell_update_time + datetime.timedelta(milliseconds=configs.CELL_CHANGE_DELAY):
                 # we are in the middle, our starting position
                 if len(recorded_cells) == 0 and GRID[current_row][current_col] == "5":
                     continue
@@ -109,7 +109,7 @@ def main():
                     play_audio(SOURCE_DIR + "/" + route_filename)
                 recorded_cells = []
             
-            time.sleep(config.SLEEP_DURATION)
+            time.sleep(configs.SLEEP_DURATION)
             
     except KeyboardInterrupt:
         print("Exiting on keyboard interrupt")
