@@ -53,7 +53,7 @@ def create_default_db(database_file):
             
             if existing_row is None:
                 # Insert default values into the "words" table
-                cursor.execute('INSERT INTO words (positions, value) VALUES (?, ?)', (posistions, str(value)))
+                cursor.execute('INSERT INTO words (positions, word) VALUES (?, ?)', (posistions, str(value)))
         
         # Commit the changes to the database
         connection.commit()
