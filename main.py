@@ -46,9 +46,9 @@ SOURCE_DIR = os.path.dirname(__file__)
 # Define filenames for stick routes
 ROUTE_MAPPING_FILE = SOURCE_DIR + "/route_mapping.txt"
 
-STARTUP_SOUND = SOURCE_DIR + "/sfx/startup.mp3"
-POWERDOWN_SOUND = SOURCE_DIR + "/sfx/powerdown.mp3"
-ERROR_SOUND = SOURCE_DIR + "/sfx/error.mp3"
+STARTUP_SOUND = SOURCE_DIR + "/sfx/startup.wav"
+POWERDOWN_SOUND = SOURCE_DIR + "/sfx/powerdown.wav"
+ERROR_SOUND = SOURCE_DIR + "/sfx/error.wav"
 
 def read_route_mapping(filename):
     route_mapping = {}
