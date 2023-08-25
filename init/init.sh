@@ -36,4 +36,10 @@ sudo systemctl enable speakstick-management-server
 # root /var/www/html; -> root /opt/SpeakStick/management-console/dist;
 # server_name _; -> server_name speakstick.local;
 
+# add a new location to nginx config:
+# location /api {
+#   proxy_pass http://localhost:8080;
+# }
+
+# convert files to .wav
 # https://cloudconvert.com/
