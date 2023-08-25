@@ -1,7 +1,6 @@
 import os
 import time
 import datetime
-from tkinter import E
 import busio
 import digitalio
 import board
