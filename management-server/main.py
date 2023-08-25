@@ -12,7 +12,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        BaseHTTPRequestHandler.end_headers()
+        BaseHTTPRequestHandler.end_headers(self)
 
     def do_GET(self):
         if self.path == BASE_ROUTE + "/configs":
