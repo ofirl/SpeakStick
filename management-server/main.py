@@ -4,7 +4,7 @@ import json
 
 import db
 
-port = 9090
+port = 8090
 BASE_ROUTE = "/api"
 
 # Define the HTTP request handler class
