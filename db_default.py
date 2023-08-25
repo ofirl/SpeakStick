@@ -10,7 +10,7 @@ defaultConfigs = {
 }
 
 defaultWords = {
-    "2": "applause-1.wav"
+    "8": "applause-1.wav"
 }
 
 def create_default_db(database_file):
