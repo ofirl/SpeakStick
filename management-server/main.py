@@ -9,7 +9,12 @@ BASE_ROUTE = "/api"
 
 # Define the HTTP request handler class
 class RequestHandler(BaseHTTPRequestHandler):
-    
+    def end_headers(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+
     def do_GET(self):
         if self.path == BASE_ROUTE + "/configs":
             configs = db.get_configs()

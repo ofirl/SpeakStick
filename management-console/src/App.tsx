@@ -19,7 +19,7 @@ function App() {
                 <TopBar />
                 <BrowserRouter basename="/">
                     <Routes>
-                        <Route path="/" Component={Settings} />
+                        <Route path="/settings" Component={Settings} />
                     </Routes>
                 </BrowserRouter>
             </QueryClientProvider>
