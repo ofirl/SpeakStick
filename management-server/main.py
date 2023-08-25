@@ -74,5 +74,6 @@ def run():
     print("Starting server on port", port)
     httpd.serve_forever()
 
-# Call the run function to start the HTTP server
-run()
+if __name__ == "__main__":
+    # Call the run function to start the HTTP server
+    run()

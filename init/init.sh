@@ -19,6 +19,16 @@ sudo apt install -y yarn
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt -y install nodejs
 
+# SpeakStick service
+cp ./speakstick.service /usr/lib/systemd/system/speakstick.service
+sudo systemctl daemon-reload
+sudo systemctl enable speakstick
+
+# SpeakStick management server service
+cp ./speakstick.service /usr/lib/systemd/system/speakstick-management-server.service
+sudo systemctl daemon-reload
+sudo systemctl enable speakstick-management-server
+
 
 
 # manual steps:
