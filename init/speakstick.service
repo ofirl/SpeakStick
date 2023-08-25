@@ -5,6 +5,8 @@
  [Service]
  Type=idle
  ExecStart=/usr/bin/python3 -u /opt/SpeakStick/main.py
+ Environment="SDL_AUDIODRIVER=alsa"
+ Environment="SDL_AUDIODEV=/dev/audio"
  Restart=on-failure
  RestartSec=5s
 

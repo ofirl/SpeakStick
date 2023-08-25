@@ -39,6 +39,9 @@ echo 'alias ss-update="git pull && ss-restart && echo "service restarted"' >> ~/
 
 
 
+# SDL_AUDIODRIVER=alsa
+# SDL_AUDIODEV=/dev/audio
+
 
 # manual steps:
 # 1. change those lines in '/etc/nginx/sites-enabled/default':
