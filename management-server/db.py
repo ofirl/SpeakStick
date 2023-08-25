@@ -2,7 +2,7 @@ import sqlite3
 
 from consts import db_file
 
-def get_configs(self):
+def get_configs():
     configs = {}
 
     try:
@@ -33,7 +33,7 @@ def get_configs(self):
     
     return configs
 
-def get_words(self):
+def get_words():
     words = {}
 
     try:

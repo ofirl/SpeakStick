@@ -29,6 +29,15 @@ cp ./speakstick-management-server.service /usr/lib/systemd/system/speakstick-man
 sudo systemctl daemon-reload
 sudo systemctl enable speakstick-management-server
 
+# bashrc
+echo 'alias ss-logs="sudo journalctl -u speakstick"' >> ~/.bashrc
+echo 'alias ss-server-logs="sudo journalctl -u speakstick-management-server"' >> ~/.bashrc
+echo 'alias ss-restart="sudo systemctl restart speakstick speakstick-management-server"'  >> ~/.bashrc
+
+echo 'alias cdss="cd /opt/SpeakStick"' >> ~/.bashrc
+echo 'alias ss-update="git pull && ss-restart && echo "service restarted"' >> ~/.bashrc
+
+
 
 
 # manual steps:
