@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-
-const baseUrl = "http://speakstick.local"
+import { baseUrl } from "./consts";
 
 export const useGetConfigs = () => {
-    return useQuery(['configs'], () => axios.get(baseUrl + "/api/configs"))
+    return useQuery(['configs'], () => axios.get(baseUrl + "/api/configs").then(value => value.data as Record<string, string>))
 };

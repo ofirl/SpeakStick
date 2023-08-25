@@ -8,14 +8,14 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import { useGetConfigs } from "../../api/configs";
 import { useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
+import { useGetWords } from '../../api/words';
 
-export const Settings = () => {
+export const Words = () => {
     const [filter, setFilter] = useState("");
-    const { data: configs = {} } = useGetConfigs();
-    console.log(configs)
+    const { data: words = {} } = useGetWords();
+    console.log(words)
 
     const onFilterChange = useCallback((value: string) => {
         setFilter(value.toLowerCase())
@@ -27,7 +27,7 @@ export const Settings = () => {
             <div style={{ width: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column" }}>
                 <Autocomplete
                     freeSolo
-                    options={Object.keys(configs)}
+                    options={Array.from(new Set([...Object.keys(words), ...Object.values(words)]))}
                     renderInput={(params) => <TextField {...params} label="Filter" />}
                     onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
                 />
@@ -35,20 +35,23 @@ export const Settings = () => {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell> Key</TableCell>
-                                <TableCell> Value </TableCell>
+                                <TableCell> Positions </TableCell>
+                                <TableCell> Word </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Object.entries(configs).filter(([key]) => key.toLowerCase().includes(filter)).map(([key, value]) => (
-                                <TableRow
-                                    key={key}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row"> {key} </TableCell>
-                                    <TableCell> {value} </TableCell>
-                                </TableRow>
-                            ))}
+                            {Object.entries(words).filter(([positions, word]) =>
+                                positions.toLowerCase().includes(filter) ||
+                                word.toLowerCase().includes(filter))
+                                .map(([positions, word]) => (
+                                    <TableRow
+                                        key={positions}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row"> {positions} </TableCell>
+                                        <TableCell> {word} </TableCell>
+                                    </TableRow>
+                                ))}
                         </TableBody>
                     </Table>
                 </TableContainer>

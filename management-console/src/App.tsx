@@ -6,6 +6,7 @@ import '@fontsource/roboto/700.css';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Settings } from './screens/settings/Settings';
+import { Words } from './screens/words/Words';
 import { TopBar } from './components/TopBar/TopBar';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -16,10 +17,11 @@ function App() {
     return (
         <>
             <QueryClientProvider client={queryClient}>
-                <TopBar />
                 <BrowserRouter basename="/">
+                    <TopBar />
                     <Routes>
                         <Route path="/settings" Component={Settings} />
+                        <Route path="/words" Component={Words} />
                     </Routes>
                 </BrowserRouter>
             </QueryClientProvider>

@@ -1,8 +1,11 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import os
 from urllib.parse import parse_qs
 import json
 
 import db
+
+from consts import words_directory
 
 port = 8090
 BASE_ROUTE = "/api"
@@ -71,6 +74,27 @@ class RequestHandler(BaseHTTPRequestHandler):
             else:
                 self.send_response(500)
             self.end_headers()
+
+        elif self.path == BASE_ROUTE + "/upload_sound":
+            content_length = int(self.headers['Content-Length'])
+            uploaded_file = self.rfile.read(content_length)
+
+            filename = self.headers.get('filename', '')
+            if filename == "":
+                self.send_response(400)
+                self.send_header("Content-type", "text/plain")
+                self.end_headers()
+                self.wfile.write(b"Mssing 'filename' header")
+
+            filepath = os.path.join(words_directory, filename)
+
+            with open(filepath, 'wb') as f:
+                f.write(uploaded_file)
+
+            self.send_response(200)
+            self.send_header("Content-type", "text/plain")
+            self.end_headers()
+            self.wfile.write(b"File uploaded successfully.")
 
 # Run the HTTP server
 def run():
