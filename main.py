@@ -46,6 +46,10 @@ SOURCE_DIR = os.path.dirname(__file__)
 # Define filenames for stick routes
 ROUTE_MAPPING_FILE = SOURCE_DIR + "/route_mapping.txt"
 
+STARTUP_SOUND = SOURCE_DIR + "/sfx/startup.mp3"
+POWERDOWN_SOUND = SOURCE_DIR + "/sfx/powerdown.mp3"
+ERROR_SOUND = SOURCE_DIR + "/sfx/error.mp3"
+
 def read_route_mapping(filename):
     route_mapping = {}
     with open(filename, "r") as file:
@@ -78,6 +82,9 @@ def main():
     recorded_cells = []
     
     cell_update_time = datetime.datetime.now()
+
+    print("Starting loop")
+    play_audio(STARTUP_SOUND)
 
     try:
         while True:
@@ -116,8 +123,10 @@ def main():
             
     except KeyboardInterrupt:
         print("Exiting on keyboard interrupt")
+        play_audio(ERROR_SOUND)
     except Exception as error:
         print("An exception occurred:", type(error).__name__, ":", error)
+        play_audio(ERROR_SOUND)
 
 if __name__ == "__main__":
     main()
