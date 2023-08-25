@@ -1,6 +1,8 @@
+import os
 import sqlite3
 
-db_file = "configs.db"
+SOURCE_DIR = os.path.dirname(__file__)
+db_file = SOURCE_DIR + "/configs.db"
 
 defaultConfigs = {
     "SLEEP_DURATION": 0.1, # Define main loop sleep duration
