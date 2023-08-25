@@ -112,7 +112,7 @@ def main():
                     play_audio(SOURCE_DIR + "/" + route_filename)
                 recorded_cells = []
             
-            time.sleep(configs.["SLEEP_DURATION"])
+            time.sleep(configs["SLEEP_DURATION"])
             
     except KeyboardInterrupt:
         print("Exiting on keyboard interrupt")
