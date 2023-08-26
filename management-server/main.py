@@ -109,24 +109,55 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         elif self.path == BASE_ROUTE + "/word":
             content_length = int(self.headers['Content-Length'])
-            uploaded_file = self.rfile.read(content_length)
+            content_type = self.headers['Content-Type']
 
-            filename = self.headers.get('filename', '')
-            if filename == "":
-                self.send_response(400)
+            if "multipart/form-data" in content_type:
+                # Read the uploaded file and save it
+                file_data = self.rfile.read(content_length)
+                file_name = self.headers.get('filename', '')
+                if file_name == "":
+                    self.send_response(400)
+                    self.send_header("Content-type", "text/plain")
+                    self.end_headers()
+                    self.wfile.write(b"Mssing 'filename' header")
+
+                file_path = os.path.join(words_directory, file_name)
+
+                with open(file_path, 'wb') as f:
+                    f.write(file_data)
+
+                self.send_response(200)  # OK
                 self.send_header("Content-type", "text/plain")
                 self.end_headers()
-                self.wfile.write(b"Mssing 'filename' header")
+                response = f"File '{file_name}' uploaded successfully"
+                self.wfile.write(response.encode())
+            else:
+                self.send_response(400)  # Bad Request
+                self.send_header("Content-type", "text/plain")
+                self.end_headers()
+                response = "Invalid content type"
+                self.wfile.write(response.encode())
 
-            filepath = os.path.join(words_directory, filename)
+        # elif self.path == BASE_ROUTE + "/word":
+        #     content_length = int(self.headers['Content-Length'])
+        #     uploaded_file = self.rfile.read(content_length)
 
-            with open(filepath, 'wb') as f:
-                f.write(uploaded_file)
+        #     filename = self.headers.get('filename', '')
+        #     if filename == "":
+        #         self.send_response(400)
+        #         self.send_header("Content-type", "text/plain")
+        #         self.end_headers()
+        #         self.wfile.write(b"Mssing 'filename' header")
 
-            self.send_response(200)
-            self.send_header("Content-type", "text/plain")
-            self.end_headers()
-            self.wfile.write(b"File uploaded successfully.")
+        #     filepath = os.path.join(words_directory, filename)
+
+        #     with open(filepath, 'wb') as f:
+        #         f.write(uploaded_file)
+
+        #     self.send_response(200)
+        #     self.send_header("Content-type", "text/plain")
+        #     self.end_headers()
+        #     self.wfile.write(b"File uploaded successfully.")
         
         else:
             self.send_response(404)

@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,12 +13,26 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { ComponentProps, useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
-// import { AddWordModal } from './AddPositionModal';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDeleteWord, useGetWords } from '../../api/words';
 import { useGetPositions } from '../../api/positions';
 import { DeleteWordModal } from './DeleteWordModal';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
+import Button from '@mui/material/Button';
+
+const VisuallyHiddenInputStyle: CSSProperties = {
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: "1px",
+    overflow: "hidden",
+    position: "absolute",
+    bottom: "0",
+    left: "0",
+    whiteSpace: "nowrap",
+    width: "1px"
+};
 
 export const Words = () => {
     const [filter, setFilter] = useState("");
@@ -48,6 +63,22 @@ export const Words = () => {
         setDeleteConfirmationOpen(true);
     };
 
+    const onFileSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        const selecteFile = e.target.files?.[0];
+        if (!selecteFile)
+            return null;
+        // Create an object of formData
+        const formData = new FormData();
+
+        // Update the formData object
+        formData.append(
+            "file",
+            selecteFile,
+            selecteFile.name
+        );
+    }
+
+
     return (
         <div style={{ display: "flex", justifyContent: "center", paddingTop: "2rem" }}>
             <div style={{ width: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column" }}>
@@ -60,6 +91,14 @@ export const Words = () => {
                         onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
                     />
                     <DeleteWordModal open={deleteConfirmationOpen} onDecline={() => setDeleteConfirmationOpen(false)} {...deletionModalProps} />
+                    <Button
+                        component="label"
+                        variant="outlined"
+                        startIcon={<CloudUploadIcon />}
+                    >
+                        Upload a file
+                        <input style={VisuallyHiddenInputStyle} onChange={onFileSelect} type="file" />
+                    </Button>
                 </div>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
