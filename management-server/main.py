@@ -134,13 +134,12 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b"404 Not Found")
 
-    def do_DEL(self):
+    def do_DELETE(self):
         if self.path == BASE_ROUTE + "/position":
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length).decode('utf-8')
-            json_data = json.loads(post_data)
+            query_parameters = parse_qs(self.path.split('?')[1])
+
+            position = query_parameters.get('position')
             
-            position = json_data.get('position')
             success = db.delete_position(position)
             if success:
                 self.send_response(200)
