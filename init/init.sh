@@ -61,7 +61,7 @@ echo 'alias ss-update="git pull && ss-restart && echo "service restarted"' >> ~/
 # }
 
 # crontab -e
-# 0 1 * * * /opt/SpeakStick/init/upgrade-script.sh
+# 0 1 * * * /opt/SpeakStick/upgrade-script-linux.sh
 
 
 # convert files to .wav
