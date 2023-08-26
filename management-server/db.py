@@ -101,8 +101,6 @@ def update_config(key, value):
     return True
 
 def update_word(position, new_word):
-    print("position", position)
-    print("new_word", new_word)
     try:
         # Connect to the SQLite database
         connection = sqlite3.connect(db_file)
@@ -110,11 +108,13 @@ def update_word(position, new_word):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        cursor.execute("""
-            INSERT INTO words (positions, word)
-            VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE word = ?
-        """, (position, new_word, new_word))
+        cursor.execute('SELECT * FROM words WHERE positions = ?', (position))
+        existing_row = cursor.fetchone()
+        
+        if existing_row is None:
+            cursor.execute('INSERT INTO words (positions, word) VALUES (?, ?)', (position, new_word))
+        else:
+            cursor.execute('UPDATE words set word = ?', (new_word))
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
