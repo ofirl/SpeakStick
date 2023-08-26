@@ -38,8 +38,8 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"500 internal server error")
             
-        elif self.path == BASE_ROUTE + "/words":
-            files = db.get_words()
+        elif self.path == BASE_ROUTE + "/positions":
+            files = db.get_positions()
             if files:
                 self.send_response(200)
                 self.send_header("Content-type", "application/json")
@@ -51,7 +51,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"500 internal server error")
         
-        elif self.path == BASE_ROUTE + "/files":
+        elif self.path == BASE_ROUTE + "/words":
             files = system.getWordFiles()
             if files:
                 self.send_response(200)
@@ -97,17 +97,17 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.send_response(500)
             self.end_headers()
             
-        elif self.path == BASE_ROUTE + "/word":
+        elif self.path == BASE_ROUTE + "/position":
             position = json_data.get('position')
             new_word = json_data.get('word')
-            success = db.update_word(position, new_word)
+            success = db.update_position(position, new_word)
             if success:
                 self.send_response(200)
             else:
                 self.send_response(500)
             self.end_headers()
 
-        elif self.path == BASE_ROUTE + "/upload_sound":
+        elif self.path == BASE_ROUTE + "/word":
             content_length = int(self.headers['Content-Length'])
             uploaded_file = self.rfile.read(content_length)
 
@@ -127,6 +127,32 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/plain")
             self.end_headers()
             self.wfile.write(b"File uploaded successfully.")
+        
+        else:
+            self.send_response(404)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            self.wfile.write(b"404 Not Found")
+
+    def do_DEL(self):
+        if self.path == BASE_ROUTE + "/position":
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            json_data = json.loads(post_data)
+            
+            position = json_data.get('position')
+            success = db.delete_position(position)
+            if success:
+                self.send_response(200)
+            else:
+                self.send_response(500)
+            self.end_headers()
+        
+        else:
+            self.send_response(404)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            self.wfile.write(b"404 Not Found")
 
 # Run the HTTP server
 def run():

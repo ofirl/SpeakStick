@@ -11,12 +11,14 @@ import Skeleton from '@mui/material/Skeleton';
 
 import { useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
-import { useGetWords } from '../../api/words';
+import { useGetPositions } from '../../api/positions';
 import { AddWordModal } from './AddWordModal';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const Words = () => {
     const [filter, setFilter] = useState("");
-    const { data: words = {}, isLoading } = useGetWords();
+    const { data: words = {}, isLoading } = useGetPositions();
 
     const onFilterChange = useCallback((value: string) => {
         setFilter(value.toLowerCase())
@@ -40,8 +42,9 @@ export const Words = () => {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell> Positions </TableCell>
-                                <TableCell> Word </TableCell>
+                                <TableCell width={"45%"}> Positions </TableCell>
+                                <TableCell width={"45%"}> Word </TableCell>
+                                <TableCell> </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -51,7 +54,7 @@ export const Words = () => {
                                         key={"positions"}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell colSpan={2} component="th" scope="row">
+                                        <TableCell colSpan={3} component="th" scope="row">
                                             <Skeleton variant="rounded" height={"2rem"} />
                                         </TableCell>
                                     </TableRow>,
@@ -59,7 +62,7 @@ export const Words = () => {
                                         key={"word"}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell colSpan={2} component="th" scope="row">
+                                        <TableCell colSpan={3} component="th" scope="row">
                                             <Skeleton variant="rounded" height={"2rem"} />
                                         </TableCell>
                                     </TableRow>
@@ -75,6 +78,16 @@ export const Words = () => {
                                         >
                                             <TableCell component="th" scope="row"> {positions} </TableCell>
                                             <TableCell> {word} </TableCell>
+                                            <TableCell>
+                                                <IconButton
+                                                    size="large"
+                                                    color="inherit"
+                                                    aria-label="delete word"
+                                                // onClick={() => setModalOpen(true)}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </TableCell>
                                         </TableRow>
                                     ))
                             }

@@ -11,7 +11,8 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useGetFiles, useUpdateWord } from '../../api/words';
+import { useUpdatePosition } from '../../api/positions';
+import { useGetWords } from '../../api/words';
 
 const style = {
     position: 'absolute',
@@ -31,9 +32,9 @@ export const AddWordModal = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const positionsRef = useRef<HTMLInputElement>(null)
     const wordRef = useRef<HTMLSelectElement>(null)
-    const { data: files } = useGetFiles();
+    const { data: files } = useGetWords();
 
-    const { mutateAsync: updateWord, isLoading } = useUpdateWord();
+    const { mutateAsync: updateWord, isLoading } = useUpdatePosition();
 
     const onSave = () => {
         if (!positionsRef.current || !wordRef.current)

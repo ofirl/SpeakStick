@@ -34,7 +34,7 @@ def get_configs():
     
     return configs
 
-def get_words():
+def get_positions():
     words = {}
 
     try:
@@ -68,8 +68,8 @@ def get_words():
     return words
 
 def update_config(key, value):
-    print("key", key)
-    print("value", value)
+    output = True
+
     try:
         # Connect to the SQLite database
         connection = sqlite3.connect(db_file)
@@ -88,7 +88,7 @@ def update_config(key, value):
 
         if affected_rows != 1:
             print("Error: Updated ", affected_rows, " rows. Expected 1.")
-            return False
+            output = False
         
     except sqlite3.Error as e:
         print("An error occurred:", e)
@@ -98,9 +98,11 @@ def update_config(key, value):
         if connection:
             connection.close()
 
-    return True
+    return output
 
-def update_word(position, new_word):
+def update_position(position, new_word):
+    output = True
+
     try:
         # Connect to the SQLite database
         connection = sqlite3.connect(db_file)
@@ -124,7 +126,7 @@ def update_word(position, new_word):
 
         if affected_rows != 1:
             print("Error: Updated ", affected_rows, " rows. Expected 1.")
-            return False
+            output = False
         
     except sqlite3.Error as e:
         print("An error occurred:", e)
@@ -134,4 +136,36 @@ def update_word(position, new_word):
         if connection:
             connection.close()
 
-    return True
+    return output
+
+def delete_position(position):
+    output = True
+
+    try:
+        # Connect to the SQLite database
+        connection = sqlite3.connect(db_file)
+        
+        # Create a cursor object to interact with the database
+        cursor = connection.cursor()
+        
+        cursor.execute('DELETE FROM words WHERE positions = ?', (position))
+
+        # Check how many rows were affected by the update
+        affected_rows = cursor.rowcount
+
+        # Commit the changes to the database
+        connection.commit()
+
+        if affected_rows != 1:
+            print("Error: Updated ", affected_rows, " rows. Expected 1.")
+            output = False
+        
+    except sqlite3.Error as e:
+        print("An error occurred:", e)
+        
+    finally:
+        # Close the database connection
+        if connection:
+            connection.close()
+
+    return output
