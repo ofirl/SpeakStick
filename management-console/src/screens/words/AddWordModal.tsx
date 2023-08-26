@@ -9,7 +9,9 @@ import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { useGetFiles } from '../../api/words';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useGetFiles, useUpdateWord } from '../../api/words';
 
 const style = {
     position: 'absolute',
@@ -21,6 +23,8 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    display: "flex",
+    flexDirection: "column"
 };
 
 export const AddWordModal = () => {
@@ -28,6 +32,15 @@ export const AddWordModal = () => {
     const positionsRef = useRef<HTMLInputElement>(null)
     const wordRef = useRef<HTMLSelectElement>(null)
     const { data: files } = useGetFiles();
+
+    const { mutateAsync: updateWord, isLoading } = useUpdateWord();
+
+    const onSave = () => {
+        if (!positionsRef.current || !wordRef.current)
+            return;
+
+        updateWord({ position: positionsRef.current.value, word: wordRef.current.value })
+    };
 
     return (
         <>
@@ -59,10 +72,13 @@ export const AddWordModal = () => {
                     >
                         {
                             files?.map(file => (
-                                <MenuItem value={file}>file</MenuItem>
+                                <MenuItem value={file}>{file}</MenuItem>
                             ))
                         }
                     </Select>
+                    <Button disabled={isLoading} variant="contained" style={{ marginTop: "1rem", alignSelf: "end" }} onClick={onSave}>
+                        {isLoading ? <CircularProgress /> : "Save"}
+                    </Button>
                 </Box>
             </Modal >
         </>

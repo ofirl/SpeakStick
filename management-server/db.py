@@ -112,7 +112,7 @@ def update_word(position, new_word):
         cursor.execute("UPDATE words SET word = ? WHERE positions = ?", (new_word, position))
         
         cursor.execute("""
-            INSERT INTO your_table (positions, word)
+            INSERT INTO words (positions, word)
             VALUES (?, ?)
             ON DUPLICATE KEY UPDATE word = ?;
         """, (position, new_word, new_word))
