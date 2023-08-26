@@ -182,7 +182,7 @@ def delete_position_for_word(word):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         print("word:", word)
-        cursor.execute('DELETE FROM words WHERE word = ?', ("".join(word)))
+        cursor.execute('DELETE FROM words WHERE word = ?', (word))
         print("word:", word)
         # Commit the changes to the database
         connection.commit()
@@ -199,14 +199,12 @@ def delete_position_for_word(word):
 
 def delete_word(word):
     try:
-        os.remove(os.path.join(words_directory, word))
+        os.remove(os.path.join(words_directory, "".join(word)))
 
         if not delete_position_for_word(word):
-            return "Error deleting positions", Exception.__init__("Error deleting positions for word " + word)
+            return Exception.__init__("Error deleting positions for word " + word)
     
-        return None, None
+        return None
 
-    except FileNotFoundError as e:
-        return "File not found", e
     except Exception as e:
-        return "An error occurred", e
+        return e
