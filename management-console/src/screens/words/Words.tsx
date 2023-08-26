@@ -57,7 +57,10 @@ export const Words = () => {
             return;
         }
         setDeletionModalProps({
-            onApprove: () => deleteWord({ word }),
+            onApprove: () => {
+                deleteWord({ word });
+                setDeleteConfirmationOpen(false);
+            },
             positions: wordPositions,
             word: word
         });
@@ -68,15 +71,6 @@ export const Words = () => {
         const selecteFile = e.target.files?.[0];
         if (!selecteFile)
             return null;
-        // Create an object of formData
-        // const formData = new FormData();
-
-        // Update the formData object
-        // formData.append(
-        //     "file",
-        //     selecteFile,
-        //     selecteFile.name
-        // );
 
         uploadWord({ file: selecteFile, fileName: selecteFile.name })
     }
