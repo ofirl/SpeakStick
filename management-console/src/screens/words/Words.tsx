@@ -12,11 +12,11 @@ import Skeleton from '@mui/material/Skeleton';
 import { useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
 import { useGetWords } from '../../api/words';
+import { AddWordModal } from './AddWordModal';
 
 export const Words = () => {
     const [filter, setFilter] = useState("");
     const { data: words = {}, isLoading } = useGetWords();
-    console.log(words)
 
     const onFilterChange = useCallback((value: string) => {
         setFilter(value.toLowerCase())
@@ -26,12 +26,16 @@ export const Words = () => {
     return (
         <div style={{ display: "flex", justifyContent: "center", paddingTop: "2rem" }}>
             <div style={{ width: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column" }}>
-                <Autocomplete
-                    freeSolo
-                    options={Array.from(new Set([...Object.keys(words), ...Object.values(words)]))}
-                    renderInput={(params) => <TextField {...params} label="Filter" />}
-                    onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
-                />
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <Autocomplete
+                        style={{ flexGrow: "1" }}
+                        freeSolo
+                        options={Array.from(new Set([...Object.keys(words), ...Object.values(words)]))}
+                        renderInput={(params) => <TextField {...params} label="Filter" />}
+                        onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
+                    />
+                    <AddWordModal />
+                </div>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>

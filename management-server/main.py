@@ -39,12 +39,25 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(b"500 internal server error")
             
         elif self.path == BASE_ROUTE + "/words":
-            words = db.get_words()
-            if words:
+            files = db.get_words()
+            if files:
                 self.send_response(200)
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
-                self.wfile.write(json.dumps(words).encode())
+                self.wfile.write(json.dumps(files).encode())
+            else:
+                self.send_response(500)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(b"500 internal server error")
+        
+        elif self.path == BASE_ROUTE + "/files":
+            files = system.getWordFiles()
+            if files:
+                self.send_response(200)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps(files).encode())
             else:
                 self.send_response(500)
                 self.send_header("Content-type", "text/html")

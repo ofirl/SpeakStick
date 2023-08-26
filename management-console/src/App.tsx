@@ -10,6 +10,8 @@ import { Words } from './screens/words/Words';
 import { TopBar } from './components/TopBar/TopBar';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient()
 
@@ -23,6 +25,7 @@ function App() {
                         <Route path="/settings" Component={Settings} />
                         <Route path="/words" Component={Words} />
                     </Routes>
+                    <ToastContainer />
                 </BrowserRouter>
             </QueryClientProvider>
         </>

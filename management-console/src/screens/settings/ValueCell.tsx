@@ -48,7 +48,7 @@ export const ValueCell = ({ value, onEdit }: ValueCellProps) => {
                 defaultValue={value}
                 inputRef={inputRef}
             />
-            <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={onSave}>
+            <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={onSave} disabled={isLoading}>
                 {isLoading ? <CircularProgress /> : <SaveIcon />}
             </IconButton>
             <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
