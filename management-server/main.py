@@ -135,6 +135,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(b"404 Not Found")
 
     def do_DELETE(self):
+        print(self.path)
         if self.path == BASE_ROUTE + "/position":
             query_parameters = parse_qs(self.path.split('?')[1])
 
