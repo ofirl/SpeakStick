@@ -6,6 +6,6 @@ cd "${workdir}"
 git pull
 sudo systemctl restart speakstick speakstick-management-server
 
-cd ../management-console
+cd management-console
 
 yarn deploy

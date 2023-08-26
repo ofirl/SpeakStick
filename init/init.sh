@@ -39,6 +39,7 @@ echo 'alias ss-update="git pull && ss-restart && echo "service restarted"' >> ~/
 
 
 
+
 # SDL_AUDIODRIVER=alsa
 # SDL_AUDIODEV=/dev/audio
 
@@ -58,6 +59,10 @@ echo 'alias ss-update="git pull && ss-restart && echo "service restarted"' >> ~/
 # location /api {
 #   proxy_pass http://localhost:8080;
 # }
+
+# crontab -e
+# 0 1 * * * /opt/SpeakStick/init/upgrade-script.sh
+
 
 # convert files to .wav
 # https://cloudconvert.com/

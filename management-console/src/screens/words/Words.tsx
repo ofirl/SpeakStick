@@ -21,6 +21,7 @@ import { DeleteWordModal } from './DeleteWordModal';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import Button from '@mui/material/Button';
+import { Typography } from "@mui/material";
 
 const VisuallyHiddenInputStyle: CSSProperties = {
     clip: "rect(0 0 0 0)",
@@ -97,11 +98,14 @@ export const Words = () => {
                             isUploading ? <CircularProgress /> :
                                 <>
                                     Upload a file
-                                    <input style={VisuallyHiddenInputStyle} onChange={onFileSelect} type="file" />
+                                    <input style={VisuallyHiddenInputStyle} onChange={onFileSelect} type="file" accept="audio/wav" />
                                 </>
                         }
                     </Button>
                 </div>
+                <Typography variant="body1" sx={{ paddingBottom: "0.5rem" }}>
+                    You can use <a href="https://cloudconvert.com/"> this site </a> to convert audio files to .wav
+                </Typography>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
