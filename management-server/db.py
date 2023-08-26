@@ -111,7 +111,7 @@ def update_word(position, new_word):
         cursor.execute("""
             INSERT INTO words (positions, word)
             VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE word = ?;
+            ON DUPLICATE KEY UPDATE word = ?
         """, (position, new_word, new_word))
 
         # Check how many rows were affected by the update
