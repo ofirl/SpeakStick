@@ -119,6 +119,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                     self.send_header("Content-type", "text/plain")
                     self.end_headers()
                     self.wfile.write(b"Mssing 'filename' header")
+                    return
 
                 file_path = os.path.join(words_directory, file_name)
 
