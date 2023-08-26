@@ -179,7 +179,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.send_response(200)
             else:
                 self.send_response(500)
-                self.wfile.write(error.__str__.encode())
+                self.wfile.write(error.__str__().encode())
             self.end_headers()
         
         else:
