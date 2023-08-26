@@ -16,10 +16,10 @@ export const useUpdatePosition = () => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["positions"]);
-                toast.success("Word updated")
+                toast.success("Position updated")
             },
             onError: () => {
-                toast.error("Error updating word")
+                toast.error("Error updating position")
             }
         }
     )
@@ -33,10 +33,10 @@ export const useDeletePosition = () => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["positions"]);
-                toast.success("Word updated")
+                toast.success("Position Deleted")
             },
             onError: () => {
-                toast.error("Error updating word")
+                toast.error("Error updating position")
             }
         }
     )
