@@ -150,7 +150,7 @@ def delete_position(position):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        cursor.execute('DELETE FROM words WHERE positions = ?', (position))
+        cursor.execute('DELETE FROM words WHERE positions = :position', {"position": "".join(position)})
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
