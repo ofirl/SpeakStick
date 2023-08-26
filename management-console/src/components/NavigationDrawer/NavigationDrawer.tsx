@@ -6,6 +6,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import AbcIcon from '@mui/icons-material/Abc';
 import SettingsIcon from '@mui/icons-material/Settings';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Link } from 'react-router-dom';
 
 const menuItems = [
@@ -15,13 +16,13 @@ const menuItems = [
         link: "/settings"
     },
     {
-        text: "Posistion List",
+        text: "Posistions",
         icon: AbcIcon,
         link: "/positions"
     },
     {
-        text: "Word List",
-        icon: AbcIcon,
+        text: "Word Files",
+        icon: CloudUploadIcon,
         link: "/words"
     }
 ]

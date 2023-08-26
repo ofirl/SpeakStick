@@ -10,23 +10,43 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Skeleton from '@mui/material/Skeleton';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useCallback, useState } from 'react';
+import { ComponentProps, useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
-import { useDeletePosition, useGetPositions } from '../../api/positions';
-import { AddWordModal } from './AddPositionModal';
+// import { AddWordModal } from './AddPositionModal';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDeleteWord, useGetWords } from '../../api/words';
+import { useGetPositions } from '../../api/positions';
+import { DeleteWordModal } from './DeleteWordModal';
 
-export const Positions = () => {
+export const Words = () => {
     const [filter, setFilter] = useState("");
-    const { data: positions = {}, isLoading } = useGetPositions();
+    const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+    const { data: words = [], isLoading } = useGetWords();
+
+    const [deletionModalProps, setDeletionModalProps] = useState<Omit<ComponentProps<typeof DeleteWordModal>, "open" | "onDecline">>({} as ComponentProps<typeof DeleteWordModal>);
 
     const onFilterChange = useCallback((value: string) => {
-        setFilter(value.toLowerCase())
+        setFilter(value.toLowerCase());
     }, [])
     const onFilterChangeDebounced = useDebounce(onFilterChange, 200)
 
-    const { mutateAsync: deletePosition, isLoading: isDeleting } = useDeletePosition();
+    const { mutateAsync: deleteWord, isLoading: isDeleting } = useDeleteWord();
+    const { data: positions = {} } = useGetPositions();
+
+    const onDeleteWord = (word: string) => {
+        const wordPositions = Object.entries(positions).filter(([, positionWord]) => positionWord === word).map(([position]) => position);
+        if (wordPositions.length === 0) {
+            deleteWord({ word });
+            return;
+        }
+        setDeletionModalProps({
+            onApprove: () => deleteWord({ word }),
+            positions: wordPositions,
+            word: word
+        });
+        setDeleteConfirmationOpen(true);
+    };
 
     return (
         <div style={{ display: "flex", justifyContent: "center", paddingTop: "2rem" }}>
@@ -35,18 +55,17 @@ export const Positions = () => {
                     <Autocomplete
                         style={{ flexGrow: "1" }}
                         freeSolo
-                        options={Array.from(new Set([...Object.keys(positions), ...Object.values(positions)]))}
+                        options={words}
                         renderInput={(params) => <TextField {...params} label="Filter" />}
                         onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
                     />
-                    <AddWordModal />
+                    <DeleteWordModal open={deleteConfirmationOpen} onDecline={() => setDeleteConfirmationOpen(false)} {...deletionModalProps} />
                 </div>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell width={"45%"}> Positions </TableCell>
-                                <TableCell width={"45%"}> Word </TableCell>
+                                <TableCell width={"90%"}> Word </TableCell>
                                 <TableCell />
                             </TableRow>
                         </TableHead>
@@ -57,29 +76,26 @@ export const Positions = () => {
                                         key={"row" + i}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell colSpan={3} component="th" scope="row">
+                                        <TableCell colSpan={2} component="th" scope="row">
                                             <Skeleton variant="rounded" height={"2rem"} />
                                         </TableCell>
                                     </TableRow>
                                 ))
                                 :
-                                Object.entries(positions).filter(([positions, word]) =>
-                                    positions.toLowerCase().includes(filter) ||
-                                    word.toLowerCase().includes(filter))
-                                    .map(([positions, word]) => (
+                                words.filter((word) => word.toLowerCase().includes(filter))
+                                    .map((word) => (
                                         <TableRow
-                                            key={positions}
+                                            key={word}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
-                                            <TableCell component="th" scope="row"> {positions} </TableCell>
-                                            <TableCell> {word} </TableCell>
+                                            <TableCell component="th" scope="row"> {word} </TableCell>
                                             <TableCell>
                                                 <IconButton
                                                     disabled={isDeleting}
                                                     size="large"
                                                     color="inherit"
                                                     aria-label="delete word"
-                                                    onClick={() => deletePosition({ position: positions })}
+                                                    onClick={() => onDeleteWord(word)}
                                                 >
                                                     {isDeleting ? <CircularProgress /> : <DeleteIcon />}
                                                 </IconButton>

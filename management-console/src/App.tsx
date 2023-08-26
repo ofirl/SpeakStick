@@ -12,6 +12,7 @@ import { TopBar } from './components/TopBar/TopBar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Words } from './screens/words/Words';
 
 const queryClient = new QueryClient()
 
@@ -24,6 +25,9 @@ function App() {
                     <Routes>
                         <Route path="/settings" Component={Settings} />
                         <Route path="/positions" Component={Positions} />
+                        <Route path="/words" Component={Words} />
+                        {/* default route */}
+                        <Route path="/" Component={Positions} />
                     </Routes>
                     <ToastContainer />
                 </BrowserRouter>

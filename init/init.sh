@@ -47,6 +47,12 @@ echo 'alias ss-update="git pull && ss-restart && echo "service restarted"' >> ~/
 # 1. change those lines in '/etc/nginx/sites-enabled/default':
 # root /var/www/html; -> root /opt/SpeakStick/management-console/dist;
 # server_name _; -> server_name speakstick.local;
+# add `/index.html`` to the try_files in the default location `/`: 
+# location / {
+#   # First attempt to serve request as file, then
+#   # as directory, then fall back to displaying a 404.
+#   try_files $uri $uri/ /index.html =404;
+# }
 
 # add a new location to nginx config:
 # location /api {

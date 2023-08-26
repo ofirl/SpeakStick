@@ -1,3 +1,4 @@
+import os
 import sqlite3
 
 from consts import db_file
@@ -169,3 +170,12 @@ def delete_position(position):
             connection.close()
 
     return output
+
+def delete_word(word):
+    try:
+        os.remove(word)
+        return None, None
+    except FileNotFoundError:
+        return "File not found", None
+    except Exception as e:
+        return "An error occurred", e

@@ -146,6 +146,18 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.send_response(500)
             self.end_headers()
         
+        if self.path.startswith(BASE_ROUTE + "/word"):
+            query_parameters = parse_qs(self.path.split('?')[1])
+            word = query_parameters.get('word')
+            
+            msg, error = db.delete_word(word)
+            if error == None:
+                self.send_response(200)
+            else:
+                self.send_response(500)
+                self.wfile.write(msg)
+            self.end_headers()
+        
         else:
             self.send_response(404)
             self.send_header("Content-type", "text/html")
