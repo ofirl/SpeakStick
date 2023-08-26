@@ -53,6 +53,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         elif self.path == BASE_ROUTE + "/restart/stick-controller":
             return_code = system.restartStickController()
+            print("return_code2:", return_code)
             if return_code == 0:
                 self.send_response(200)
                 self.send_header("Content-type", "application/json")
