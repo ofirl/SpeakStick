@@ -78,8 +78,15 @@ def update_config(key, value):
         # Update the value in the "configs" table
         cursor.execute("UPDATE configs SET value = ? WHERE key = ?", (value, key))
         
+        # Check how many rows were affected by the update
+        affected_rows = cursor.rowcount
+
         # Commit the changes to the database
         connection.commit()
+
+        if affected_rows != 1:
+            print("Error: Updated ", affected_rows, " rows. Expected 1.")
+            return False
         
     except sqlite3.Error as e:
         print("An error occurred:", e)
@@ -102,8 +109,15 @@ def update_word(position, new_word):
         # Update the word in the "words" table
         cursor.execute("UPDATE words SET word = ? WHERE positions = ?", (new_word, position))
         
+        # Check how many rows were affected by the update
+        affected_rows = cursor.rowcount
+
         # Commit the changes to the database
         connection.commit()
+
+        if affected_rows != 1:
+            print("Error: Updated ", affected_rows, " rows. Expected 1.")
+            return False
         
     except sqlite3.Error as e:
         print("An error occurred:", e)
