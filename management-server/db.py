@@ -197,13 +197,15 @@ def delete_position_for_word(word):
     return output
 
 def delete_word(word):
+    print(word)
     try:
         os.remove(word)
 
-        if delete_position_for_word(word):
-            return None, None
+        if not(delete_position_for_word(word)):
+            return "Error deleting positions", Exception.__init__("Error deleting positions for word " + word)
+    
+        return None, None
 
-        return None, Exception.__init__("Error deleting positions for word " + word)
     except FileNotFoundError:
         return "File not found", None
     except Exception as e:
