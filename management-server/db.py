@@ -172,6 +172,7 @@ def delete_position(position):
     return output
 
 def delete_position_for_word(word):
+    print("word:", word)
     output = True
 
     try:
