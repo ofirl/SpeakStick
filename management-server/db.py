@@ -101,6 +101,8 @@ def update_config(key, value):
     return True
 
 def update_word(position, new_word):
+    print("position", position)
+    print("new_word", new_word)
     try:
         # Connect to the SQLite database
         connection = sqlite3.connect(db_file)
