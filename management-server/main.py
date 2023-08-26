@@ -84,10 +84,10 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length).decode('utf-8')
-        json_data = json.loads(post_data)
+        post_data = self.rfile.read(content_length)
         
         if self.path == BASE_ROUTE + "/config":
+            json_data = json.loads(post_data.decode('utf-8'))
             key = json_data.get('key')
             value = json_data.get('value')
             success = db.update_config(key, value)
@@ -98,6 +98,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             
         elif self.path == BASE_ROUTE + "/position":
+            json_data = json.loads(post_data.decode('utf-8'))
             position = json_data.get('position')
             new_word = json_data.get('word')
             success = db.update_position(position, new_word)
