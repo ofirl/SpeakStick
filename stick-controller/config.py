@@ -19,7 +19,7 @@ def read_configs_from_db(database_file):
         
         # Populate the configs dictionary with retrieved data
         for row in rows:
-            key, value = row
+            key, value, description, default_value = row
             configs[key] = value
             
     except sqlite3.Error as e:
