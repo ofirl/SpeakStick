@@ -110,34 +110,26 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
         elif self.path == BASE_ROUTE + "/word":
-            content_type = self.headers['Content-Type']
-
-            if "multipart/form-data" in content_type:
-                # Read the uploaded file and save it
-                file_name = self.headers.get('filename', '')
-                if file_name == "":
-                    self.send_response(400)
-                    self.send_header("Content-type", "text/plain")
-                    self.end_headers()
-                    self.wfile.write(b"Mssing 'filename' header")
-                    return
-
-                file_path = os.path.join(words_directory, file_name)
-
-                with open(file_path, 'wb') as f:
-                    f.write(post_data)
-
-                self.send_response(200)  # OK
+            # Read the uploaded file and save it
+            file_name = self.headers.get('filename', '')
+            if file_name == "":
+                self.send_response(400)
                 self.send_header("Content-type", "text/plain")
                 self.end_headers()
-                response = f"File '{file_name}' uploaded successfully"
-                self.wfile.write(response.encode())
-            else:
-                self.send_response(400)  # Bad Request
-                self.send_header("Content-type", "text/plain")
-                self.end_headers()
-                response = "Invalid content type"
-                self.wfile.write(response.encode())
+                self.wfile.write(b"Mssing 'filename' header")
+                return
+
+            file_path = os.path.join(words_directory, file_name)
+
+            with open(file_path, 'wb') as f:
+                f.write(post_data)
+
+            self.send_response(200)  # OK
+            self.send_header("Content-type", "text/plain")
+            self.end_headers()
+            response = f"File '{file_name}' uploaded successfully"
+            self.wfile.write(response.encode())
+        
 
         # elif self.path == BASE_ROUTE + "/word":
         #     content_length = int(self.headers['Content-Length'])

@@ -69,16 +69,16 @@ export const Words = () => {
         if (!selecteFile)
             return null;
         // Create an object of formData
-        const formData = new FormData();
+        // const formData = new FormData();
 
         // Update the formData object
-        formData.append(
-            "file",
-            selecteFile,
-            selecteFile.name
-        );
+        // formData.append(
+        //     "file",
+        //     selecteFile,
+        //     selecteFile.name
+        // );
 
-        uploadWord({ file: formData, fileName: selecteFile.name })
+        uploadWord({ file: selecteFile, fileName: selecteFile.name })
     }
 
 

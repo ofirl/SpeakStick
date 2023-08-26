@@ -25,7 +25,7 @@ export const useDeleteWord = () => {
     )
 };
 
-type UploadWordParams = { file: FormData, fileName: string };
+type UploadWordParams = { file: File, fileName: string };
 export const useUploadWord = () => {
     const queryClient = useQueryClient();
     return useMutation(({ file, fileName }: UploadWordParams) =>
