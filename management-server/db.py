@@ -79,8 +79,7 @@ def update_config(key, value):
         cursor = connection.cursor()
         
         # Update the value in the "configs" table
-        cursor.execute("UPDATE configs SET value = ? WHERE key = ?", (value, key))
-        
+        cursor.execute("UPDATE configs SET value = :value WHERE key = :key", {"value": value, "key": key})        
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
 
@@ -111,13 +110,15 @@ def update_position(position, new_word):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        cursor.execute('SELECT * FROM words WHERE positions = ?', (position))
+        data = {"position": position, "word": new_word}
+
+        cursor.execute('SELECT * FROM words WHERE positions = :position', data)
         existing_row = cursor.fetchone()
         
         if existing_row is None:
-            cursor.execute('INSERT INTO words (positions, word) VALUES (?, ?)', (position, new_word))
+            cursor.execute('INSERT INTO words (positions, word) VALUES (:position, :word)', data)
         else:
-            cursor.execute('UPDATE words set word = ?', (new_word))
+            cursor.execute('UPDATE words set word = :word', data)
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
@@ -149,7 +150,7 @@ def delete_position(position):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        cursor.execute('DELETE FROM words WHERE positions = ?', (position))
+        cursor.execute('DELETE FROM words WHERE positions = :position', {"position": position})
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
@@ -178,15 +179,12 @@ def delete_position_for_word(word):
     try:
         # Connect to the SQLite database
         connection = sqlite3.connect(db_file)
-        print("word:", word)
+
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
-        print("word:", word)
 
-        data = {"word": word}
-        cursor.execute('DELETE FROM words WHERE word = :word', data)
-        
-        print("word:", word)
+        cursor.execute('DELETE FROM words WHERE word = :word', {"word": word})
+
         # Commit the changes to the database
         connection.commit()
 
