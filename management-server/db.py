@@ -24,10 +24,10 @@ def get_configs():
         for row in rows:
             key, value, description, default_value = row
             configs.append({
-                key,
-                value,
-                description,
-                default_value
+                "key": key,
+                "value": value,
+                "description": description,
+                "default_value": default_value
             })
             
     except sqlite3.Error as e:
