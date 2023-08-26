@@ -1,7 +1,7 @@
 import os
 import sqlite3
 
-from consts import db_file
+from consts import db_file, words_directory
 print("db file:", db_file)
 
 def get_configs():
@@ -199,7 +199,7 @@ def delete_position_for_word(word):
 def delete_word(word):
     print(word)
     try:
-        os.remove(word)
+        os.remove(os.path.join(words_directory, word))
 
         if not(delete_position_for_word(word)):
             return "Error deleting positions", Exception.__init__("Error deleting positions for word " + word)
