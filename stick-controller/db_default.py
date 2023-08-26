@@ -31,13 +31,14 @@ def create_default_db(database_file):
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS configs (
                 key TEXT PRIMARY KEY,
-                value TEXT
-                description TEXT
+                value TEXT,
+                description TEXT,
                 default_value TEXT
             )
         ''')
         
         for config in defaultConfigs:
+            print(config)
             # Check if the key already exists in the "configs" table
             cursor.execute('SELECT * FROM configs WHERE key = :key', config)
             existing_row = cursor.fetchone()
