@@ -108,9 +108,6 @@ def update_word(position, new_word):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        # Update the word in the "words" table
-        cursor.execute("UPDATE words SET word = ? WHERE positions = ?", (new_word, position))
-        
         cursor.execute("""
             INSERT INTO words (positions, word)
             VALUES (?, ?)

@@ -39,7 +39,9 @@ export const AddWordModal = () => {
         if (!positionsRef.current || !wordRef.current)
             return;
 
-        updateWord({ position: positionsRef.current.value, word: wordRef.current.value })
+        updateWord({ position: positionsRef.current.value, word: wordRef.current.value }).then(() => {
+            setModalOpen(false)
+        })
     };
 
     return (
