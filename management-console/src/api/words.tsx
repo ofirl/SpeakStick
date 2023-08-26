@@ -24,3 +24,20 @@ export const useDeleteWord = () => {
         }
     )
 };
+
+type UploadWordParams = FormData;
+export const useUploadWord = () => {
+    const queryClient = useQueryClient();
+    return useMutation((params: UploadWordParams) =>
+        axios.post(baseUrl + "/api/word", params).then(value => value.status === 200),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(["words"]);
+                toast.success("Word Uploaded")
+            },
+            onError: () => {
+                toast.error("Error uploading word")
+            }
+        }
+    )
+};

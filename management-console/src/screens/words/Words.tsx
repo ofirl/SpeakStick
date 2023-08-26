@@ -15,7 +15,7 @@ import { ComponentProps, useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useDeleteWord, useGetWords } from '../../api/words';
+import { useDeleteWord, useGetWords, useUploadWord } from '../../api/words';
 import { useGetPositions } from '../../api/positions';
 import { DeleteWordModal } from './DeleteWordModal';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -46,6 +46,7 @@ export const Words = () => {
     }, [])
     const onFilterChangeDebounced = useDebounce(onFilterChange, 200)
 
+    const { mutateAsync: uploadWord, isLoading: isUploading } = useUploadWord();
     const { mutateAsync: deleteWord, isLoading: isDeleting } = useDeleteWord();
     const { data: positions = {} } = useGetPositions();
 
@@ -76,6 +77,8 @@ export const Words = () => {
             selecteFile,
             selecteFile.name
         );
+
+        uploadWord(formData)
     }
 
 
@@ -96,8 +99,13 @@ export const Words = () => {
                         variant="outlined"
                         startIcon={<CloudUploadIcon />}
                     >
-                        Upload a file
-                        <input style={VisuallyHiddenInputStyle} onChange={onFileSelect} type="file" />
+                        {
+                            isUploading ? <CircularProgress /> :
+                                <>
+                                    Upload a file
+                                    <input style={VisuallyHiddenInputStyle} onChange={onFileSelect} type="file" />
+                                </>
+                        }
                     </Button>
                 </div>
                 <TableContainer component={Paper}>
