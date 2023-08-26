@@ -134,7 +134,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b"404 Not Found")
 
-    def do_DELETE(self):
+    def do_DEL(self):
         if self.path == BASE_ROUTE + "/position":
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode('utf-8')
