@@ -172,7 +172,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         
         if self.path.startswith(BASE_ROUTE + "/word"):
             query_parameters = parse_qs(self.path.split('?')[1])
-            word = query_parameters.get('word')
+            word = query_parameters.get('word')[0]
             
             msg, error = db.delete_word(word)
             if error == None:
