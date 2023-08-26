@@ -109,12 +109,10 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
         elif self.path == BASE_ROUTE + "/word":
-            content_length = int(self.headers['Content-Length'])
             content_type = self.headers['Content-Type']
 
             if "multipart/form-data" in content_type:
                 # Read the uploaded file and save it
-                file_data = self.rfile.read(content_length)
                 file_name = self.headers.get('filename', '')
                 if file_name == "":
                     self.send_response(400)
@@ -125,7 +123,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 file_path = os.path.join(words_directory, file_name)
 
                 with open(file_path, 'wb') as f:
-                    f.write(file_data)
+                    f.write(post_data)
 
                 self.send_response(200)  # OK
                 self.send_header("Content-type", "text/plain")
