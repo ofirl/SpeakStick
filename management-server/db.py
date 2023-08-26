@@ -21,7 +21,14 @@ def get_configs():
         rows = cursor.fetchall()
         
         # Populate the configs dictionary with retrieved data
-        configs = rows
+        for row in rows:
+            key, value, description, default_value = row
+            configs.append({
+                key,
+                value,
+                description,
+                default_value
+            })
             
     except sqlite3.Error as e:
         print("An error occurred:", e)
