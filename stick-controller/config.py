@@ -1,11 +1,6 @@
 import sqlite3
 from consts import db_file
 
-defaultConfigs = {
-    "SLEEP_DURATION": 0.1, # Define main loop sleep duration
-    "CELL_CHANGE_DELAY": 200 # Define cell change delay
-}
-
 def read_configs_from_db(database_file):
     configs = {}
 

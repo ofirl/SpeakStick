@@ -3,8 +3,8 @@ import sqlite3
 from consts import db_file
 
 defaultConfigs = {
-    "SLEEP_DURATION": 0.1, # Define main loop sleep duration
-    "CELL_CHANGE_DELAY": 200 # Define cell change delay
+    "SLEEP_DURATION_MS": 0.1, # Define main loop sleep duration
+    "CELL_CHANGE_DELAY_MS": 200 # Define cell change delay
 }
 
 defaultWords = {

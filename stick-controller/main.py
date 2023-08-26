@@ -86,7 +86,7 @@ def main():
                 current_col = new_col
                 cell_update_time = datetime.datetime.now()
 
-            if datetime.datetime.now() > cell_update_time + datetime.timedelta(milliseconds=float(configs["CELL_CHANGE_DELAY"])):
+            if datetime.datetime.now() > cell_update_time + datetime.timedelta(milliseconds=float(configs["CELL_CHANGE_DELAY_MS"])):
                 # we are in the middle, our starting position
                 if len(recorded_cells) == 0 and GRID[current_row][current_col] == "5":
                     continue
@@ -107,7 +107,7 @@ def main():
                     play_audio(WORDS_SOUND_FILES_DIR + route_filename)
                 recorded_cells = []
             
-            time.sleep(float(configs["SLEEP_DURATION"]))
+            time.sleep(float(configs["SLEEP_DURATION_MS"]))
             
     except KeyboardInterrupt:
         print("Exiting on keyboard interrupt")
