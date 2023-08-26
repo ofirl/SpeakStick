@@ -123,12 +123,12 @@ def update_position(position, new_word):
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
 
-        # Commit the changes to the database
-        connection.commit()
-
         if affected_rows != 1:
             print("Error: Updated ", affected_rows, " rows. Expected 1.")
             output = False
+        else:
+            # Commit the changes to the database
+            connection.commit()
         
     except sqlite3.Error as e:
         print("An error occurred:", e)
