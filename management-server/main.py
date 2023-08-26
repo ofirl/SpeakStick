@@ -52,7 +52,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(b"500 internal server error")
 
         elif self.path == BASE_ROUTE + "/restart/stick-controller":
-            return_code = system.restartStickController()
+            return_code, _ = system.restartStickController()
             print("return_code2:", return_code)
             if return_code == 0:
                 self.send_response(200)
