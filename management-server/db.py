@@ -202,7 +202,7 @@ def delete_word(word):
     try:
         os.remove(os.path.join(words_directory, word))
 
-        if not(delete_position_for_word(word)):
+        if not delete_position_for_word(word):
             return "Error deleting positions", Exception.__init__("Error deleting positions for word " + word)
     
         return None, None
