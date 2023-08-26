@@ -15,6 +15,11 @@ const menuItems = [
         link: "/settings"
     },
     {
+        text: "Posistion List",
+        icon: AbcIcon,
+        link: "/positions"
+    },
+    {
         text: "Word List",
         icon: AbcIcon,
         link: "/words"

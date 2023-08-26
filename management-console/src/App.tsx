@@ -6,7 +6,7 @@ import '@fontsource/roboto/700.css';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Settings } from './screens/settings/Settings';
-import { Words } from './screens/words/Words';
+import { Positions } from './screens/positions/Positions';
 import { TopBar } from './components/TopBar/TopBar';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -23,7 +23,7 @@ function App() {
                     <TopBar />
                     <Routes>
                         <Route path="/settings" Component={Settings} />
-                        <Route path="/words" Component={Words} />
+                        <Route path="/positions" Component={Positions} />
                     </Routes>
                     <ToastContainer />
                 </BrowserRouter>

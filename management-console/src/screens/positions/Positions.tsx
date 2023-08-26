@@ -13,11 +13,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
 import { useDeletePosition, useGetPositions } from '../../api/positions';
-import { AddWordModal } from './AddWordModal';
+import { AddWordModal } from './AddPositionModal';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export const Words = () => {
+export const Positions = () => {
     const [filter, setFilter] = useState("");
     const { data: words = {}, isLoading } = useGetPositions();
 
