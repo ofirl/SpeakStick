@@ -109,7 +109,7 @@ def main():
                     play_audio(WORDS_SOUND_FILES_DIR + route_filename)
                 recorded_cells = []
             
-            time.sleep(float(configs["SLEEP_DURATION_MS"]))
+            time.sleep(float(configs["SLEEP_DURATION_S"]))
             
     except KeyboardInterrupt:
         print("Exiting on keyboard interrupt")

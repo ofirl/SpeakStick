@@ -2,10 +2,18 @@ import sqlite3
 
 from consts import db_file
 
-defaultConfigs = {
-    "SLEEP_DURATION_MS": 0.1, # Define main loop sleep duration
-    "CELL_CHANGE_DELAY_MS": 200 # Define cell change delay
-}
+defaultConfigs = [
+    {
+        "key": "SLEEP_DURATION_S",
+        "value": "0.1",
+        "description": "Interval to poll the stick position (in seconds)"
+    },
+    {
+        "key": "CELL_CHANGE_DELAY_MS",
+        "value": "200",
+        "description": "Delay between the stick changing position and it actually being recorded (usefull for shaky hands) (in milli seconds)"
+    }
+]
 
 defaultWords = {
     "8": "applause-1.wav"
@@ -24,17 +32,19 @@ def create_default_db(database_file):
             CREATE TABLE IF NOT EXISTS configs (
                 key TEXT PRIMARY KEY,
                 value TEXT
+                description TEXT
+                default_value TEXT
             )
         ''')
         
-        for key, value in defaultConfigs.items():
+        for config in defaultConfigs:
             # Check if the key already exists in the "configs" table
-            cursor.execute('SELECT * FROM configs WHERE key = ?', (key,))
+            cursor.execute('SELECT * FROM configs WHERE key = :key', config)
             existing_row = cursor.fetchone()
             
             if existing_row is None:
                 # Insert default values into the "configs" table
-                cursor.execute('INSERT INTO configs (key, value) VALUES (?, ?)', (key, str(value)))
+                cursor.execute('INSERT INTO configs (key, value, description, default_value) VALUES (:key, :value, :description, :value)', config)
         
         # Create the "words" table
         cursor.execute('''
@@ -46,12 +56,12 @@ def create_default_db(database_file):
 
         for posistions, value in defaultWords.items():
             # Check if the key already exists in the "words" table
-            cursor.execute('SELECT * FROM words WHERE positions = ?', (key,))
+            cursor.execute('SELECT * FROM words WHERE positions = ?', (posistions,))
             existing_row = cursor.fetchone()
             
             if existing_row is None:
                 # Insert default values into the "words" table
-                cursor.execute('INSERT INTO words (positions, word) VALUES (?, ?)', (posistions, str(value)))
+                cursor.execute('INSERT INTO words (positions, word) VALUES (?, ?)', (posistions, value))
         
         # Commit the changes to the database
         connection.commit()
