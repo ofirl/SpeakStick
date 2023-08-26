@@ -111,6 +111,12 @@ def update_word(position, new_word):
         # Update the word in the "words" table
         cursor.execute("UPDATE words SET word = ? WHERE positions = ?", (new_word, position))
         
+        cursor.execute("""
+            INSERT INTO your_table (positions, word)
+            VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE word = ?;
+        """, (position, new_word, new_word))
+
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
 
