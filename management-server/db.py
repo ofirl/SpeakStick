@@ -118,7 +118,7 @@ def update_position(position, new_word):
         if existing_row is None:
             cursor.execute('INSERT INTO words (positions, word) VALUES (:position, :word)', data)
         else:
-            cursor.execute('UPDATE words set word = :word where position = :position', data)
+            cursor.execute('UPDATE words set word = :word where positions = :position', data)
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
