@@ -78,7 +78,7 @@ export const Words = () => {
             selecteFile.name
         );
 
-        uploadWord(formData)
+        uploadWord({ file: formData, fileName: selecteFile.name })
     }
 
 
