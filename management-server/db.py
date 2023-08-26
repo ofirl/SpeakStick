@@ -5,7 +5,7 @@ from consts import db_file, words_directory
 print("db file:", db_file)
 
 def get_configs():
-    configs = {}
+    configs = []
 
     try:
         # Connect to the SQLite database
@@ -21,9 +21,7 @@ def get_configs():
         rows = cursor.fetchall()
         
         # Populate the configs dictionary with retrieved data
-        for row in rows:
-            key, value = row
-            configs[key] = value
+        configs = rows
             
     except sqlite3.Error as e:
         print("An error occurred:", e)
