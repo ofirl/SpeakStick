@@ -206,7 +206,7 @@ def delete_word(word):
     
         return None, None
 
-    except FileNotFoundError:
-        return "File not found", None
+    except FileNotFoundError as e:
+        return "File not found", e
     except Exception as e:
         return "An error occurred", e
