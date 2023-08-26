@@ -8,6 +8,8 @@ import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 from pygame import mixer
 
+import db_default
+
 from config import configs
 from words import get_word_by_position
 
