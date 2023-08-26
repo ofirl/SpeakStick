@@ -1,7 +1,7 @@
 import subprocess
 
 def restartStickController():
-    runCommand("sudo systemctl restart speakstick")
+    return runCommand("sudo systemctl restart speakstick")
 
 def runCommand(command):
     # Run the command and capture its output
