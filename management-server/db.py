@@ -68,6 +68,8 @@ def get_words():
     return words
 
 def update_config(key, value):
+    print("key", key)
+    print("value", value)
     try:
         # Connect to the SQLite database
         connection = sqlite3.connect(db_file)
