@@ -3,8 +3,15 @@ import axios from "axios";
 import { baseUrl } from "./consts";
 import { toast } from "react-toastify";
 
+type Config = {
+    key: string,
+    value: string,
+    description: string,
+    default_value: string
+}
+
 export const useGetConfigs = () => {
-    return useQuery(['configs'], () => axios.get(baseUrl + "/api/configs").then(value => value.data as Record<string, string>))
+    return useQuery(['configs'], () => axios.get(baseUrl + "/api/configs").then(value => value.data as Config[]))
 };
 
 type updateConfigParams = { key: string, value: string };

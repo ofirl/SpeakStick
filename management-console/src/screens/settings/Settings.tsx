@@ -13,10 +13,11 @@ import { useGetConfigs, useUpdateConfig } from "../../api/configs";
 import { useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
 import { ValueCell } from './ValueCell';
+import { DefaultValueCell } from './DefaultValueCell';
 
 export const Settings = () => {
     const [filter, setFilter] = useState("");
-    const { data: configs = {}, isLoading } = useGetConfigs();
+    const { data: configs = [], isLoading } = useGetConfigs();
 
     const { mutateAsync: updateConfig } = useUpdateConfig();
 
@@ -27,10 +28,10 @@ export const Settings = () => {
 
     return (
         <div style={{ display: "flex", justifyContent: "center", paddingTop: "2rem" }}>
-            <div style={{ width: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column" }}>
+            <div style={{ width: "70rem", gap: "0.5rem", display: "flex", flexDirection: "column" }}>
                 <Autocomplete
                     freeSolo
-                    options={Object.keys(configs)}
+                    options={configs.map(c => c.key)}
                     renderInput={(params) => <TextField {...params} label="Filter" />}
                     onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
                 />
@@ -38,8 +39,10 @@ export const Settings = () => {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell width={"50%"}> Key</TableCell>
-                                <TableCell> Value </TableCell>
+                                <TableCell width={"30%"}> Key</TableCell>
+                                <TableCell width={"10%"}> Value </TableCell>
+                                <TableCell width={"40%"}> Description </TableCell>
+                                <TableCell> Default Value </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -63,13 +66,17 @@ export const Settings = () => {
                                     </TableRow>
                                 ]
                                 :
-                                Object.entries(configs).filter(([key]) => key.toLowerCase().includes(filter)).map(([key, value]) => (
+                                configs.filter((c) => c.key.toLowerCase().includes(filter)).map((c) => (
                                     <TableRow
-                                        key={key}
+                                        key={c.key}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell component="th" scope="row"> {key} </TableCell>
-                                        <TableCell> <ValueCell value={value} onEdit={(updatedValue) => updateConfig({ key, value: updatedValue })} /> </TableCell>
+                                        <TableCell component="th" scope="row"> {c.key} </TableCell>
+                                        <TableCell> <ValueCell value={c.value} onEdit={(updatedValue) => updateConfig({ key: c.key, value: updatedValue })} /> </TableCell>
+                                        <TableCell> {c.description} </TableCell>
+                                        <TableCell>
+                                            <DefaultValueCell value={c.default_value} onRestore={() => updateConfig({ key: c.key, value: c.default_value })} />
+                                        </TableCell>
                                     </TableRow>
                                 ))
                             }
