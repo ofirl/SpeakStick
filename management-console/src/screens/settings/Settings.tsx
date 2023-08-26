@@ -7,15 +7,18 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Skeleton from '@mui/material/Skeleton';
 
-import { useGetConfigs } from "../../api/configs";
+import { useGetConfigs, useUpdateConfig } from "../../api/configs";
 import { useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
+import { ValueCell } from './ValueCell';
 
 export const Settings = () => {
     const [filter, setFilter] = useState("");
-    const { data: configs = {} } = useGetConfigs();
-    console.log(configs)
+    const { data: configs = {}, isLoading } = useGetConfigs();
+
+    const { mutate: updateConfig } = useUpdateConfig();
 
     const onFilterChange = useCallback((value: string) => {
         setFilter(value.toLowerCase())
@@ -35,20 +38,41 @@ export const Settings = () => {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell> Key</TableCell>
+                                <TableCell width={"50%"}> Key</TableCell>
                                 <TableCell> Value </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Object.entries(configs).filter(([key]) => key.toLowerCase().includes(filter)).map(([key, value]) => (
-                                <TableRow
-                                    key={key}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row"> {key} </TableCell>
-                                    <TableCell> {value} </TableCell>
-                                </TableRow>
-                            ))}
+                            {isLoading ?
+                                [
+                                    <TableRow
+                                        key={"positions"}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell colSpan={2} component="th" scope="row">
+                                            <Skeleton variant="rounded" height={"2rem"} />
+                                        </TableCell>
+                                    </TableRow>,
+                                    <TableRow
+                                        key={"word"}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell colSpan={2} component="th" scope="row">
+                                            <Skeleton variant="rounded" height={"2rem"} />
+                                        </TableCell>
+                                    </TableRow>
+                                ]
+                                :
+                                Object.entries(configs).filter(([key]) => key.toLowerCase().includes(filter)).map(([key, value]) => (
+                                    <TableRow
+                                        key={key}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row"> {key} </TableCell>
+                                        <TableCell> <ValueCell value={value} onEdit={(updatedValue) => updateConfig({ key, value: updatedValue })} /> </TableCell>
+                                    </TableRow>
+                                ))
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>

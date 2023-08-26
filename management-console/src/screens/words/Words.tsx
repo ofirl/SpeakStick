@@ -7,6 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Skeleton from '@mui/material/Skeleton';
 
 import { useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
@@ -14,7 +15,7 @@ import { useGetWords } from '../../api/words';
 
 export const Words = () => {
     const [filter, setFilter] = useState("");
-    const { data: words = {} } = useGetWords();
+    const { data: words = {}, isLoading } = useGetWords();
     console.log(words)
 
     const onFilterChange = useCallback((value: string) => {
@@ -40,20 +41,42 @@ export const Words = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Object.entries(words).filter(([positions, word]) =>
-                                positions.toLowerCase().includes(filter) ||
-                                word.toLowerCase().includes(filter))
-                                .map(([positions, word]) => (
+                            {isLoading ?
+                                [
                                     <TableRow
-                                        key={positions}
+                                        key={"positions"}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell component="th" scope="row"> {positions} </TableCell>
-                                        <TableCell> {word} </TableCell>
+                                        <TableCell colSpan={2} component="th" scope="row">
+                                            <Skeleton variant="rounded" height={"2rem"} />
+                                        </TableCell>
+                                    </TableRow>,
+                                    <TableRow
+                                        key={"word"}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell colSpan={2} component="th" scope="row">
+                                            <Skeleton variant="rounded" height={"2rem"} />
+                                        </TableCell>
                                     </TableRow>
-                                ))}
+                                ]
+                                :
+                                Object.entries(words).filter(([positions, word]) =>
+                                    positions.toLowerCase().includes(filter) ||
+                                    word.toLowerCase().includes(filter))
+                                    .map(([positions, word]) => (
+                                        <TableRow
+                                            key={positions}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row"> {positions} </TableCell>
+                                            <TableCell> {word} </TableCell>
+                                        </TableRow>
+                                    ))
+                            }
                         </TableBody>
                     </Table>
+
                 </TableContainer>
             </div>
         </div>
