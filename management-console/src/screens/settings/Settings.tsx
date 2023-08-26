@@ -18,7 +18,7 @@ export const Settings = () => {
     const [filter, setFilter] = useState("");
     const { data: configs = {}, isLoading } = useGetConfigs();
 
-    const { mutate: updateConfig } = useUpdateConfig();
+    const { mutateAsync: updateConfig } = useUpdateConfig();
 
     const onFilterChange = useCallback((value: string) => {
         setFilter(value.toLowerCase())

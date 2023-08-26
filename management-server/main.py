@@ -4,6 +4,7 @@ from urllib.parse import parse_qs
 import json
 
 import db
+import system
 
 from consts import words_directory
 
@@ -44,6 +45,18 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
                 self.wfile.write(json.dumps(words).encode())
+            else:
+                self.send_response(500)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(b"500 internal server error")
+
+        elif self.path == BASE_ROUTE + "/restart/stick-controller":
+            return_code = system.restartStickController()
+            if return_code == 0:
+                self.send_response(200)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
             else:
                 self.send_response(500)
                 self.send_header("Content-type", "text/html")
