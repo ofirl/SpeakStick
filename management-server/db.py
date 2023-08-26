@@ -171,10 +171,39 @@ def delete_position(position):
 
     return output
 
+def delete_position_for_word(word):
+    output = True
+
+    try:
+        # Connect to the SQLite database
+        connection = sqlite3.connect(db_file)
+        
+        # Create a cursor object to interact with the database
+        cursor = connection.cursor()
+        
+        cursor.execute('DELETE FROM words WHERE word = ?', (word))
+
+        # Commit the changes to the database
+        connection.commit()
+
+    except sqlite3.Error as e:
+        print("An error occurred:", e)
+        
+    finally:
+        # Close the database connection
+        if connection:
+            connection.close()
+
+    return output
+
 def delete_word(word):
     try:
         os.remove(word)
-        return None, None
+
+        if delete_position_for_word(word):
+            return None, None
+
+        return None, Exception.__init__("Error deleting positions for word " + word)
     except FileNotFoundError:
         return "File not found", None
     except Exception as e:
