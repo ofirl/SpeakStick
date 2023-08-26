@@ -178,12 +178,12 @@ def delete_position_for_word(word):
     try:
         # Connect to the SQLite database
         connection = sqlite3.connect(db_file)
-        
+        print("word:", word)
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
-        
+        print("word:", word)
         cursor.execute('DELETE FROM words WHERE word = ?', (word))
-
+        print("word:", word)
         # Commit the changes to the database
         connection.commit()
 
@@ -198,7 +198,6 @@ def delete_position_for_word(word):
     return output
 
 def delete_word(word):
-    print(word)
     try:
         os.remove(os.path.join(words_directory, word))
 
