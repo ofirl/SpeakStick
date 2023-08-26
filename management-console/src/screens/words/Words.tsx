@@ -8,10 +8,11 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Skeleton from '@mui/material/Skeleton';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
-import { useGetPositions } from '../../api/positions';
+import { useDeletePosition, useGetPositions } from '../../api/positions';
 import { AddWordModal } from './AddWordModal';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -24,6 +25,8 @@ export const Words = () => {
         setFilter(value.toLowerCase())
     }, [])
     const onFilterChangeDebounced = useDebounce(onFilterChange, 200)
+
+    const { mutateAsync: deletePosition, isLoading: isDeleting } = useDeletePosition();
 
     return (
         <div style={{ display: "flex", justifyContent: "center", paddingTop: "2rem" }}>
@@ -80,12 +83,13 @@ export const Words = () => {
                                             <TableCell> {word} </TableCell>
                                             <TableCell>
                                                 <IconButton
+                                                    disabled={isDeleting}
                                                     size="large"
                                                     color="inherit"
                                                     aria-label="delete word"
-                                                // onClick={() => setModalOpen(true)}
+                                                    onClick={() => deletePosition({ position: positions })}
                                                 >
-                                                    <DeleteIcon />
+                                                    {isDeleting ? <CircularProgress /> : <DeleteIcon />}
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>

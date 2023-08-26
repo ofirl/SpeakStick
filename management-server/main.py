@@ -15,7 +15,7 @@ BASE_ROUTE = "/api"
 class RequestHandler(BaseHTTPRequestHandler):
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE")
         BaseHTTPRequestHandler.end_headers(self)
 
     def do_OPTIONS(self):
@@ -134,7 +134,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b"404 Not Found")
 
-    def do_DEL(self):
+    def do_DELETE(self):
         if self.path == BASE_ROUTE + "/position":
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode('utf-8')
