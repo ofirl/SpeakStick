@@ -39,9 +39,11 @@ GRID = [
 ]
 
 # Define stick position thresholds
+GRID_BORDER_SIZE = 0.1
 VREF = 3.3
 POSITION_LOW = VREF * 0.33
 POSITION_MEDIUM = VREF * 0.66
+GRID_DEAD_ZONE = VREF * GRID_BORDER_SIZE / 2
 
 SOURCE_DIR = os.path.dirname(__file__)
 WORDS_SOUND_FILES_DIR = SOURCE_DIR + "/words/"
@@ -58,12 +60,14 @@ def play_audio(file):
     sound.play()
 
 def get_cell(position):
-    if position < POSITION_LOW:
+    if position < POSITION_LOW - GRID_DEAD_ZONE:
         return 0
-    elif position < POSITION_MEDIUM:
+    elif position < POSITION_MEDIUM - GRID_DEAD_ZONE and position > POSITION_LOW + GRID_DEAD_ZONE:
         return 1
-    else:
+    elif position > POSITION_MEDIUM + GRID_DEAD_ZONE:
         return 2
+    else:
+        return -1
 
 def main():
     current_row = 1
@@ -82,6 +86,9 @@ def main():
             
             new_row = get_cell(vertical_position)
             new_col = get_cell(horizontal_position)
+            # dead zone check
+            if new_row == -1 or new_col == -1:
+                continue
             
             if new_row != current_row or new_col != current_col:
                 current_row = new_row

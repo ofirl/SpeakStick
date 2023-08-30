@@ -16,9 +16,9 @@ const menuItems = [
         link: "/settings"
     },
     {
-        text: "Libraries",
+        text: "Library",
         icon: AbcIcon,
-        link: "/libraries"
+        link: "/library"
     },
     {
         text: "Word Files",
