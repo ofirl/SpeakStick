@@ -109,7 +109,7 @@ def main():
                 print(recorded_cells)
             
             # end word
-            if (recorded_cells[-1] == "5" and recorded_cells and datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["END_WORD_TIMEOUT_S"]))):
+            if (len(recorded_cells) > 0 and datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["END_WORD_TIMEOUT_S"]))):
                 print("positions:")
                 print("-".join(recorded_cells))
 
