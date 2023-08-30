@@ -73,6 +73,7 @@ def main():
     current_row = 1
     current_col = 1
     recorded_cells = []
+    wait_for_reset = False
     
     cell_update_time = datetime.datetime.now()
 
@@ -95,6 +96,12 @@ def main():
                 current_col = new_col
                 cell_update_time = datetime.datetime.now()
             
+            if wait_for_reset:
+                if current_col == "1" and current_row == "1":
+                    wait_for_reset = False
+
+                continue
+
             # end word
             if (len(recorded_cells) > 0 and datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["END_WORD_TIMEOUT_S"]))):
                 print("word positions:")
@@ -105,6 +112,7 @@ def main():
                     print("Playing audio:", route_filename)
                     play_audio(WORDS_SOUND_FILES_DIR + route_filename)
                 recorded_cells = []
+                wait_for_reset = True
 
                 continue
 
