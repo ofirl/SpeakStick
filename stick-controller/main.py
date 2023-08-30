@@ -82,6 +82,7 @@ def main():
 
     try:
         while True:
+            time.sleep(float(configs["SLEEP_DURATION_S"]))
             horizontal_position = chan1.voltage
             vertical_position = chan0.voltage
             
@@ -129,8 +130,6 @@ def main():
                 cell_update_time = datetime.datetime.now()
                 print("record new position:")
                 print(recorded_cells)
-            
-            time.sleep(float(configs["SLEEP_DURATION_S"]))
             
     except KeyboardInterrupt:
         print("Exiting on keyboard interrupt")
