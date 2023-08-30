@@ -6,12 +6,17 @@ defaultConfigs = [
     {
         "key": "SLEEP_DURATION_S",
         "value": "0.1",
-        "description": "Interval to poll the stick position (in seconds)"
+        "description": "Interval to poll the stick position"
     },
     {
-        "key": "CELL_CHANGE_DELAY_MS",
-        "value": "200",
-        "description": "Delay between the stick changing position and it actually being recorded (usefull for shaky hands) (in milli seconds)"
+        "key": "CELL_CHANGE_DELAY_S",
+        "value": "0.2",
+        "description": "Delay between the stick changing position and it actually being recorded (usefull for shaky hands)"
+    },
+    {
+        "key": "END_WORD_TIMEOUT_S",
+        "value": "1",
+        "description": "Word will end if no position change is recorded for this duration"
     }
 ]
 

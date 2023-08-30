@@ -88,7 +88,8 @@ def main():
                 current_col = new_col
                 cell_update_time = datetime.datetime.now()
 
-            if datetime.datetime.now() > cell_update_time + datetime.timedelta(milliseconds=float(configs["CELL_CHANGE_DELAY_MS"])):
+            # record cell change
+            if datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["CELL_CHANGE_DELAY_S"])):
                 # we are in the middle, our starting position
                 if len(recorded_cells) == 0 and GRID[current_row][current_col] == "5":
                     continue
@@ -97,9 +98,11 @@ def main():
                     continue
 
                 recorded_cells.append(GRID[current_row][current_col])
+                print("record new position:")
                 print(recorded_cells)
             
-            if GRID[current_row][current_col] == "5" and recorded_cells:
+            # end word
+            if (recorded_cells[-1] == "5" and recorded_cells and datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["END_WORD_TIMEOUT_S"]))):
                 print("positions:")
                 print("-".join(recorded_cells))
 
