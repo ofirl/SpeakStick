@@ -94,6 +94,19 @@ def main():
                 current_row = new_row
                 current_col = new_col
                 cell_update_time = datetime.datetime.now()
+            
+            # end word
+            if (len(recorded_cells) > 0 and datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["END_WORD_TIMEOUT_S"]))):
+                print("positions:")
+                print("-".join(recorded_cells))
+
+                route_filename = get_word_by_position("".join(recorded_cells))
+                if route_filename != None:
+                    print("Playing audio:", route_filename)
+                    play_audio(WORDS_SOUND_FILES_DIR + route_filename)
+                recorded_cells = []
+
+                continue
 
             # record cell change
             if datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["CELL_CHANGE_DELAY_S"])):
@@ -107,17 +120,6 @@ def main():
                 recorded_cells.append(GRID[current_row][current_col])
                 print("record new position:")
                 print(recorded_cells)
-            
-            # end word
-            if (len(recorded_cells) > 0 and datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["END_WORD_TIMEOUT_S"]))):
-                print("positions:")
-                print("-".join(recorded_cells))
-
-                route_filename = get_word_by_position("".join(recorded_cells))
-                if route_filename != None:
-                    print("Playing audio:", route_filename)
-                    play_audio(WORDS_SOUND_FILES_DIR + route_filename)
-                recorded_cells = []
             
             time.sleep(float(configs["SLEEP_DURATION_S"]))
             
