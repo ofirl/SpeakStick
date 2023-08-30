@@ -17,7 +17,7 @@ import { AddWordModal } from './AddPositionModal';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export const Positions = () => {
+export const Library = () => {
     const [filter, setFilter] = useState("");
     const { data: positions = {}, isLoading } = useGetPositions();
 
