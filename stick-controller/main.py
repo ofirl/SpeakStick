@@ -118,6 +118,7 @@ def main():
                     continue
 
                 recorded_cells.append(GRID[current_row][current_col])
+                cell_update_time = datetime.datetime.now()
                 print("record new position:")
                 print(recorded_cells)
             
