@@ -94,19 +94,15 @@ def main():
             new_col = get_cell(horizontal_position)
             # dead zone check
             if new_row == -1 or new_col == -1:
-                print("dead zone")
                 continue
             
             if new_row != current_row or new_col != current_col:
                 current_row = new_row
                 current_col = new_col
-                print("current_row: ", current_row)
-                print("current_col: ", current_col)
                 cell_update_time = datetime.datetime.now()
             
             if wait_for_reset:
-                if current_col == 1 and current_row == 1:
-                    print("reset")
+                if GRID[current_row][current_col] == "5":
                     wait_for_reset = False
 
                 continue
@@ -126,7 +122,12 @@ def main():
                 continue
 
             # record cell change
-            if datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["CELL_CHANGE_DELAY_S"])):
+            if datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["CELL_CHANGE_DELAY_S"])) or (
+                # 5 is a special case, we want to be able to go over it quickly
+                datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["MIDDLE_CELL_CHANGE_DELAY_S"]))
+                and
+                GRID[current_row][current_col] == "5"
+            ):
                 # we are in the middle, our starting position
                 if len(recorded_cells) == 0 and GRID[current_row][current_col] == "5":
                     continue

@@ -14,6 +14,11 @@ defaultConfigs = [
         "description": "Delay between the stick changing position and it actually being recorded (usefull for shaky hands)"
     },
     {
+        "key": "MIDDLE_CELL_CHANGE_DELAY_S",
+        "value": "0.1",
+        "description": "Same as `CELL_CHANGE_DELAY_S` only for the middle, this is in a different config because we might want the ability to go over hte middle position quickly"
+    },
+    {
         "key": "END_WORD_TIMEOUT_S",
         "value": "1",
         "description": "Word will end if no position change is recorded for this duration"
