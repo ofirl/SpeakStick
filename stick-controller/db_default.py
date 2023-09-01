@@ -22,6 +22,11 @@ defaultConfigs = [
         "key": "END_WORD_TIMEOUT_S",
         "value": "1",
         "description": "Word will end if no position change is recorded for this duration"
+    },
+    {
+        "key": "GRID_BORDER_SIZE",
+        "value": "0.1",
+        "description": "If we think about the grid of numbers, this is the inner border (the border between the cells) width, this will create a \"dead zone\" in which there are no cells"
     }
 ]
 

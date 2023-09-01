@@ -39,7 +39,7 @@ GRID = [
 ]
 
 # Define stick position thresholds
-GRID_BORDER_SIZE = 0.1
+GRID_BORDER_SIZE = configs["GRID_BORDER_SIZE"]
 VREF = 3.3
 POSITION_LOW = VREF * 0.33
 POSITION_MEDIUM = VREF * 0.66
