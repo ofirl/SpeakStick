@@ -30,6 +30,8 @@ defaultWords = {
 }
 
 def create_default_db(database_file):
+    connection = None
+    
     try:
         # Connect to the SQLite database or create it if it doesn't exist
         connection = sqlite3.connect(database_file)
