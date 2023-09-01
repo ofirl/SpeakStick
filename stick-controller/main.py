@@ -92,8 +92,6 @@ def main():
             
             new_row = get_cell(vertical_position)
             new_col = get_cell(horizontal_position)
-            print("new_row: ", new_row)
-            print("new_col: ", new_col)
             # dead zone check
             if new_row == -1 or new_col == -1:
                 print("dead zone")
@@ -102,6 +100,8 @@ def main():
             if new_row != current_row or new_col != current_col:
                 current_row = new_row
                 current_col = new_col
+                print("current_row: ", current_row)
+                print("current_col: ", current_col)
                 cell_update_time = datetime.datetime.now()
             
             if wait_for_reset:
