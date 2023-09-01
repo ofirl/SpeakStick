@@ -112,6 +112,9 @@ def main():
                 print("word positions:")
                 print("".join(recorded_cells))
 
+                if recorded_cells[-1] == "5":
+                    recorded_cells = recorded_cells[:-1]
+
                 route_filename = get_word_by_position("".join(recorded_cells))
                 if route_filename != None:
                     print("Playing audio:", route_filename)
