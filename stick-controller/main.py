@@ -39,7 +39,7 @@ GRID = [
 ]
 
 # Define stick position thresholds
-GRID_BORDER_SIZE = 0.05
+GRID_BORDER_SIZE = 0.1
 VREF = 3.3
 POSITION_LOW = VREF * 0.33
 POSITION_MEDIUM = VREF * 0.66
@@ -92,6 +92,8 @@ def main():
             
             new_row = get_cell(vertical_position)
             new_col = get_cell(horizontal_position)
+            print("new_row: ", new_row)
+            print("new_col: ", new_col)
             # dead zone check
             if new_row == -1 or new_col == -1:
                 print("dead zone")
