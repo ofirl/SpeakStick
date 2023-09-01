@@ -105,7 +105,7 @@ def main():
                 cell_update_time = datetime.datetime.now()
             
             if wait_for_reset:
-                if current_col == "1" and current_row == "1":
+                if current_col == 1 and current_row == 1:
                     print("reset")
                     wait_for_reset = False
 
