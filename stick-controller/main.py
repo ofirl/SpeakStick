@@ -79,7 +79,7 @@ def main():
 
     print("Starting loop")
     play_audio(STARTUP_SOUND)
-
+# loop hangs.....
     try:
         while True:
             time.sleep(float(configs["SLEEP_DURATION_S"]))
@@ -90,6 +90,7 @@ def main():
             new_col = get_cell(horizontal_position)
             # dead zone check
             if new_row == -1 or new_col == -1:
+                print("dead zone")
                 continue
             
             if new_row != current_row or new_col != current_col:
@@ -99,6 +100,7 @@ def main():
             
             if wait_for_reset:
                 if current_col == "1" and current_row == "1":
+                    print("reset")
                     wait_for_reset = False
 
                 continue
