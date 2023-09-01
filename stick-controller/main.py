@@ -45,6 +45,7 @@ POSITION_LOW = VREF * 0.33
 POSITION_MEDIUM = VREF * 0.66
 GRID_DEAD_ZONE = VREF * GRID_BORDER_SIZE / 2
 
+print("Grid configuration:")
 print("GRID_DEAD_ZONE: ", GRID_DEAD_ZONE)
 print("POSITION_LOW: ", POSITION_LOW)
 print("POSITION_MEDIUM: ", POSITION_MEDIUM)
@@ -87,11 +88,13 @@ def main():
     try:
         while True:
             time.sleep(float(configs["SLEEP_DURATION_S"]))
+
             horizontal_position = chan1.voltage
             vertical_position = chan0.voltage
             
             new_row = get_cell(vertical_position)
             new_col = get_cell(horizontal_position)
+
             # dead zone check
             if new_row == -1 or new_col == -1:
                 continue
@@ -112,13 +115,17 @@ def main():
                 print("word positions:")
                 print("".join(recorded_cells))
 
+                # ignore the last position if it's 5
                 if recorded_cells[-1] == "5":
                     recorded_cells = recorded_cells[:-1]
 
+                # get file to play
                 route_filename = get_word_by_position("".join(recorded_cells))
                 if route_filename != None:
                     print("Playing audio:", route_filename)
                     play_audio(WORDS_SOUND_FILES_DIR + route_filename)
+
+                # reset state
                 recorded_cells = []
                 wait_for_reset = True
 
@@ -126,7 +133,7 @@ def main():
 
             # record cell change
             if datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["CELL_CHANGE_DELAY_S"])) or (
-                # 5 is a special case, we want to be able to go over it quickly
+                # 5 is a special case, we want to be able to go over it quickly so it has it's own delay
                 datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["MIDDLE_CELL_CHANGE_DELAY_S"]))
                 and
                 GRID[current_row][current_col] == "5"
@@ -138,6 +145,7 @@ def main():
                 if len(recorded_cells) > 0 and GRID[current_row][current_col] == recorded_cells[-1]:
                     continue
 
+                # cell changed
                 recorded_cells.append(GRID[current_row][current_col])
                 cell_update_time = datetime.datetime.now()
                 print("record new position:")

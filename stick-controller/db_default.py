@@ -6,7 +6,7 @@ defaultConfigs = [
     {
         "key": "SLEEP_DURATION_S",
         "value": "0.1",
-        "description": "Interval to poll the stick position"
+        "description": "Interval to poll the stick position, Recommended to be half the cell change delay (the lower of the 2)"
     },
     {
         "key": "CELL_CHANGE_DELAY_S",
