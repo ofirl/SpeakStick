@@ -2,10 +2,13 @@ import os
 import sqlite3
 
 from consts import db_file, words_directory
+from system import restartStickController
+
 print("db file:", db_file)
 
 def get_configs():
     configs = []
+    connection = None
 
     try:
         # Connect to the SQLite database
@@ -42,6 +45,7 @@ def get_configs():
 
 def get_positions():
     words = {}
+    connection = None
 
     try:
         # Connect to the SQLite database
@@ -75,6 +79,7 @@ def get_positions():
 
 def update_config(key, value):
     output = True
+    connection = None
 
     try:
         # Connect to the SQLite database
@@ -95,6 +100,8 @@ def update_config(key, value):
             print("Error: Updated ", affected_rows, " rows. Expected 1.")
             output = False
         
+        restartStickController()
+
     except sqlite3.Error as e:
         print("An error occurred:", e)
         
@@ -107,6 +114,7 @@ def update_config(key, value):
 
 def update_position(position, new_word):
     output = True
+    connection = None
 
     try:
         # Connect to the SQLite database
@@ -147,6 +155,7 @@ def update_position(position, new_word):
 
 def delete_position(position):
     output = True
+    connection = None
 
     try:
         # Connect to the SQLite database
@@ -178,8 +187,8 @@ def delete_position(position):
     return output
 
 def delete_position_for_word(word):
-    print("word:", word)
     output = True
+    connection = None
 
     try:
         # Connect to the SQLite database

@@ -130,28 +130,6 @@ class RequestHandler(BaseHTTPRequestHandler):
             response = f"File '{file_name}' uploaded successfully"
             self.wfile.write(response.encode())
         
-
-        # elif self.path == BASE_ROUTE + "/word":
-        #     content_length = int(self.headers['Content-Length'])
-        #     uploaded_file = self.rfile.read(content_length)
-
-        #     filename = self.headers.get('filename', '')
-        #     if filename == "":
-        #         self.send_response(400)
-        #         self.send_header("Content-type", "text/plain")
-        #         self.end_headers()
-        #         self.wfile.write(b"Mssing 'filename' header")
-
-        #     filepath = os.path.join(words_directory, filename)
-
-        #     with open(filepath, 'wb') as f:
-        #         f.write(uploaded_file)
-
-        #     self.send_response(200)
-        #     self.send_header("Content-type", "text/plain")
-        #     self.end_headers()
-        #     self.wfile.write(b"File uploaded successfully.")
-        
         else:
             self.send_response(404)
             self.send_header("Content-type", "text/html")
@@ -173,7 +151,12 @@ class RequestHandler(BaseHTTPRequestHandler):
         if self.path.startswith(BASE_ROUTE + "/word"):
             query_parameters = parse_qs(self.path.split('?')[1])
             word = query_parameters.get('word')
-            
+            if not word:
+                self.send_response(400)
+                self.end_headers()
+                self.wfile.write(b"400 Bad Request - word parameter expected")
+                return
+
             error = db.delete_word("".join(word))
             if error == None:
                 self.send_response(200)
