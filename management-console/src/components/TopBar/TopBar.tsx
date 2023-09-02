@@ -7,13 +7,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import UpgradeIcon from '@mui/icons-material/Upgrade';
 import { NavigationDrawer } from '../../components/NavigationDrawer/NavigationDrawer';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { useRestartStickController, useUpgradeApplication } from '../../api/system';
+import { useGetNetworkStatus, useRestartStickController, useUpgradeApplication } from '../../api/system';
 import { Tooltip } from '@mui/material';
 
 export const TopBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const { mutate: restartStickController } = useRestartStickController()
     const { mutate: upgradeApplication } = useUpgradeApplication()
+    const { data: networkStatus } = useGetNetworkStatus()
+    console.log(networkStatus)
 
     return <>
         <AppBar position="sticky">

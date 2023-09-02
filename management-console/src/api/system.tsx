@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { baseUrl } from "./consts";
 
@@ -24,4 +24,8 @@ export const useUpgradeApplication = () => {
             }
         }
     )
+};
+
+export const useGetNetworkStatus = () => {
+    return useQuery(['network', 'status'], () => axios.get(baseUrl + "/network/status").then(value => value.data as { ssid: string, strength: number }))
 };

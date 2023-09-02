@@ -43,6 +43,16 @@ routes = [
         "method": "GET",
         "handler": handlers.system_handlers.performUpgrade,
     },
+    {
+        "path": "/network/scan",
+        "method": "GET",
+        "handler": handlers.system_handlers.scanForNetworks,
+    },
+    {
+        "path": "/network/status",
+        "method": "GET",
+        "handler": handlers.system_handlers.getNetworkStatus,
+    },
     # POST --- POST --- POST --- POST --- POST --- POST --- POST --- POST ---
     {
         "path": "/config",
@@ -58,6 +68,11 @@ routes = [
         "path": "/word",
         "method": "POST",
         "handler": handlers.words_handlers.updateWord,
+    },
+    {
+        "path": "/network/update",
+        "method": "POST",
+        "handler": handlers.system_handlers.connectToNetwork,
     },
     # DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE ---
     {

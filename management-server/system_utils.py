@@ -81,7 +81,7 @@ def scan_wifi_networks():
 
     except subprocess.CalledProcessError as e:
         print(f"Error: {e}")
-        return []
+        return None
 
 def update_network_config(ssid, psk, key_mgmt=None):
     try:
@@ -144,3 +144,40 @@ def update_network_config(ssid, psk, key_mgmt=None):
     except Exception as e:
         print(f"Error: {e}")
         return False
+
+def get_wifi_connection_status(interface = "wlan0"):
+    try:
+        # Run the iwconfig command for the specified interface
+        output = subprocess.check_output(["iwconfig", interface], stderr=subprocess.STDOUT, text=True)
+
+        # Define regex patterns to extract SSID and Signal level information
+        essid_pattern = re.compile(r'ESSID:"(.*?)"')
+        signal_level_pattern = re.compile(r'Signal level=(-\d+) dBm')
+
+        # Search for ESSID and Signal level in the output
+        essid_match = essid_pattern.search(output)
+        signal_level_match = signal_level_pattern.search(output)
+
+        connection_status = {}
+
+        if essid_match:
+            connection_status["ssid"] = essid_match.group(1)
+        else:
+            return None
+
+        if signal_level_match:
+            # Extract the signal level in dBm and convert it to a strength value between 0 and 4
+            signal_level_dbm = int(signal_level_match.group(1))
+            # Calculate the signal strength value (assuming a reasonable dBm range)
+            signal_strength = min(max(4 + (signal_level_dbm + 60) // 10, 0), 4)
+        else:
+            # If no signal level information is found, assume no signal (0 strength)
+            signal_strength = 0
+
+        connection_status["signal_strength"] = signal_strength
+
+        return connection_status
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error: {e}")
+        return None
