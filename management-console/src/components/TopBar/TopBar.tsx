@@ -4,13 +4,15 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
+import UpgradeIcon from '@mui/icons-material/Upgrade';
 import { NavigationDrawer } from '../../components/NavigationDrawer/NavigationDrawer';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { useRestartStickController } from '../../api/system';
+import { useRestartStickController, useUpgradeApplication } from '../../api/system';
 
 export const TopBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const { mutate: restartStickController } = useRestartStickController()
+    const { mutate: upgradeApplication } = useUpgradeApplication()
 
     return <>
         <AppBar position="sticky">
@@ -33,6 +35,15 @@ export const TopBar = () => {
                 >
                     Speak Stick Management Console
                 </Typography>
+                <IconButton
+                    size="large"
+                    color="inherit"
+                    aria-label="restart"
+                    sx={{ mr: 2 }}
+                    onClick={() => upgradeApplication()}
+                >
+                    <UpgradeIcon />
+                </IconButton>
                 <IconButton
                     size="large"
                     color="inherit"

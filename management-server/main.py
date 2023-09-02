@@ -38,6 +38,11 @@ routes = [
         "method": "GET",
         "handler": handlers.system_handlers.restartStickController,
     },
+    {
+        "path": "/upgrade",
+        "method": "GET",
+        "handler": handlers.system_handlers.performUpgrade,
+    },
     # POST --- POST --- POST --- POST --- POST --- POST --- POST --- POST ---
     {
         "path": "/config",

@@ -14,3 +14,14 @@ export const useRestartStickController = () => {
         }
     )
 };
+
+export const useUpgradeApplication = () => {
+    return useMutation(() =>
+        axios.get(baseUrl + "/api/upgrade").then(value => value.status === 200),
+        {
+            onSuccess: () => {
+                toast.success("Application is upgrading, this might take a few minutes")
+            }
+        }
+    )
+};
