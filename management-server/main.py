@@ -65,6 +65,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 print("calling a route handler")
                 routeHandler(self)
 
+        print("call end headers")
         self.end_headers()
 
     def do_POST(self):
