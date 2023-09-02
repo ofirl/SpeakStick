@@ -70,7 +70,7 @@ routes = [
 def getRouteHandler(self, method, startsWith = False):
     route = next((route for route in routes if route.get("method") == method and \
             ( \
-                (startsWith and self.path.startsWith(BASE_ROUTE + str(route.get("path")))) or \
+                (startsWith and self.path.startswith(BASE_ROUTE + str(route.get("path")))) or \
                 self.path == BASE_ROUTE + str(route.get("path")) \
             ) \
         ), None)
