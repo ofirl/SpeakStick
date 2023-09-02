@@ -5,7 +5,7 @@ from consts import db_file
 defaultConfigs = [
     {
         "key": "SLEEP_DURATION_S",
-        "value": "0.1",
+        "value": "0.05",
         "description": "Interval to poll the stick position, Recommended to be half the cell change delay (the lower of the 2)"
     },
     {
