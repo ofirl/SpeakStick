@@ -19,6 +19,9 @@ def runCommand(command):
 
     return return_code, output
 
+def restartNetworkServices():
+    return runCommand("sleep 3 && sudo systemctl restart dnsmasq hostapd dhcpcd &")
+
 def restartStickController():
     return runCommand("sudo systemctl restart speakstick")
 
@@ -152,7 +155,7 @@ def update_network_config(ssid, psk, key_mgmt=None):
         with open("/etc/wpa_supplicant/wpa_supplicant.conf", "w") as f:
             f.writelines(updated_lines)
 
-        runCommand("sleep 3 && sudo systemctl restart dnsmasq hostapd dhcpcd &")
+        restartNetworkServices()
 
         return True
 

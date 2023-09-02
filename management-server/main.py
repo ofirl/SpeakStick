@@ -1,9 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import os
 from urllib.parse import parse_qs
-import json
-
-import db_utils
 
 import response_utils
 import handlers.configs_handlers
@@ -11,7 +7,7 @@ import handlers.positions_handlers
 import handlers.words_handlers
 import handlers.system_handlers
 
-from consts import words_directory
+import system_utils
 
 port = 8090
 BASE_ROUTE = "/api"
@@ -138,6 +134,9 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 # Run the HTTP server
 def run():
+    system_utils.restartNetworkServices()
+    system_utils.runCommand("sleep 5")
+    
     server_address = ("", port)
     httpd = HTTPServer(server_address, RequestHandler)
     print("Starting server on port", port)
