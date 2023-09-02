@@ -187,7 +187,6 @@ def get_wifi_connection_status(interface = "wlan0"):
 
         connection_status["signal_strength"] = signal_strength
 
-        print(connection_status)
         return connection_status, None
 
     except subprocess.CalledProcessError as e:
