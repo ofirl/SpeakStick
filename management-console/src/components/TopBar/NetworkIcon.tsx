@@ -26,7 +26,7 @@ export const NetworkIcon = () => {
 
     const { data: networkStatus, isLoading: isLoadingStatus } = useGetNetworkStatus()
     const { data: networks, isFetching: isScanningNetworks } = useScanNetworks({
-        enabled: networksMenuOpen && selectedNetwork != null,
+        enabled: networksMenuOpen && selectedNetwork == null,
         refetchInterval: 5000
     })
 
