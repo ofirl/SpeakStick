@@ -2,8 +2,10 @@ import os
 
 import system_utils
 import response_utils
+import db_utils
 
 from consts import words_directory
+from urllib.parse import parse_qs
 
 def getWords(self):
     positions = system_utils.getWordFiles()
@@ -24,3 +26,17 @@ def updateWord(self, post_data):
         f.write(post_data)
 
     response_utils.okWithText(self, f"File '{file_name}' uploaded successfully" )
+
+def deleteWord(self):
+    query_parameters = parse_qs(self.path.split('?')[1])
+    word = query_parameters.get('word')
+    if not word:
+        response_utils.BadRequest(self, "Missing required parameter: 'word'")
+        return
+
+    error = db_utils.delete_word("".join(word))
+    if error == None:
+        response_utils.okResponse(self)
+    else:
+        print(error.__str__().encode())
+        response_utils.InternalServerError(self, "Error deleting word")

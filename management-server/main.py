@@ -54,7 +54,31 @@ routes = [
         "method": "POST",
         "handler": handlers.words_handlers.updateWord,
     },
+    # DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE ---
+    {
+        "path": "/position",
+        "method": "DELETE",
+        "handler": handlers.positions_handlers.deletePosition,
+    },
+    {
+        "path": "/word",
+        "method": "DELETE",
+        "handler": handlers.words_handlers.deleteWord,
+    },
 ]
+
+def getRouteHandler(self, method):
+    route = next((route for route in routes if route.get("method") == method and self.path == BASE_ROUTE + str(route.get("path"))), None)
+    if route == None:
+        response_utils.NotFound(self)
+    else:
+        routeHandler = route.get("handler")
+        if routeHandler == None:
+            response_utils.NotFound(self)
+        else:
+            return routeHandler
+        
+    return None
 
 # Define the HTTP request handler class
 class RequestHandler(BaseHTTPRequestHandler):
@@ -71,66 +95,21 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        route = next((route for route in routes if route.get("method") == "GET" and self.path == BASE_ROUTE + str(route.get("path"))), None)
-        if route == None:
-            response_utils.NotFound(self)
-        else:
-            routeHandler = route.get("handler")
-            if routeHandler == None:
-                response_utils.NotFound(self)
-            else:
-                print("calling a route handler")
-                routeHandler(self)
+        routeHandler = getRouteHandler(self, "GET")
+        if routeHandler != None:
+            routeHandler(self)
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        
-        route = next((route for route in routes if route.get("method") == "POST" and self.path == BASE_ROUTE + str(route.get("path"))), None)
-        if route == None:
-            response_utils.NotFound(self)
-        else:
-            routeHandler = route.get("handler")
-            if routeHandler == None:
-                response_utils.NotFound(self)
-            else:
-                print("calling a route handler")
-                routeHandler(self, post_data)
+        routeHandler = getRouteHandler(self, "POST")
+        if routeHandler != None:
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            routeHandler(self, post_data)
 
     def do_DELETE(self):
-        if self.path.startswith(BASE_ROUTE + "/position"):
-            query_parameters = parse_qs(self.path.split('?')[1])
-            position = query_parameters.get('position')
-            
-            success = db_utils.delete_position(position)
-            if success:
-                self.send_response(200)
-            else:
-                self.send_response(500)
-            self.end_headers()
-        
-        if self.path.startswith(BASE_ROUTE + "/word"):
-            query_parameters = parse_qs(self.path.split('?')[1])
-            word = query_parameters.get('word')
-            if not word:
-                self.send_response(400)
-                self.end_headers()
-                self.wfile.write(b"400 Bad Request - word parameter expected")
-                return
-
-            error = db_utils.delete_word("".join(word))
-            if error == None:
-                self.send_response(200)
-            else:
-                self.send_response(500)
-                self.wfile.write(error.__str__().encode())
-            self.end_headers()
-        
-        else:
-            self.send_response(404)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            self.wfile.write(b"404 Not Found")
+        routeHandler = getRouteHandler(self, "DELETE")
+        if routeHandler != None:
+            routeHandler(self)
 
 # Run the HTTP server
 def run():
