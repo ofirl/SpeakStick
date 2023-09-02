@@ -37,8 +37,8 @@ def connectToNetwork(self, post_data):
         response_utils.InternalServerError(self, "Error updating network configuration")
 
 def getNetworkStatus(self):
-    status = system_utils.get_wifi_connection_status()
-    if status == None:
+    status, error = system_utils.get_wifi_connection_status()
+    if error == None:
         response_utils.InternalServerError(self, "Error getting network connection status")
     else:
         response_utils.okWithData(self, status)

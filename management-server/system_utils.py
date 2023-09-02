@@ -32,6 +32,9 @@ def getWordFiles():
             file_names.append(filename)
     return file_names
 
+def signalStrengthToNumber(strength: int):
+    return min(max(4 + (strength + 60) // 10, 0), 4)
+
 # network names and pass keys are saved in "/etc/wpa_supplicant/wpa_supplicant.conf"
 def scan_wifi_networks():
     try:
@@ -44,6 +47,7 @@ def scan_wifi_networks():
         # Define regex patterns to extract SSID and encryption info
         ssid_pattern = re.compile(r'ESSID:"(.*)"')
         encryption_pattern = re.compile(r'Encryption key:(on|off)')
+        signal_level_pattern = re.compile(r'Signal level=(-\d+) dBm')
         wpa2_pattern = re.compile(r'IE: IEEE 802.11i/WPA2')
         wpa3_pattern = re.compile(r'IE: IEEE 802.11i/WPA3')
 
@@ -55,6 +59,7 @@ def scan_wifi_networks():
             network_info = {}
             ssid_match = ssid_pattern.search(section)
             encryption_match = encryption_pattern.search(section)
+            signal_match = signal_level_pattern.search(section)
             wpa2_match = wpa2_pattern.search(section)
             wpa3_match = wpa3_pattern.search(section)
 
@@ -67,6 +72,12 @@ def scan_wifi_networks():
                 network_info["secured"] = (encryption_match.group(1) == "on")
             else:
                 network_info["secured"] = False
+
+            if signal_match:
+                signal_level_dbm = int(signal_match.group(1))
+                network_info["signal_strength"] = signalStrengthToNumber(signal_level_dbm)
+            else:
+                network_info["signal_strength"] = 0
 
             if wpa2_match:
                 network_info["key_mgmt"] = "WPA2"
@@ -163,21 +174,21 @@ def get_wifi_connection_status(interface = "wlan0"):
         if essid_match:
             connection_status["ssid"] = essid_match.group(1)
         else:
-            return None
+            return None, None
 
         if signal_level_match:
             # Extract the signal level in dBm and convert it to a strength value between 0 and 4
             signal_level_dbm = int(signal_level_match.group(1))
             # Calculate the signal strength value (assuming a reasonable dBm range)
-            signal_strength = min(max(4 + (signal_level_dbm + 60) // 10, 0), 4)
+            signal_strength = signalStrengthToNumber(signal_level_dbm)
         else:
             # If no signal level information is found, assume no signal (0 strength)
             signal_strength = 0
 
         connection_status["signal_strength"] = signal_strength
 
-        return connection_status
+        return connection_status, None
 
     except subprocess.CalledProcessError as e:
         print(f"Error: {e}")
-        return None
+        return None, e

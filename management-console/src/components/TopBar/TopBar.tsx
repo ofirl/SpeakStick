@@ -7,15 +7,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import UpgradeIcon from '@mui/icons-material/Upgrade';
 import { NavigationDrawer } from '../../components/NavigationDrawer/NavigationDrawer';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { useGetNetworkStatus, useRestartStickController, useUpgradeApplication } from '../../api/system';
+import { useRestartStickController, useUpgradeApplication } from '../../api/system';
 import { Tooltip } from '@mui/material';
+import { NetworkIcon } from './NetworkIcon';
 
 export const TopBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const { mutate: restartStickController } = useRestartStickController()
     const { mutate: upgradeApplication } = useUpgradeApplication()
-    const { data: networkStatus } = useGetNetworkStatus()
-    console.log(networkStatus)
 
     return <>
         <AppBar position="sticky">
@@ -38,6 +37,7 @@ export const TopBar = () => {
                 >
                     Speak Stick Management Console
                 </Typography>
+                <NetworkIcon />
                 <Tooltip title="Upgrade application">
                     <IconButton
                         size="large"
