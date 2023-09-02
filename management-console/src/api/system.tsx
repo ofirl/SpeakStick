@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { baseUrl } from "./consts";
 
@@ -30,6 +30,11 @@ export const useGetNetworkStatus = () => {
     return useQuery(['network', 'status'], () => axios.get(baseUrl + "/network/status").then(value => value.data as { ssid: string, signal_strength: number }))
 };
 
-export const useScanNetworks = () => {
-    return useQuery(['network', 'scan'], () => axios.get(baseUrl + "/network/scan").then(value => value.data as { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string }[]))
+type NetowrkScanResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string }[];
+export const useScanNetworks = (options: UseQueryOptions<NetowrkScanResult, unknown, NetowrkScanResult, string[]> = {}) => {
+    return useQuery(
+        ['network', 'scan'],
+        () => axios.get(baseUrl + "/network/scan").then(value => value.data as { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string }[]),
+        options
+    )
 };
