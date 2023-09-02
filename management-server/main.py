@@ -134,7 +134,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 # Run the HTTP server
 def run():
-    system_utils.runCommand("sleep 10")
+    system_utils.runCommand("sleep 30")
     system_utils.restartNetworkServices()
     system_utils.runCommand("sleep 10")
 
