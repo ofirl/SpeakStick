@@ -27,7 +27,13 @@ export const useUpgradeApplication = () => {
 };
 
 export const useGetNetworkStatus = () => {
-    return useQuery(['network', 'status'], () => axios.get(baseUrl + "/network/status").then(value => value.data as { ssid: string, signal_strength: number }))
+    return useQuery(
+        ['network', 'status'],
+        () => axios.get(baseUrl + "/network/status").then(value => value.data as { ssid: string, signal_strength: number }),
+        {
+            staleTime: 10000
+        }
+    )
 };
 
 export type NetowrkScanResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string };

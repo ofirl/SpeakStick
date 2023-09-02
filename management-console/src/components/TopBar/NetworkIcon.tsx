@@ -24,7 +24,7 @@ export const NetworkIcon = () => {
     const passKeyInputRef = useRef<HTMLInputElement>()
     const { mutateAsync: updateNetworkConfiguration, isLoading: isConnectingToNetwork } = useUpdateNetworkConfiguration()
 
-    const { data: networkStatus } = useGetNetworkStatus()
+    const { data: networkStatus, isLoading: isLoadingStatus } = useGetNetworkStatus()
     const { data: networks, isFetching: isScanningNetworks } = useScanNetworks({
         enabled: networksMenuOpen && selectedNetwork != null,
         refetchInterval: 5000
@@ -50,7 +50,7 @@ export const NetworkIcon = () => {
                     onClick={() => setNetworksMenuOpen(prev => !prev)}
                     ref={menuAnchorElement}
                 >
-                    <SignalIcon />
+                    {isLoadingStatus ? <CircularProgress /> : <SignalIcon />}
                 </IconButton>
             </Tooltip>
             <Menu
