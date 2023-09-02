@@ -66,7 +66,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 routeHandler(self)
 
         print("end")
-        self.end_headers()
+        # self.end_headers()
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
