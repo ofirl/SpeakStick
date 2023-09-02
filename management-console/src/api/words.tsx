@@ -5,14 +5,14 @@ import { baseUrl } from "./consts";
 import { toast } from "react-toastify";
 
 export const useGetWords = () => {
-    return useQuery(['words'], () => axios.get(baseUrl + "/api/words").then(value => value.data as string[]))
+    return useQuery(['words'], () => axios.get(baseUrl + "/words").then(value => value.data as string[]))
 };
 
 type DeleteWordParams = { word: string };
 export const useDeleteWord = () => {
     const queryClient = useQueryClient();
     return useMutation((params: DeleteWordParams) =>
-        axios.delete(baseUrl + "/api/word", { params }).then(value => value.status === 200),
+        axios.delete(baseUrl + "/word", { params }).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["words"]);
@@ -29,7 +29,7 @@ type UploadWordParams = { file: File, fileName: string };
 export const useUploadWord = () => {
     const queryClient = useQueryClient();
     return useMutation(({ file, fileName }: UploadWordParams) =>
-        axios.post(baseUrl + "/api/word", file, {
+        axios.post(baseUrl + "/word", file, {
             headers: {
                 filename: fileName
             }

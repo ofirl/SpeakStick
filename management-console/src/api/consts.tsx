@@ -1,1 +1,1 @@
-export const baseUrl = "http://speakstick.local"
+export const baseUrl = "http://speakstick.local/api"

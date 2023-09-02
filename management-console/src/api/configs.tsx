@@ -11,14 +11,14 @@ type Config = {
 }
 
 export const useGetConfigs = () => {
-    return useQuery(['configs'], () => axios.get(baseUrl + "/api/configs").then(value => value.data as Config[]))
+    return useQuery(['configs'], () => axios.get(baseUrl + "/configs").then(value => value.data as Config[]))
 };
 
 type updateConfigParams = { key: string, value: string };
 export const useUpdateConfig = () => {
     const queryClient = useQueryClient();
     return useMutation((params: updateConfigParams) =>
-        axios.post(baseUrl + "/api/config", params).then(value => value.status === 200),
+        axios.post(baseUrl + "/config", params).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["configs"]);

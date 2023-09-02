@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 export const useRestartStickController = () => {
     return useMutation(() =>
-        axios.get(baseUrl + "/api/restart/stick-controller").then(value => value.status === 200),
+        axios.get(baseUrl + "/restart/stick-controller").then(value => value.status === 200),
         {
             onSuccess: () => {
                 toast.success("Stick controller restarted")
@@ -17,7 +17,7 @@ export const useRestartStickController = () => {
 
 export const useUpgradeApplication = () => {
     return useMutation(() =>
-        axios.get(baseUrl + "/api/upgrade").then(value => value.status === 200),
+        axios.get(baseUrl + "/upgrade").then(value => value.status === 200),
         {
             onSuccess: () => {
                 toast.success("Application is upgrading, this might take a few minutes")
