@@ -30,11 +30,29 @@ export const useGetNetworkStatus = () => {
     return useQuery(['network', 'status'], () => axios.get(baseUrl + "/network/status").then(value => value.data as { ssid: string, signal_strength: number }))
 };
 
-type NetowrkScanResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string }[];
-export const useScanNetworks = (options: UseQueryOptions<NetowrkScanResult, unknown, NetowrkScanResult, string[]> = {}) => {
+export type NetowrkScanResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string };
+export const useScanNetworks = (options: UseQueryOptions<NetowrkScanResult[], unknown, NetowrkScanResult[], string[]> = {}) => {
     return useQuery(
         ['network', 'scan'],
         () => axios.get(baseUrl + "/network/scan").then(value => value.data as { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string }[]),
         options
+    )
+};
+
+type NetworkConfiguration = {
+    ssid: string,
+    psk?: string,
+    key_mgmt: string
+}
+export const useUpdateNetworkConfiguration = () => {
+    return useMutation(({ ssid, psk, key_mgmt }: NetworkConfiguration) =>
+        axios.post(baseUrl + "/network/update", {
+            ssid, psk, key_mgmt
+        }).then(value => value.status === 200),
+        {
+            onSuccess: () => {
+                toast.success("Network configuration updated")
+            }
+        }
     )
 };
