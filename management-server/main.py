@@ -115,40 +115,6 @@ class RequestHandler(BaseHTTPRequestHandler):
         routeHandler = getRouteHandler(self, "DELETE", True)
         if routeHandler != None:
             routeHandler(self)
-            
-        # if self.path.startswith(BASE_ROUTE + "/position"):
-        #     query_parameters = parse_qs(self.path.split('?')[1])
-        #     position = query_parameters.get('position')
-            
-        #     success = db_utils.delete_position(position)
-        #     if success:
-        #         self.send_response(200)
-        #     else:
-        #         self.send_response(500)
-        #     self.end_headers()
-        
-        # if self.path.startswith(BASE_ROUTE + "/word"):
-        #     query_parameters = parse_qs(self.path.split('?')[1])
-        #     word = query_parameters.get('word')
-        #     if not word:
-        #         self.send_response(400)
-        #         self.end_headers()
-        #         self.wfile.write(b"400 Bad Request - word parameter expected")
-        #         return
-
-        #     error = db_utils.delete_word("".join(word))
-        #     if error == None:
-        #         self.send_response(200)
-        #     else:
-        #         self.send_response(500)
-        #         self.wfile.write(error.__str__().encode())
-        #     self.end_headers()
-        
-        # else:
-        #     self.send_response(404)
-        #     self.send_header("Content-type", "text/html")
-        #     self.end_headers()
-        #     self.wfile.write(b"404 Not Found")
 
 # Run the HTTP server
 def run():
