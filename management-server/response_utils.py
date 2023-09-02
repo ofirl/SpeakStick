@@ -5,11 +5,11 @@ def okResponse(self):
     self.send_header("Content-type", "application/json")
     self.end_headers()
 
-def writeJsonResponse(self, data):
+def okWithData(self, data):
     okResponse(self)
     self.wfile.write(json.dumps(data).encode())
 
-def writeTextResponse(self, data: str):
+def okWithText(self, data: str):
     okResponse(self)
     self.wfile.write(data.encode())
 
@@ -22,5 +22,11 @@ def InternalServerError(self, message: str = "500 internal server error"):
 def NotFound(self, message: str = "404 Not Found"):
     self.send_response(404)
     self.send_header("Content-type", "text/html")
+    self.end_headers()
+    self.wfile.write(message.encode())
+
+def BadRequest(self, message: str = "400 Bad Request"):
+    self.send_response(400)
+    self.send_header("Content-type", "text/plain")
     self.end_headers()
     self.wfile.write(message.encode())

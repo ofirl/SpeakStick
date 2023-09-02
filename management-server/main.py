@@ -17,6 +17,7 @@ port = 8090
 BASE_ROUTE = "/api"
 
 routes = [
+    # GET --- GET --- GET --- GET --- GET --- GET --- GET --- GET --- GET ---
     {
         "path": "/configs",
         "method": "GET",
@@ -36,6 +37,22 @@ routes = [
         "path": "/restart/stick-controller",
         "method": "GET",
         "handler": handlers.system_handlers.restartStickController,
+    },
+    # POST --- POST --- POST --- POST --- POST --- POST --- POST --- POST ---
+    {
+        "path": "/config",
+        "method": "POST",
+        "handler": handlers.configs_handlers.updateConfig,
+    },
+    {
+        "path": "/position",
+        "method": "POST",
+        "handler": handlers.positions_handlers.updatePosition,
+    },
+    {
+        "path": "/word",
+        "method": "POST",
+        "handler": handlers.words_handlers.updateWord,
     },
 ]
 
@@ -65,61 +82,20 @@ class RequestHandler(BaseHTTPRequestHandler):
                 print("calling a route handler")
                 routeHandler(self)
 
-        print("end")
-        # self.end_headers()
-
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
         
-        if self.path == BASE_ROUTE + "/config":
-            json_data = json.loads(post_data.decode('utf-8'))
-            key = json_data.get('key')
-            value = json_data.get('value')
-            success = db_utils.update_config(key, value)
-            if success:
-                self.send_response(200)
-            else:
-                self.send_response(500)
-            self.end_headers()
-            
-        elif self.path == BASE_ROUTE + "/position":
-            json_data = json.loads(post_data.decode('utf-8'))
-            position = json_data.get('position')
-            new_word = json_data.get('word')
-            success = db_utils.update_position(position, new_word)
-            if success:
-                self.send_response(200)
-            else:
-                self.send_response(500)
-            self.end_headers()
-
-        elif self.path == BASE_ROUTE + "/word":
-            # Read the uploaded file and save it
-            file_name = self.headers.get('filename', '')
-            if file_name == "":
-                self.send_response(400)
-                self.send_header("Content-type", "text/plain")
-                self.end_headers()
-                self.wfile.write(b"Mssing 'filename' header")
-                return
-
-            file_path = os.path.join(words_directory, file_name)
-
-            with open(file_path, 'wb') as f:
-                f.write(post_data)
-
-            self.send_response(200)  # OK
-            self.send_header("Content-type", "text/plain")
-            self.end_headers()
-            response = f"File '{file_name}' uploaded successfully"
-            self.wfile.write(response.encode())
-        
+        route = next((route for route in routes if route.get("method") == "POST" and self.path == BASE_ROUTE + str(route.get("path"))), None)
+        if route == None:
+            response_utils.NotFound(self)
         else:
-            self.send_response(404)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            self.wfile.write(b"404 Not Found")
+            routeHandler = route.get("handler")
+            if routeHandler == None:
+                response_utils.NotFound(self)
+            else:
+                print("calling a route handler")
+                routeHandler(self, post_data)
 
     def do_DELETE(self):
         if self.path.startswith(BASE_ROUTE + "/position"):
