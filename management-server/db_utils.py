@@ -2,7 +2,7 @@ import os
 import sqlite3
 
 from consts import db_file, words_directory
-from system import restartStickController
+from system_utils import restartStickController
 
 print("db file:", db_file)
 

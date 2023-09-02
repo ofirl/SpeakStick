@@ -3,8 +3,7 @@ import os
 from urllib.parse import parse_qs
 import json
 
-import db
-import system_utils
+import db_utils
 
 import response_utils
 import handlers.configs_handlers
@@ -75,7 +74,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             json_data = json.loads(post_data.decode('utf-8'))
             key = json_data.get('key')
             value = json_data.get('value')
-            success = db.update_config(key, value)
+            success = db_utils.update_config(key, value)
             if success:
                 self.send_response(200)
             else:
@@ -86,7 +85,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             json_data = json.loads(post_data.decode('utf-8'))
             position = json_data.get('position')
             new_word = json_data.get('word')
-            success = db.update_position(position, new_word)
+            success = db_utils.update_position(position, new_word)
             if success:
                 self.send_response(200)
             else:
@@ -125,7 +124,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             query_parameters = parse_qs(self.path.split('?')[1])
             position = query_parameters.get('position')
             
-            success = db.delete_position(position)
+            success = db_utils.delete_position(position)
             if success:
                 self.send_response(200)
             else:
@@ -141,7 +140,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(b"400 Bad Request - word parameter expected")
                 return
 
-            error = db.delete_word("".join(word))
+            error = db_utils.delete_word("".join(word))
             if error == None:
                 self.send_response(200)
             else:
