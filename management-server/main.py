@@ -62,6 +62,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             if routeHandler == None:
                 response_utils.NotFound(self)
             else:
+                print("calling a route handler")
                 routeHandler(self)
 
         self.end_headers()
