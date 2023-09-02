@@ -84,7 +84,7 @@ def main():
 
     print("Starting loop")
     play_audio(STARTUP_SOUND)
-# loop hangs.....
+
     try:
         while True:
             time.sleep(float(configs["SLEEP_DURATION_S"]))
@@ -104,8 +104,10 @@ def main():
                 current_col = new_col
                 cell_update_time = datetime.datetime.now()
             
+            current_cell = GRID[current_row][current_col]
+
             if wait_for_reset:
-                if GRID[current_row][current_col] == "5":
+                if current_cell == "5":
                     wait_for_reset = False
 
                 continue
@@ -136,17 +138,17 @@ def main():
                 # 5 is a special case, we want to be able to go over it quickly so it has it's own delay
                 datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["MIDDLE_CELL_CHANGE_DELAY_S"]))
                 and
-                GRID[current_row][current_col] == "5"
+                current_cell == "5"
             ):
                 # we are in the middle, our starting position
-                if len(recorded_cells) == 0 and GRID[current_row][current_col] == "5":
+                if len(recorded_cells) == 0 and current_cell == "5":
                     continue
                 # if nothing changed, don't do anything
-                if len(recorded_cells) > 0 and GRID[current_row][current_col] == recorded_cells[-1]:
+                if len(recorded_cells) > 0 and current_cell == recorded_cells[-1]:
                     continue
 
                 # cell changed
-                recorded_cells.append(GRID[current_row][current_col])
+                recorded_cells.append(current_cell)
                 cell_update_time = datetime.datetime.now()
                 print("record new position:")
                 print(recorded_cells)
