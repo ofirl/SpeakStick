@@ -8,6 +8,7 @@ import UpgradeIcon from '@mui/icons-material/Upgrade';
 import { NavigationDrawer } from '../../components/NavigationDrawer/NavigationDrawer';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { useRestartStickController, useUpgradeApplication } from '../../api/system';
+import { Tooltip } from '@mui/material';
 
 export const TopBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
@@ -35,24 +36,28 @@ export const TopBar = () => {
                 >
                     Speak Stick Management Console
                 </Typography>
-                <IconButton
-                    size="large"
-                    color="inherit"
-                    aria-label="restart"
-                    sx={{ mr: 2 }}
-                    onClick={() => upgradeApplication()}
-                >
-                    <UpgradeIcon />
-                </IconButton>
-                <IconButton
-                    size="large"
-                    color="inherit"
-                    aria-label="restart"
-                    sx={{ mr: 2 }}
-                    onClick={() => restartStickController()}
-                >
-                    <RestartAltIcon />
-                </IconButton>
+                <Tooltip title="Upgrade application">
+                    <IconButton
+                        size="large"
+                        color="inherit"
+                        aria-label="restart"
+                        sx={{ mr: 2 }}
+                        onClick={() => upgradeApplication()}
+                    >
+                        <UpgradeIcon />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Restart stick controller">
+                    <IconButton
+                        size="large"
+                        color="inherit"
+                        aria-label="restart"
+                        sx={{ mr: 2 }}
+                        onClick={() => restartStickController()}
+                    >
+                        <RestartAltIcon />
+                    </IconButton>
+                </Tooltip>
             </Toolbar>
         </AppBar>
         <NavigationDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
