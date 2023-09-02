@@ -128,7 +128,8 @@ def update_network_config(ssid, psk, key_mgmt=None):
                             updated_lines.append(f'    ssid="{ssid}"\n')
                             updated_lines.append(f'    psk="{psk}"\n')
                             if key_mgmt:
-                                updated_lines.append(f'    key_mgmt={key_mgmt}\n')
+                                if key_mgmt.startswith("WPA"):
+                                    updated_lines.append(f'    key_mgmt=WPA-PSK\n')
                             updated_lines.append('}\n')
                         else:
                             updated_lines.append(network_config + "\n")
@@ -143,7 +144,7 @@ def update_network_config(ssid, psk, key_mgmt=None):
             updated_lines.append(f'    ssid="{ssid}"\n')
             updated_lines.append(f'    psk="{psk}"\n')
             if key_mgmt:
-                if key_mgmt.startswith("WPA2"):
+                if key_mgmt.startswith("WPA"):
                     updated_lines.append(f'    key_mgmt=WPA-PSK\n')
             updated_lines.append('}\n')
 
