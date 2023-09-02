@@ -26,7 +26,7 @@ export const NetworkIcon = () => {
 
     const { data: networkStatus } = useGetNetworkStatus()
     const { data: networks, isFetching: isScanningNetworks } = useScanNetworks({
-        enabled: networksMenuOpen,
+        enabled: networksMenuOpen && selectedNetwork != null,
         refetchInterval: 5000
     })
 
@@ -35,6 +35,7 @@ export const NetworkIcon = () => {
     const connectToNetwork = (ssid: string, key_mgmt: string, psk?: string) => {
         updateNetworkConfiguration({ ssid, psk, key_mgmt }).then(() => {
             setSelectedNetwork(undefined)
+            setNetworksMenuOpen(false)
         })
     }
 
