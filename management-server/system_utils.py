@@ -151,7 +151,7 @@ def update_network_config(ssid, psk, key_mgmt=None):
         with open("/etc/wpa_supplicant/wpa_supplicant.conf", "w") as f:
             f.writelines(updated_lines)
 
-        code, _ = runCommand("sudo systemctl restart dnsmasq hostapd dhcpcd")
+        code, _ = runCommand("sleep 2 && sudo systemctl restart dnsmasq hostapd dhcpcd")
         if code != 0:
             return False
 
