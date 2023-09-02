@@ -80,7 +80,10 @@ export const NetworkIcon = () => {
                     const signalIconSet = network.secured ? wifiLockedSignalIcons : wifiSignalIcons
                     const SignalIcon = signalIconSet[network.signal_strength]
                     return (
-                        <MenuItem onClick={() => network.secured ? setSelectedNetwork(network) : updateNetworkConfiguration({ ssid: network.ssid, key_mgmt: network.key_mgmt })}>
+                        <MenuItem
+                            selected={network.ssid === networkStatus?.ssid}
+                            onClick={() => network.secured ? setSelectedNetwork(network) : updateNetworkConfiguration({ ssid: network.ssid, key_mgmt: network.key_mgmt })}
+                        >
                             <ListItemIcon>
                                 <SignalIcon fontSize="small" />
                             </ListItemIcon>
