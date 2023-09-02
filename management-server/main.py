@@ -4,12 +4,41 @@ from urllib.parse import parse_qs
 import json
 
 import db
-import system
+import system_utils
+
+import response_utils
+import handlers.configs_handlers
+import handlers.positions_handlers
+import handlers.words_handlers
+import handlers.system_handlers
 
 from consts import words_directory
 
 port = 8090
 BASE_ROUTE = "/api"
+
+routes = [
+    {
+        "path": "/configs",
+        "method": "GET",
+        "handler": handlers.configs_handlers.getConfigs,
+    },
+    {
+        "path": "/positions",
+        "method": "GET",
+        "handler": handlers.positions_handlers.getPositions,
+    },
+    {
+        "path": "/words",
+        "method": "GET",
+        "handler": handlers.words_handlers.getWords,
+    },
+    {
+        "path": "/restart/stick-controller",
+        "method": "GET",
+        "handler": handlers.system_handlers.restartStickController,
+    },
+]
 
 # Define the HTTP request handler class
 class RequestHandler(BaseHTTPRequestHandler):
@@ -26,62 +55,17 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        if self.path == BASE_ROUTE + "/configs":
-            configs = db.get_configs()
-            if configs:
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps(configs).encode())
-            else:
-                self.send_response(500)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                self.wfile.write(b"500 internal server error")
-            
-        elif self.path == BASE_ROUTE + "/positions":
-            files = db.get_positions()
-            if files:
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps(files).encode())
-            else:
-                self.send_response(500)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                self.wfile.write(b"500 internal server error")
-        
-        elif self.path == BASE_ROUTE + "/words":
-            files = system.getWordFiles()
-            if files:
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps(files).encode())
-            else:
-                self.send_response(500)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                self.wfile.write(b"500 internal server error")
-
-        elif self.path == BASE_ROUTE + "/restart/stick-controller":
-            return_code, _ = system.restartStickController()
-            if return_code == 0:
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
-            else:
-                self.send_response(500)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                self.wfile.write(b"500 internal server error")
-            
+        route = next((route for route in routes if route.get("method") == "GET" and self.path == BASE_ROUTE + str(route.get("path"))), None)
+        if route == None:
+            response_utils.NotFound(self)
         else:
-            self.send_response(404)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            self.wfile.write(b"404 Not Found")
+            routeHandler = route.get("handler")
+            if routeHandler == None:
+                response_utils.NotFound(self)
+            else:
+                routeHandler(self)
+
+        self.end_headers()
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
