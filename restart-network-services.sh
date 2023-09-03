@@ -1,4 +1,7 @@
 #! /bin/bash
 
-sleep 30
+sleep 10
+sudo systemctl restart hostapd dhcpcd dnsmasq
+
+sleep 10
 sudo systemctl restart hostapd dhcpcd dnsmasq
