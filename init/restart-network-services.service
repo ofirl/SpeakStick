@@ -1,0 +1,11 @@
+ [Unit]
+ Description=Restart network services after boot
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ ExecStart=/opt/SpeakStick/restart-network-services.sh
+ Restart=no
+
+ [Install]
+ WantedBy=multi-user.target

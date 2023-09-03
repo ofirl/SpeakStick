@@ -30,14 +30,19 @@ sudo cp ~/speakstick-upgrade-cron /etc/cron.d/speakstick
 
 # Services --- Services --- Services --- Services --- Services --- Services --- Services --- Services ---
 # SpeakStick service
-cp ./speakstick.service /usr/lib/systemd/system/speakstick.service
+cp ./init/speakstick.service /usr/lib/systemd/system/speakstick.service
 sudo systemctl daemon-reload
 sudo systemctl enable speakstick
 
 # SpeakStick management server service
-cp ./speakstick-management-server.service /usr/lib/systemd/system/speakstick-management-server.service
+cp ./init/speakstick-management-server.service /usr/lib/systemd/system/speakstick-management-server.service
 sudo systemctl daemon-reload
 sudo systemctl enable speakstick-management-server
+
+# Network services
+cp ./init/restart-network-services.service /usr/lib/systemd/system/restart-network-services.service
+sudo systemctl daemon-reload
+sudo systemctl enable restart-network-services
 
 # First Build --- First Build --- First Build --- First Build --- First Build --- First Build --- First Build ---
 # run an upgrade in order to build everything for the first time
