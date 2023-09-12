@@ -19,6 +19,31 @@ def runCommand(command):
 
     return return_code, output
 
+def runCommandBackground(command):
+    try:
+        # Use subprocess.Popen to run the command in the background
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # Optionally, you can capture the process ID (PID) if you need it
+        pid = process.pid
+
+        # Print the PID and command
+        print(f"Command '{command}' started in the background with PID: {pid}")
+
+        return process
+
+        # You can wait for the command to complete (optional)
+        # process.wait()
+
+        # you can capture and print the command's output
+        # stdout, stderr = process.communicate()
+        # print(f"Command output:\n{stdout.decode('utf-8')}")
+
+    except Exception as e:
+        print(f"Error running command '{command}': {str(e)}")
+        return None
+
+
 def restartNetworkServices():
     return runCommand("sleep 3 && sudo systemctl restart dnsmasq hostapd dhcpcd &")
 
@@ -26,7 +51,7 @@ def restartStickController():
     return runCommand("sudo systemctl restart speakstick")
 
 def runUpgrade():
-    return runCommand("/opt/SpeakStick/upgrade-script.sh")
+    return runCommandBackground("/opt/SpeakStick/upgrade-script.sh")
 
 def getWordFiles():
     file_names = []
