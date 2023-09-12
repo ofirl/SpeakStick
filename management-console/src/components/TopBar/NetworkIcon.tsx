@@ -50,7 +50,7 @@ export const NetworkIcon = () => {
                     onClick={() => setNetworksMenuOpen(prev => !prev)}
                     ref={menuAnchorElement}
                 >
-                    {isLoadingStatus ? <CircularProgress /> : <SignalIcon />}
+                    {isLoadingStatus ? <CircularProgress style={{ color: "white" }} size="25px" /> : <SignalIcon />}
                 </IconButton>
             </Tooltip>
             <Menu

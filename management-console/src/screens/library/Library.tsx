@@ -29,69 +29,67 @@ export const Library = () => {
     const { mutateAsync: deletePosition, isLoading: isDeleting } = useDeletePosition();
 
     return (
-        <div style={{ display: "flex", justifyContent: "center", paddingTop: "2rem" }}>
-            <div style={{ width: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column" }}>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                    <Autocomplete
-                        style={{ flexGrow: "1" }}
-                        freeSolo
-                        options={Array.from(new Set([...Object.keys(positions), ...Object.values(positions)]))}
-                        renderInput={(params) => <TextField {...params} label="Filter" />}
-                        onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
-                    />
-                    <AddWordModal />
-                </div>
-                <TableContainer component={Paper}>
-                    <Table aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell width={"45%"}> Positions </TableCell>
-                                <TableCell width={"45%"}> Word </TableCell>
-                                <TableCell />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {isLoading ?
-                                [1, 2].map(i => (
+        <div style={{ maxWidth: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+                <Autocomplete
+                    style={{ flexGrow: "1" }}
+                    freeSolo
+                    options={Array.from(new Set([...Object.keys(positions), ...Object.values(positions)]))}
+                    renderInput={(params) => <TextField {...params} label="Filter" />}
+                    onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
+                />
+                <AddWordModal />
+            </div>
+            <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={(theme) => ({ width: window.innerWidth < theme.breakpoints.values.sm ? "4rem" : "6rem", background: "white" })}> Positions </TableCell>
+                            <TableCell sx={{ background: "white" }}> Word </TableCell>
+                            <TableCell sx={{ width: "3rem", background: "white" }} />
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {isLoading ?
+                            [1, 2].map(i => (
+                                <TableRow
+                                    key={"row" + i}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell colSpan={3} component="th" scope="row">
+                                        <Skeleton variant="rounded" height={"2rem"} />
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                            :
+                            Object.entries(positions).filter(([positions, word]) =>
+                                positions.toLowerCase().includes(filter) ||
+                                word.toLowerCase().includes(filter))
+                                .map(([positions, word]) => (
                                     <TableRow
-                                        key={"row" + i}
+                                        key={positions}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell colSpan={3} component="th" scope="row">
-                                            <Skeleton variant="rounded" height={"2rem"} />
+                                        <TableCell component="th" scope="row"> {positions} </TableCell>
+                                        <TableCell> {word} </TableCell>
+                                        <TableCell>
+                                            <IconButton
+                                                disabled={isDeleting}
+                                                size="large"
+                                                color="inherit"
+                                                aria-label="delete word"
+                                                onClick={() => deletePosition({ position: positions })}
+                                            >
+                                                {isDeleting ? <CircularProgress /> : <DeleteIcon />}
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))
-                                :
-                                Object.entries(positions).filter(([positions, word]) =>
-                                    positions.toLowerCase().includes(filter) ||
-                                    word.toLowerCase().includes(filter))
-                                    .map(([positions, word]) => (
-                                        <TableRow
-                                            key={positions}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell component="th" scope="row"> {positions} </TableCell>
-                                            <TableCell> {word} </TableCell>
-                                            <TableCell>
-                                                <IconButton
-                                                    disabled={isDeleting}
-                                                    size="large"
-                                                    color="inherit"
-                                                    aria-label="delete word"
-                                                    onClick={() => deletePosition({ position: positions })}
-                                                >
-                                                    {isDeleting ? <CircularProgress /> : <DeleteIcon />}
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                            }
-                        </TableBody>
-                    </Table>
+                        }
+                    </TableBody>
+                </Table>
 
-                </TableContainer>
-            </div>
+            </TableContainer>
         </div>
     )
 };

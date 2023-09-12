@@ -17,7 +17,7 @@ export const TopBar = () => {
     const { mutate: upgradeApplication } = useUpgradeApplication()
 
     return <>
-        <AppBar position="sticky">
+        <AppBar position="sticky" sx={{ height: "4rem" }}>
             <Toolbar>
                 <IconButton
                     size="large"
@@ -35,31 +35,33 @@ export const TopBar = () => {
                     component="div"
                     sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block', textAlign: "center" } }}
                 >
-                    Speak Stick Management Console
+                    Speak Stick
                 </Typography>
-                <NetworkIcon />
-                <Tooltip title="Upgrade application">
-                    <IconButton
-                        size="large"
-                        color="inherit"
-                        aria-label="restart"
-                        sx={{ mr: 2 }}
-                        onClick={() => upgradeApplication()}
-                    >
-                        <UpgradeIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Restart stick controller">
-                    <IconButton
-                        size="large"
-                        color="inherit"
-                        aria-label="restart"
-                        sx={{ mr: 2 }}
-                        onClick={() => restartStickController()}
-                    >
-                        <RestartAltIcon />
-                    </IconButton>
-                </Tooltip>
+                <div style={{ flexGrow: "1", textAlign: "end" }}>
+                    <NetworkIcon />
+                    <Tooltip title="Upgrade application">
+                        <IconButton
+                            size="large"
+                            color="inherit"
+                            aria-label="restart"
+                            sx={{ mr: 2 }}
+                            onClick={() => upgradeApplication()}
+                        >
+                            <UpgradeIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Restart stick controller">
+                        <IconButton
+                            size="large"
+                            color="inherit"
+                            aria-label="restart"
+                            sx={{ mr: 2 }}
+                            onClick={() => restartStickController()}
+                        >
+                            <RestartAltIcon />
+                        </IconButton>
+                    </Tooltip>
+                </div>
             </Toolbar>
         </AppBar>
         <NavigationDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />

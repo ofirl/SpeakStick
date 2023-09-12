@@ -78,81 +78,79 @@ export const Words = () => {
 
 
     return (
-        <div style={{ display: "flex", justifyContent: "center", paddingTop: "2rem" }}>
-            <div style={{ width: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column" }}>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                    <Autocomplete
-                        style={{ flexGrow: "1" }}
-                        freeSolo
-                        options={words}
-                        renderInput={(params) => <TextField {...params} label="Filter" />}
-                        onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
-                    />
-                    <DeleteWordModal open={deleteConfirmationOpen} onDecline={() => setDeleteConfirmationOpen(false)} {...deletionModalProps} />
-                    <Button
-                        component="label"
-                        variant="outlined"
-                        startIcon={<CloudUploadIcon />}
-                    >
-                        {
-                            isUploading ? <CircularProgress /> :
-                                <>
-                                    Upload a file
-                                    <input style={VisuallyHiddenInputStyle} onChange={onFileSelect} type="file" accept="audio/wav" />
-                                </>
-                        }
-                    </Button>
-                </div>
-                <Typography variant="body1" sx={{ paddingBottom: "0.5rem" }}>
-                    You can use <a href="https://cloudconvert.com/"> this site </a> to convert audio files to .wav
-                </Typography>
-                <TableContainer component={Paper}>
-                    <Table aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell width={"90%"}> Word </TableCell>
-                                <TableCell />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {isLoading ?
-                                [1, 2].map(i => (
+        <div style={{ gap: "0.5rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1, maxWidth: "40rem" }}>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+                <Autocomplete
+                    style={{ flexGrow: "1" }}
+                    freeSolo
+                    options={words}
+                    renderInput={(params) => <TextField {...params} label="Filter" />}
+                    onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
+                />
+                <DeleteWordModal open={deleteConfirmationOpen} onDecline={() => setDeleteConfirmationOpen(false)} {...deletionModalProps} />
+                <Button
+                    component="label"
+                    variant="outlined"
+                    startIcon={<CloudUploadIcon />}
+                >
+                    {
+                        isUploading ? <CircularProgress /> :
+                            <>
+                                Upload a file
+                                <input style={VisuallyHiddenInputStyle} onChange={onFileSelect} type="file" accept="audio/wav" />
+                            </>
+                    }
+                </Button>
+            </div>
+            <Typography variant="body1" sx={{ paddingBottom: "0.5rem" }}>
+                You can use <a href="https://cloudconvert.com/"> this site </a> to convert audio files to .wav
+            </Typography>
+            <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell> Word </TableCell>
+                            <TableCell sx={{ width: "3rem" }} />
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {isLoading ?
+                            [1, 2].map(i => (
+                                <TableRow
+                                    key={"row" + i}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell colSpan={2} component="th" scope="row">
+                                        <Skeleton variant="rounded" height={"2rem"} />
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                            :
+                            words.filter((word) => word.toLowerCase().includes(filter))
+                                .map((word) => (
                                     <TableRow
-                                        key={"row" + i}
+                                        key={word}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell colSpan={2} component="th" scope="row">
-                                            <Skeleton variant="rounded" height={"2rem"} />
+                                        <TableCell component="th" scope="row"> {word} </TableCell>
+                                        <TableCell>
+                                            <IconButton
+                                                disabled={isDeleting}
+                                                size="large"
+                                                color="inherit"
+                                                aria-label="delete word"
+                                                onClick={() => onDeleteWord(word)}
+                                            >
+                                                {isDeleting ? <CircularProgress /> : <DeleteIcon />}
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))
-                                :
-                                words.filter((word) => word.toLowerCase().includes(filter))
-                                    .map((word) => (
-                                        <TableRow
-                                            key={word}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell component="th" scope="row"> {word} </TableCell>
-                                            <TableCell>
-                                                <IconButton
-                                                    disabled={isDeleting}
-                                                    size="large"
-                                                    color="inherit"
-                                                    aria-label="delete word"
-                                                    onClick={() => onDeleteWord(word)}
-                                                >
-                                                    {isDeleting ? <CircularProgress /> : <DeleteIcon />}
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                            }
-                        </TableBody>
-                    </Table>
+                        }
+                    </TableBody>
+                </Table>
 
-                </TableContainer>
-            </div>
+            </TableContainer>
         </div>
     )
 };

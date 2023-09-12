@@ -13,26 +13,31 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Words } from './screens/words/Words';
+import { MuiThemeProvider } from './theme/theme';
 
 const queryClient = new QueryClient()
 
 function App() {
     return (
-        <>
+        <MuiThemeProvider>
             <QueryClientProvider client={queryClient}>
                 <BrowserRouter basename="/">
                     <TopBar />
-                    <Routes>
-                        <Route path="/settings" Component={Settings} />
-                        <Route path="/library" Component={Library} />
-                        <Route path="/words" Component={Words} />
-                        {/* default route */}
-                        <Route path="/" Component={Library} />
-                    </Routes>
+                    <div style={{
+                        padding: "0 1rem", paddingTop: "2rem", flexGrow: 1, height: "calc(100vh - 4rem)", boxSizing: "border-box", justifyContent: "center", display: "flex"
+                    }}>
+                        < Routes >
+                            <Route path="/settings" Component={Settings} />
+                            <Route path="/library" Component={Library} />
+                            <Route path="/words" Component={Words} />
+                            {/* default route */}
+                            <Route path="/" Component={Library} />
+                        </Routes>
+                    </div>
                     <ToastContainer />
                 </BrowserRouter>
-            </QueryClientProvider>
-        </>
+            </QueryClientProvider >
+        </MuiThemeProvider >
     )
 }
 

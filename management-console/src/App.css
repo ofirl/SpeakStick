@@ -1,6 +1,14 @@
 #root {
   width: 100%;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (width < 800px) {
+  html {
+    font-size: small;
+  }
 }
 
 .logo {
