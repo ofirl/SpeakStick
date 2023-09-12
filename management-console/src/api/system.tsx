@@ -10,6 +10,9 @@ export const useRestartStickController = () => {
         {
             onSuccess: () => {
                 toast.success("Stick controller restarted")
+            },
+            onError: () => {
+                toast.error("Error restarting stick controller")
             }
         }
     )
@@ -21,6 +24,9 @@ export const useUpgradeApplication = () => {
         {
             onSuccess: () => {
                 toast.success("Application is upgrading, this might take a few minutes")
+            },
+            onError: () => {
+                toast.error("Error starting application upgrade")
             }
         }
     )
@@ -58,6 +64,9 @@ export const useUpdateNetworkConfiguration = () => {
         {
             onSuccess: () => {
                 toast.success("Network configuration updated")
+            },
+            onError: () => {
+                toast.error("Error updating network configuration")
             }
         }
     )
