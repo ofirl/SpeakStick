@@ -60,6 +60,8 @@ STARTUP_SOUND = SOURCE_DIR + "/sfx/startup.wav"
 POWERDOWN_SOUND = SOURCE_DIR + "/sfx/powerdown.wav"
 ERROR_SOUND = SOURCE_DIR + "/sfx/error.wav"
 
+SLEEPING = False
+
 def play_audio(file):
     sound = mixer.Sound(file)
     sound.play()
@@ -75,6 +77,8 @@ def get_cell(position):
         return -1
 
 def main():
+    global SLEEPING
+
     current_row = 1
     current_col = 1
     recorded_cells = []
@@ -87,7 +91,14 @@ def main():
 
     try:
         while True:
-            time.sleep(float(configs["SLEEP_DURATION_S"]))
+            if SLEEPING == True:
+                sleepDuration = float(configs["STICK_CHECK_INTERVAL_SLEEP_MODE_S"])
+            else:
+                sleepDuration = float(configs["STICK_CHECK_INTERVAL_S"])
+            time.sleep(sleepDuration)
+
+            if not SLEEPING and datetime.datetime.now() > cell_update_time + datetime.timedelta(minutes=float(configs["SLEEP_TIMEOUT_M"])):
+                SLEEPING = True
 
             horizontal_position = chan1.voltage
             vertical_position = chan0.voltage
@@ -103,6 +114,9 @@ def main():
                 current_row = new_row
                 current_col = new_col
                 cell_update_time = datetime.datetime.now()
+
+                if SLEEPING:
+                    SLEEPING = False
             
             current_cell = GRID[current_row][current_col]
 

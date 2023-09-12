@@ -4,14 +4,19 @@ from consts import db_file
 
 defaultConfigs = [
     {
-        "key": "SLEEP_DURATION_S",
+        "key": "STICK_CHECK_INTERVAL_S",
         "value": "0.05",
-        "description": "Interval to poll the stick position, Recommended to be half the cell change delay (the lower of the 2)"
+        "description": "Interval to poll the stick position (in seconds), Recommended to be half the cell change delay (the lower of the 2)"
+    },
+    {
+        "key": "STICK_CHECK_INTERVAL_SLEEP_MODE_S",
+        "value": "0.5",
+        "description": "Interval to poll the stick position in sleep mode (in seconds)"
     },
     {
         "key": "CELL_CHANGE_DELAY_S",
         "value": "0.2",
-        "description": "Delay between the stick changing position and it actually being recorded (usefull for shaky hands)"
+        "description": "Delay (in seconds) between the stick changing position and it actually being recorded (usefull for shaky hands)"
     },
     {
         "key": "MIDDLE_CELL_CHANGE_DELAY_S",
@@ -21,12 +26,17 @@ defaultConfigs = [
     {
         "key": "END_WORD_TIMEOUT_S",
         "value": "1",
-        "description": "Word will end if no position change is recorded for this duration"
+        "description": "Word will end if no position change is recorded for this duration (in seconds)"
     },
     {
         "key": "GRID_BORDER_SIZE",
         "value": "0.1",
         "description": "If we think about the grid of numbers, this is the inner border (the border between the cells) width, this will create a \"dead zone\" in which there are no cells"
+    },
+    {
+        "key": "SLEEP_TIMEOUT_M",
+        "value": "5",
+        "description": "How long without an input should the controller wait untill it enters sleep mode (in minutes)"
     }
 ]
 
