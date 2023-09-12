@@ -33,7 +33,7 @@ export const useUpgradeApplication = () => {
 };
 
 export type NetworkStatusResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string };
-export const useGetNetworkStatus = (options: UseQueryOptions<NetworkStatusResult, unknown, NetworkStatusResult, string[]>) => {
+export const useGetNetworkStatus = (options: UseQueryOptions<NetworkStatusResult, unknown, NetworkStatusResult, string[]> = {}) => {
     return useQuery(
         ['network', 'status'],
         () => axios.get(baseUrl + "/network/status").then(value => value.data as NetworkStatusResult),
