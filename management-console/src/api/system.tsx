@@ -32,13 +32,15 @@ export const useUpgradeApplication = () => {
     )
 };
 
-export const useGetNetworkStatus = () => {
+export type NetworkStatusResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string };
+export const useGetNetworkStatus = (options: UseQueryOptions<NetworkStatusResult, unknown, NetworkStatusResult, string[]>) => {
     return useQuery(
         ['network', 'status'],
-        () => axios.get(baseUrl + "/network/status").then(value => value.data as { ssid: string, signal_strength: number }),
+        () => axios.get(baseUrl + "/network/status").then(value => value.data as NetworkStatusResult),
         {
-            staleTime: 10000
-        }
+            refetchInterval: 10000,
+            ...options
+        },
     )
 };
 
@@ -46,7 +48,7 @@ export type NetowrkScanResult = { ssid: string, signal_strength: number, secured
 export const useScanNetworks = (options: UseQueryOptions<NetowrkScanResult[], unknown, NetowrkScanResult[], string[]> = {}) => {
     return useQuery(
         ['network', 'scan'],
-        () => axios.get(baseUrl + "/network/scan").then(value => value.data as { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string }[]),
+        () => axios.get(baseUrl + "/network/scan").then(value => value.data as NetowrkScanResult[]),
         options
     )
 };
