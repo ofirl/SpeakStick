@@ -11,8 +11,8 @@ def restartStickController(self):
         response_utils.InternalServerError(self)
 
 def performUpgrade(self):
-    return_code, _ = system_utils.runUpgrade()
-    if return_code == 0:
+    process, err = system_utils.runUpgrade()
+    if process != None and err != None:
         response_utils.okResponse(self)
     else:
         response_utils.InternalServerError(self)

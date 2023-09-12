@@ -30,7 +30,7 @@ def runCommandBackground(command):
         # Print the PID and command
         print(f"Command '{command}' started in the background with PID: {pid}")
 
-        return process
+        return process, None
 
         # You can wait for the command to complete (optional)
         # process.wait()
@@ -41,7 +41,7 @@ def runCommandBackground(command):
 
     except Exception as e:
         print(f"Error running command '{command}': {str(e)}")
-        return None
+        return None, None
 
 
 def restartNetworkServices():
