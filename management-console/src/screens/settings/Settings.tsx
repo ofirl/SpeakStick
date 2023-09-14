@@ -28,7 +28,7 @@ export const Settings = () => {
     const onFilterChangeDebounced = useDebounce(onFilterChange, 200)
 
     return (
-        <div style={{ maxWidth: "70rem", gap: "0.5rem", display: "flex", flexDirection: "column", height: "100%" }}>
+        <div style={{ maxWidth: "70rem", gap: "0.5rem", display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
             <Autocomplete
                 freeSolo
                 options={configs.map(c => c.key)}
@@ -39,7 +39,7 @@ export const Settings = () => {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell> Key</TableCell>
+                            <TableCell sx={{ width: "1rem" }}> Key</TableCell>
                             <TableCell sx={(theme) => ({ width: window.innerWidth < theme.breakpoints.values.sm ? "5rem" : "6rem" })}> Value </TableCell>
                             <TableCell sx={(theme) => ({ width: window.innerWidth < theme.breakpoints.values.sm ? "5rem" : "6rem" })}> Default Value </TableCell>
                         </TableRow>
@@ -70,7 +70,7 @@ export const Settings = () => {
                                     key={c.key}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell scope="row"> <Typography variant="body2"> {c.key} </Typography> <Typography variant="caption"> {c.description} </Typography> </TableCell>
+                                    <TableCell scope="row"> <Typography variant="body2" sx={{ wordBreak: "break-word" }}> {c.key} </Typography> <Typography variant="caption"> {c.description} </Typography> </TableCell>
                                     <TableCell> <ValueCell value={c.value} onEdit={(updatedValue) => updateConfig({ key: c.key, value: updatedValue })} /> </TableCell>
                                     <TableCell>
                                         <DefaultValueCell value={c.default_value} onRestore={() => updateConfig({ key: c.key, value: c.default_value })} />

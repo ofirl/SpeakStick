@@ -41,20 +41,22 @@ export const ValueCell = ({ value, onEdit }: ValueCellProps) => {
     ) : (
         <Paper
             component="form"
-            sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: "15rem" }}
+            sx={(theme) => ({ p: '2px 4px', display: 'flex', alignItems: 'center', maxWidth: "11rem", flexDirection: window.innerWidth < theme.breakpoints.values.sm ? "column" : "row" })}
         >
             <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 defaultValue={value}
                 inputRef={inputRef}
             />
-            <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={onSave} disabled={isLoading}>
-                {isLoading ? <CircularProgress /> : <SaveIcon />}
-            </IconButton>
-            <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-            <IconButton color="primary" disabled={isLoading} sx={{ p: '10px' }} aria-label="directions" onClick={toggleEditMode}>
-                <CancelIcon />
-            </IconButton>
+            <div style={{ display: "flex" }}>
+                <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={onSave} disabled={isLoading}>
+                    {isLoading ? <CircularProgress /> : <SaveIcon />}
+                </IconButton>
+                <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+                <IconButton color="primary" disabled={isLoading} sx={{ p: '10px' }} aria-label="directions" onClick={toggleEditMode}>
+                    <CancelIcon />
+                </IconButton>
+            </div>
         </Paper>
     )
 };
