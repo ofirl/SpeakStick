@@ -58,7 +58,7 @@ def get_library_items(libraryId):
         if libraryId == None:
             cursor.execute("SELECT * FROM library_items")
         else:
-            cursor.execute("SELECT * FROM library_items WHERE libraryId = ?", (int("".join(libraryId)),))
+            cursor.execute("SELECT * FROM library_items WHERE libraryId = ?", ("".join(libraryId),))
         
         # Fetch all the rows of data
         rows = cursor.fetchall()
