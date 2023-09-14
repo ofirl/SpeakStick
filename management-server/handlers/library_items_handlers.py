@@ -26,8 +26,8 @@ def updateLibraryItem(self, post_data):
         response_utils.InternalServerError(self, "error updating position")
 
 def deleteLibraryItem(self, query_parameters):
-    position = query_parameters.get('position')
-    libraryId = query_parameters.get('libraryId')
+    position = query_parameters.get('position')[0]
+    libraryId = query_parameters.get('libraryId')[0]
     if position == None:
         response_utils.BadRequest(self, "Missing required parameter: 'position'")
         return
