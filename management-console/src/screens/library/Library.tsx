@@ -44,6 +44,7 @@ export const Library = () => {
                             options={libraries}
                             renderInput={(params) => <TextField {...params} label="Library" />}
                             onChange={(_e, value) => setSelectedLibrary(value || undefined)}
+                            disableClearable
                         />
                 }
             </div>
