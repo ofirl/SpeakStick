@@ -62,6 +62,7 @@ def get_library_items(libraryId):
         
         # Fetch all the rows of data
         rows = cursor.fetchall()
+        print("got %d rows", len(rows))
         for row in rows:
             libraryId, positions, word = row
             library_items.append({
