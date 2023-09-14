@@ -120,6 +120,7 @@ def create_default_db(database_file):
             if libraryWords == None:
                 continue
 
+            print(libraryWords)
             for positions, word in libraryWords:
                 cursor.execute('INSERT INTO library_items (libraryId, positions, word) VALUES (?, ?, ?)', (libraryId, positions, word))
 
