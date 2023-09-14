@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 export const Library = () => {
     const [filter, setFilter] = useState("");
     // const { data: libraries } = useGetLibraries();
-    const [selectedLibrary] = useState(0);
+    const [selectedLibrary] = useState(1);
     const { data: libraryItems = [], isLoading } = useGetLibraryItems(selectedLibrary);
 
     const onFilterChange = useCallback((value: string) => {
