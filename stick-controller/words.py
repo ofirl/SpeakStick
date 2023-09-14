@@ -2,6 +2,7 @@ import sqlite3
 from consts import db_file
 
 def get_word_by_position(position):
+    print(position)
     connection = None
     word = None
 
