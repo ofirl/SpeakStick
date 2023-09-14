@@ -44,7 +44,6 @@ def get_configs():
     return configs
 
 def get_library_items(libraryId):
-    print(libraryId)
     library_items = []
     connection = None
 
@@ -168,7 +167,7 @@ def delete_library_item(libraryId, position):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        cursor.execute('DELETE FROM library_items WHERE libraryId = :libraryId AND positions = :position', {"libraryId": int(libraryId), "position": int("".join(position))})
+        cursor.execute('DELETE FROM library_items WHERE libraryId = :libraryId AND positions = :position', {"libraryId": libraryId, "position": position})
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
