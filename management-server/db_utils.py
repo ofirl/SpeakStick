@@ -59,7 +59,7 @@ def get_library_items(libraryId):
         if libraryId == None:
             cursor.execute("SELECT * FROM library_items")
         else:
-            cursor.execute("SELECT * FROM library_items WHERE libraryId = :libraryId", {"libraryId": libraryId})
+            cursor.execute("SELECT * FROM library_items WHERE libraryId = ?", (libraryId,))
         
         # Fetch all the rows of data
         rows = cursor.fetchall()
@@ -79,8 +79,6 @@ def get_library_items(libraryId):
         if connection:
             connection.close()
     
-    print("1111")
-    print(library_items)
     return library_items
 
 def update_config(key, value):
