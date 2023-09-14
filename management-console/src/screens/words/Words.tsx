@@ -16,7 +16,7 @@ import { useDebounce } from '../../customHooks/useDebounce';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDeleteWord, useGetWords, useUploadWord } from '../../api/words';
-import { useGetPositions } from '../../api/positions';
+import { useGetLibraryItems } from '../../api/libraryItems';
 import { DeleteWordModal } from './DeleteWordModal';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
@@ -49,7 +49,7 @@ export const Words = () => {
 
     const { mutateAsync: uploadWord, isLoading: isUploading } = useUploadWord();
     const { mutateAsync: deleteWord, isLoading: isDeleting } = useDeleteWord();
-    const { data: positions = {} } = useGetPositions();
+    const { data: positions = {} } = useGetLibraryItems();
 
     const onDeleteWord = (word: string) => {
         const wordPositions = Object.entries(positions).filter(([, positionWord]) => positionWord === word).map(([position]) => position);

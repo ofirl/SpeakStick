@@ -12,21 +12,25 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useCallback, useState } from 'react';
 import { useDebounce } from '../../customHooks/useDebounce';
-import { useDeletePosition, useGetPositions } from '../../api/positions';
-import { AddWordModal } from './AddPositionModal';
+import { useDeleteLibraryItem, useGetLibraryItems } from '../../api/libraryItems';
+import { AddWordModal } from './AddLibraryItemModal';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+// import { useGetLibraries } from '../../api/libraries';
 
 export const Library = () => {
     const [filter, setFilter] = useState("");
-    const { data: positions = {}, isLoading } = useGetPositions();
+    // const { data: libraries } = useGetLibraries();
+    const { data: positions = {}, isLoading } = useGetLibraryItems();
+
+    const [selectedLibrary] = useState(0);
 
     const onFilterChange = useCallback((value: string) => {
         setFilter(value.toLowerCase())
     }, [])
     const onFilterChangeDebounced = useDebounce(onFilterChange, 200)
 
-    const { mutateAsync: deletePosition, isLoading: isDeleting } = useDeletePosition();
+    const { mutateAsync: deletePosition, isLoading: isDeleting } = useDeleteLibraryItem();
 
     return (
         <div style={{ maxWidth: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>
@@ -38,7 +42,7 @@ export const Library = () => {
                     renderInput={(params) => <TextField {...params} label="Filter" />}
                     onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
                 />
-                <AddWordModal />
+                <AddWordModal libraryId={selectedLibrary} />
             </div>
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
@@ -78,7 +82,7 @@ export const Library = () => {
                                                 size="large"
                                                 color="inherit"
                                                 aria-label="delete word"
-                                                onClick={() => deletePosition({ position: positions })}
+                                                onClick={() => deletePosition({ libraryId: selectedLibrary, position: positions })}
                                             >
                                                 {isDeleting ? <CircularProgress /> : <DeleteIcon />}
                                             </IconButton>

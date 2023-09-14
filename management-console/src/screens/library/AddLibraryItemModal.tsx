@@ -11,7 +11,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useUpdatePosition } from '../../api/positions';
+import { useUpdateLibraryItems } from '../../api/libraryItems';
 import { useGetWords } from '../../api/words';
 
 const modalBoxStyle = {
@@ -29,19 +29,22 @@ const modalBoxStyle = {
     flexDirection: "column"
 };
 
-export const AddWordModal = () => {
+type AddWordModalProps = {
+    libraryId: number
+}
+export const AddWordModal = ({ libraryId }: AddWordModalProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const positionsRef = useRef<HTMLInputElement>(null)
     const wordRef = useRef<HTMLSelectElement>(null)
     const { data: files } = useGetWords();
 
-    const { mutateAsync: updateWord, isLoading } = useUpdatePosition();
+    const { mutateAsync: updateWord, isLoading } = useUpdateLibraryItems();
 
     const onSave = () => {
         if (!positionsRef.current || !wordRef.current)
             return;
 
-        updateWord({ position: positionsRef.current.value, word: wordRef.current.value }).then(() => {
+        updateWord({ libraryId, position: positionsRef.current.value, word: wordRef.current.value }).then(() => {
             setModalOpen(false)
         })
     };

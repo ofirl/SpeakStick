@@ -40,8 +40,15 @@ defaultConfigs = [
     }
 ]
 
-defaultWords = {
-    "8": "applause-1.wav"
+libraries: "dict[str, dict[str, str | dict[str, str]]]" = {
+    "defaultLibrary": {
+        "description": "Default library",
+        "words": {
+            "8": "Big.wav",
+            "852": "Yes.wav",
+            "456": "No.wav"
+        }
+    }
 }
 
 def create_default_db(database_file):
@@ -73,24 +80,48 @@ def create_default_db(database_file):
             if existing_row is None:
                 # Insert default values into the "configs" table
                 cursor.execute('INSERT INTO configs (key, value, description, default_value) VALUES (:key, :value, :description, :value)', config)
-        
-        # Create the "words" table
+
+        # Create the 'libraries' table
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS words (
-                positions TEXT PRIMARY KEY,
-                word TEXT
+            CREATE TABLE IF NOT EXISTS libraries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE,
+                description TEXT,
+                active INTEGER CHECK (editable IN (0, 1)),
+                editable INTEGER CHECK (editable IN (0, 1))
             )
         ''')
 
-        for posistions, value in defaultWords.items():
+        # Create the 'library_items' table with a foreign key constraint
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS library_items (
+                libraryId INTEGER PRIMARY KEY,
+                positions TEXT PRIMARY KEY,
+                word TEXT,
+                FOREIGN KEY (libraryId) REFERENCES libraries(id)
+            )
+        ''')
+
+        for libraryName, libraryInfo in libraries.items():
             # Check if the key already exists in the "words" table
-            cursor.execute('SELECT * FROM words WHERE positions = ?', (posistions,))
+            cursor.execute('SELECT * FROM libraries WHERE name = ?', (libraryName,))
             existing_row = cursor.fetchone()
             
             if existing_row is None:
                 # Insert default values into the "words" table
-                cursor.execute('INSERT INTO words (positions, word) VALUES (?, ?)', (posistions, value))
-        
+                cursor.execute('INSERT INTO libraries (name, description, editable) VALUES (?, ?, ?)', (libraryName, libraryInfo.get("description"), True))
+
+            cursor.execute('SELECT * FROM libraries WHERE name = ?', (libraryName,))
+            libraryRow = cursor.fetchone()
+            libraryId, _, _, _ = libraryRow
+
+            libraryWords = libraryInfo.get("words")
+            if libraryWords == None:
+                continue
+
+            for positions, word in libraryWords:
+                cursor.execute('INSERT INTO library_items (libraryId, positions, word) VALUES (?, ?, ?)', (libraryId, positions, word))
+
         # Commit the changes to the database
         connection.commit()
         print("Default tables and values created successfully.")

@@ -43,8 +43,8 @@ def get_configs():
     
     return configs
 
-def get_positions():
-    words = {}
+def get_library_items(libraryId):
+    library_items = None
     connection = None
 
     try:
@@ -54,16 +54,14 @@ def get_positions():
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        # Execute a query to retrieve data from the "words" table
-        cursor.execute("SELECT * FROM words")
+        # Execute a query to retrieve data from the "library_items" table
+        if libraryId == None:
+            cursor.execute("SELECT * FROM library_items")
+        else:
+            cursor.execute("SELECT * FROM library_items WHERE libraryId = ?", (libraryId,))
         
         # Fetch all the rows of data
-        rows = cursor.fetchall()
-        
-        # Populate the words list with retrieved data
-        for row in rows:
-            poistions, word = row
-            words[poistions] = word
+        library_items = cursor.fetchall()
         
     except sqlite3.Error as e:
         print("An error occurred:", e)
@@ -73,7 +71,7 @@ def get_positions():
         if connection:
             connection.close()
     
-    return words
+    return library_items
 
 def update_config(key, value):
     output = True
@@ -110,7 +108,7 @@ def update_config(key, value):
 
     return output
 
-def update_position(position, new_word):
+def update_library_item(libraryId, positions, new_word):
     output = True
     connection = None
 
@@ -121,15 +119,15 @@ def update_position(position, new_word):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        data = {"position": position, "word": new_word}
+        data = {"libraryId": libraryId, "positions": positions, "word": new_word}
 
-        cursor.execute('SELECT * FROM words WHERE positions = :position', data)
+        cursor.execute('SELECT * FROM library_items WHERE libraryId = :libraryId AND positions = :positions', data)
         existing_row = cursor.fetchone()
         
         if existing_row is None:
-            cursor.execute('INSERT INTO words (positions, word) VALUES (:position, :word)', data)
+            cursor.execute('INSERT INTO library_items (libraryId, positions, word) VALUES (:libraryId, :positions, :word)', data)
         else:
-            cursor.execute('UPDATE words set word = :word where positions = :position', data)
+            cursor.execute('UPDATE library_items SET word = :word WHERE libraryId = :libraryId AND positions = :positions', data)
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
@@ -151,7 +149,7 @@ def update_position(position, new_word):
 
     return output
 
-def delete_position(position):
+def delete_library_item(libraryId, position):
     output = True
     connection = None
 
@@ -162,7 +160,7 @@ def delete_position(position):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        cursor.execute('DELETE FROM words WHERE positions = :position', {"position": "".join(position)})
+        cursor.execute('DELETE FROM library_items WHERE libraryId = :libraryId AND positions = :position', {"libraryId": libraryId, "position": "".join(position)})
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
@@ -184,7 +182,7 @@ def delete_position(position):
 
     return output
 
-def delete_position_for_word(word):
+def delete_library_items_for_word(word):
     output = True
     connection = None
 
@@ -195,7 +193,7 @@ def delete_position_for_word(word):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
 
-        cursor.execute('DELETE FROM words WHERE word = :word', {"word": word})
+        cursor.execute('DELETE FROM library_items WHERE word = ?', (word,))
 
         # Commit the changes to the database
         connection.commit()
@@ -214,10 +212,37 @@ def delete_word(word):
     try:
         os.remove(os.path.join(words_directory, "".join(word)))
 
-        if not delete_position_for_word(word):
+        if not delete_library_items_for_word(word):
             return Exception.__init__("Error deleting positions for word " + word)
     
         return None
 
     except Exception as e:
         return e
+    
+def get_libraries():
+    libraries = None
+    connection = None
+
+    try:
+        # Connect to the SQLite database
+        connection = sqlite3.connect(db_file)
+        
+        # Create a cursor object to interact with the database
+        cursor = connection.cursor()
+        
+        # Execute a query to retrieve data from the "libraries" table
+        cursor.execute("SELECT * FROM libraries")
+        
+        # Fetch all the rows of data
+        libraries = cursor.fetchall()
+        
+    except sqlite3.Error as e:
+        print("An error occurred:", e)
+        
+    finally:
+        # Close the database connection
+        if connection:
+            connection.close()
+    
+    return libraries

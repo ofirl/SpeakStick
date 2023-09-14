@@ -2,6 +2,7 @@ import sqlite3
 from consts import db_file
 
 def read_configs_from_db(database_file):
+    connection = None
     configs = {}
 
     try:

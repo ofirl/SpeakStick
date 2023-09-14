@@ -3,11 +3,10 @@ from urllib.parse import parse_qs
 
 import response_utils
 import handlers.configs_handlers
-import handlers.positions_handlers
+import handlers.library_items_handlers
+import handlers.libraries_handlers
 import handlers.words_handlers
 import handlers.system_handlers
-
-import system_utils
 
 port = 8090
 BASE_ROUTE = "/api"
@@ -20,9 +19,14 @@ routes = [
         "handler": handlers.configs_handlers.getConfigs,
     },
     {
-        "path": "/positions",
+        "path": "/libraries",
         "method": "GET",
-        "handler": handlers.positions_handlers.getPositions,
+        "handler": handlers.libraries_handlers.getLibraries,
+    },
+    {
+        "path": "/library_items",
+        "method": "GET",
+        "handler": handlers.library_items_handlers.getLibraryItems,
     },
     {
         "path": "/words",
@@ -56,9 +60,9 @@ routes = [
         "handler": handlers.configs_handlers.updateConfig,
     },
     {
-        "path": "/position",
+        "path": "/library_item",
         "method": "POST",
-        "handler": handlers.positions_handlers.updatePosition,
+        "handler": handlers.library_items_handlers.updateLibraryItem,
     },
     {
         "path": "/word",
@@ -72,9 +76,9 @@ routes = [
     },
     # DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE ---
     {
-        "path": "/position",
+        "path": "/library_item",
         "method": "DELETE",
-        "handler": handlers.positions_handlers.deletePosition,
+        "handler": handlers.library_items_handlers.deleteLibraryItem,
     },
     {
         "path": "/word",
@@ -83,11 +87,10 @@ routes = [
     },
 ]
 
-def getRouteHandler(self, method, startsWith = False):
+def getRouteHandler(self, method):
     route = next((route for route in routes if route.get("method") == method and \
             ( \
-                (startsWith and self.path.startswith(BASE_ROUTE + str(route.get("path")))) or \
-                self.path == BASE_ROUTE + str(route.get("path")) \
+                self.path.startswith(BASE_ROUTE + str(route.get("path"))) \
             ) \
         ), None)
     if route == None:
@@ -118,7 +121,8 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         routeHandler = getRouteHandler(self, "GET")
         if routeHandler != None:
-            routeHandler(self)
+            query_parameters = parse_qs(self.path.split('?')[1])
+            routeHandler(self, query_parameters)
 
     def do_POST(self):
         routeHandler = getRouteHandler(self, "POST")
@@ -128,9 +132,10 @@ class RequestHandler(BaseHTTPRequestHandler):
             routeHandler(self, post_data)
 
     def do_DELETE(self):
-        routeHandler = getRouteHandler(self, "DELETE", True)
+        routeHandler = getRouteHandler(self, "DELETE")
         if routeHandler != None:
-            routeHandler(self)
+            query_parameters = parse_qs(self.path.split('?')[1])
+            routeHandler(self, query_parameters)
 
 # Run the HTTP server
 def run():
