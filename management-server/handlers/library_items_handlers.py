@@ -4,7 +4,7 @@ import db_utils
 import response_utils
 
 def getLibraryItems(self, query_parameters):
-    libraryId = query_parameters.get('libraryId')
+    libraryId = query_parameters["libraryId"]
     positions = db_utils.get_library_items(libraryId)
     if positions:
         response_utils.okWithData(self, positions)
