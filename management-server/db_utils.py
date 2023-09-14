@@ -44,7 +44,6 @@ def get_configs():
     return configs
 
 def get_library_items(libraryId):
-    libraryId = libraryId
     library_items = []
     connection = None
 
@@ -59,7 +58,7 @@ def get_library_items(libraryId):
         if libraryId == None:
             cursor.execute("SELECT * FROM library_items")
         else:
-            cursor.execute("SELECT * FROM library_items WHERE libraryId = ?", (int(libraryId),))
+            cursor.execute("SELECT * FROM library_items WHERE libraryId = ?", (int("".join(libraryId)),))
         
         # Fetch all the rows of data
         rows = cursor.fetchall()
