@@ -40,7 +40,7 @@ defaultConfigs = [
     }
 ]
 
-libraries: "dict[str, dict[str, str | dict[str, str]]]" = {
+libraries = {
     "defaultLibrary": {
         "description": "Default library",
         "words": {
@@ -121,7 +121,7 @@ def create_default_db(database_file):
                 continue
 
             print(libraryWords)
-            for positions, word in libraryWords:
+            for positions, word in libraryWords.items():
                 cursor.execute('INSERT INTO library_items (libraryId, positions, word) VALUES (?, ?, ?)', (libraryId, positions, word))
 
         # Commit the changes to the database
