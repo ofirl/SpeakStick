@@ -7,7 +7,7 @@ def getLibraryItems(self, query_parameters):
     libraryId = None
     if query_parameters != None:
         libraryId = query_parameters["libraryId"]
-        
+
     positions = db_utils.get_library_items(libraryId)
     if positions:
         response_utils.okWithData(self, positions)
@@ -25,7 +25,7 @@ def updateLibraryItem(self, post_data):
     else:
         response_utils.InternalServerError(self, "error updating position")
 
-def deletePosition(self, query_parameters):
+def deleteLibraryItem(self, query_parameters):
     position = query_parameters.get('position')
     libraryId = query_parameters.get('libraryId')
     if position == None:
