@@ -167,7 +167,7 @@ def delete_library_item(libraryId, position):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        cursor.execute('DELETE FROM library_items WHERE libraryId = :libraryId AND positions = :position', {"libraryId": libraryId, "position": "".join(position)})
+        cursor.execute('DELETE FROM library_items WHERE libraryId = :libraryId AND positions = :position', {"libraryId": int(libraryId), "position": int("".join(position))})
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
