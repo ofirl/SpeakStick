@@ -121,7 +121,9 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         routeHandler = getRouteHandler(self, "GET")
         if routeHandler != None:
-            query_parameters = parse_qs(self.path.split('?')[1])
+            query_parameters = None
+            if len(self.path.split('?')) > 1:
+                query_parameters = parse_qs(self.path.split('?')[1])
             routeHandler(self, query_parameters)
 
     def do_POST(self):
@@ -134,7 +136,9 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_DELETE(self):
         routeHandler = getRouteHandler(self, "DELETE")
         if routeHandler != None:
-            query_parameters = parse_qs(self.path.split('?')[1])
+            query_parameters = None
+            if len(self.path.split('?')) > 1:
+                query_parameters = parse_qs(self.path.split('?')[1])
             routeHandler(self, query_parameters)
 
 # Run the HTTP server
