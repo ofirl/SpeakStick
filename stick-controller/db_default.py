@@ -96,7 +96,7 @@ def create_default_db(database_file):
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS library_items (
                 libraryId INTEGER,
-                positions TEXT,
+                positions INTEGER,
                 word TEXT,
                 PRIMARY KEY (libraryId, position),
                 FOREIGN KEY (libraryId) REFERENCES libraries(id)
@@ -105,14 +105,14 @@ def create_default_db(database_file):
 
         for libraryName, libraryInfo in libraries.items():
             # Check if the key already exists in the "words" table
-            cursor.execute('SELECT * FROM libraries WHERE name = ?', (libraryName,))
+            cursor.execute('SELECT * FROM libraries WHERE name = \'?\'', (libraryName,))
             existing_row = cursor.fetchone()
             
             if existing_row is None:
                 # Insert default values into the "words" table
-                cursor.execute('INSERT INTO libraries (name, description, editable) VALUES (?, ?, ?)', (libraryName, libraryInfo.get("description"), True))
+                cursor.execute('INSERT INTO libraries (name, description, editable) VALUES (\'?\', \'?\', ?)', (libraryName, libraryInfo.get("description"), True))
 
-            cursor.execute('SELECT * FROM libraries WHERE name = ?', (libraryName,))
+            cursor.execute('SELECT * FROM libraries WHERE name = \'?\'', (libraryName,))
             libraryRow = cursor.fetchone()
             libraryId, _, _, _ = libraryRow
 
@@ -121,7 +121,7 @@ def create_default_db(database_file):
                 continue
 
             for positions, word in libraryWords:
-                cursor.execute('INSERT INTO library_items (libraryId, positions, word) VALUES (?, ?, ?)', (libraryId, positions, word))
+                cursor.execute('INSERT INTO library_items (libraryId, positions, word) VALUES (?, ?, \'?\')', (libraryId, positions, word))
 
         # Commit the changes to the database
         connection.commit()
