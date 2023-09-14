@@ -114,6 +114,7 @@ def create_default_db(database_file):
 
             cursor.execute('SELECT * FROM libraries WHERE name = ?', (libraryName,))
             libraryRow = cursor.fetchone()
+            print(libraryRow)
             libraryId, _, _, _ = libraryRow
 
             libraryWords = libraryInfo.get("words")
