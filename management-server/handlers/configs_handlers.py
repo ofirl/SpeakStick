@@ -3,7 +3,7 @@ import json
 import db_utils
 import response_utils
 
-def getConfigs(self):
+def getConfigs(self, query_parameters):
     configs = db_utils.get_configs()
     if configs:
         response_utils.okWithData(self, configs)

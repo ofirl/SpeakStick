@@ -3,21 +3,21 @@ import json
 import system_utils
 import response_utils
 
-def restartStickController(self):
+def restartStickController(self, query_parameters):
     return_code, _ = system_utils.restartStickController()
     if return_code == 0:
         response_utils.okResponse(self)
     else:
         response_utils.InternalServerError(self)
 
-def performUpgrade(self):
+def performUpgrade(self, query_parameters):
     process, err = system_utils.runUpgrade()
     if err == None and process != None:
         response_utils.okResponse(self)
     else:
         response_utils.InternalServerError(self)
 
-def scanForNetworks(self):
+def scanForNetworks(self, query_parameters):
     networks = system_utils.scan_wifi_networks()
     if networks == None:
         response_utils.InternalServerError(self, "Error scanning wireless networks")
@@ -36,7 +36,7 @@ def connectToNetwork(self, post_data):
     else:
         response_utils.InternalServerError(self, "Error updating network configuration")
 
-def getNetworkStatus(self):
+def getNetworkStatus(self, query_parameters):
     status, error = system_utils.get_wifi_connection_status()
     if error != None:
         response_utils.InternalServerError(self, "Error getting network connection status")

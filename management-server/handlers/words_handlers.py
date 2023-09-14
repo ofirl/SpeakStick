@@ -7,7 +7,7 @@ import db_utils
 from consts import words_directory
 from urllib.parse import parse_qs
 
-def getWords(self):
+def getWords(self, query_parameters):
     positions = system_utils.getWordFiles()
     if positions:
         response_utils.okWithData(self, positions)
@@ -27,8 +27,7 @@ def updateWord(self, post_data):
 
     response_utils.okWithText(self, f"File '{file_name}' uploaded successfully" )
 
-def deleteWord(self):
-    query_parameters = parse_qs(self.path.split('?')[1])
+def deleteWord(self, query_parameters):
     word = query_parameters.get('word')
     if not word:
         response_utils.BadRequest(self, "Missing required parameter: 'word'")
