@@ -44,6 +44,7 @@ def get_configs():
     return configs
 
 def get_library_items(libraryId):
+    print(libraryId)
     library_items = []
     connection = None
 
