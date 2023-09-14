@@ -8,8 +8,8 @@ type Library = {
     id: number,
     name: string,
     description: string,
-    active: number,
-    editable: number
+    active: boolean,
+    editable: boolean
 }
 
 export const useGetLibraries = () => {

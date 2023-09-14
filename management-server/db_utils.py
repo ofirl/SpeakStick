@@ -228,7 +228,7 @@ def delete_word(word):
         return e
     
 def get_libraries():
-    libraries = None
+    libraries = []
     connection = None
 
     try:
@@ -242,7 +242,17 @@ def get_libraries():
         cursor.execute("SELECT * FROM libraries")
         
         # Fetch all the rows of data
-        libraries = cursor.fetchall()
+        rows = cursor.fetchall()
+
+        for row in rows:
+            id, name, description, active, editable = row
+            libraries.append({
+                "id": id,
+                "name": name,
+                "description": description,
+                "active": active == 1,
+                "editable": editable == 1,
+            })
         
     except sqlite3.Error as e:
         print("An error occurred:", e)

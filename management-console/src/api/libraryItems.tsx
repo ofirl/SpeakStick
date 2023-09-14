@@ -11,7 +11,6 @@ type LibraryItem = {
 }
 export const useGetLibraryItems = (libraryId?: number) => {
     return useQuery(['libraryItems'], () => axios.get(`${baseUrl}/library_items`, { params: { libraryId } }).then(value => value.data as LibraryItem[]))
-    // return useQuery(['libraryItems'], () => axios.get(`${baseUrl}/library_items`, { params: { libraryId } }).then(value => value.data as LibraryItem[]))
 };
 
 type UpdateLibrartItemsParams = { libraryId: number, position: string, word: string };
@@ -38,7 +37,7 @@ export const useDeleteLibraryItem = () => {
         axios.delete(`${baseUrl}/library_item`, { params }).then(value => value.status === 200),
         {
             onSuccess: () => {
-                queryClient.invalidateQueries(["positions"]);
+                queryClient.invalidateQueries(["libraryItems"]);
                 toast.success("Position Deleted")
             },
             onError: () => {

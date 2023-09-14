@@ -1,7 +1,7 @@
 import sqlite3
 from consts import db_file
 
-def get_word_by_position(position):
+def get_word_by_position(positions):
     connection = None
     word = None
 
@@ -13,7 +13,7 @@ def get_word_by_position(position):
         cursor = connection.cursor()
         
         # Execute a query to retrieve the row with the specified position
-        cursor.execute("SELECT * FROM library_items WHERE libraryId in (SELECT id FROM libraries WHERE active = True) AND positions = ?", (position,))
+        cursor.execute("SELECT * FROM library_items WHERE libraryId in (SELECT id FROM libraries WHERE active = True) AND positions = ?", (positions,))
         
         # Fetch the row data
         row = cursor.fetchone()

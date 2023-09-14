@@ -16,12 +16,12 @@ import { useDeleteLibraryItem, useGetLibraryItems } from '../../api/libraryItems
 import { AddWordModal } from './AddLibraryItemModal';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-// import { useGetLibraries } from '../../api/libraries';
+import { useGetLibraries } from '../../api/libraries';
 
 export const Library = () => {
     const [filter, setFilter] = useState("");
-    // const { data: libraries } = useGetLibraries();
-    const [selectedLibrary] = useState(1);
+    const { data: libraries = [] } = useGetLibraries();
+    const [selectedLibrary, setSelectedLibrary] = useState(1);
     const { data: libraryItems = [], isLoading } = useGetLibraryItems(selectedLibrary);
 
     const onFilterChange = useCallback((value: string) => {
@@ -37,7 +37,14 @@ export const Library = () => {
                 <Autocomplete
                     style={{ flexGrow: "1" }}
                     freeSolo
-                    options={Array.from(new Set([...Object.keys(libraryItems), ...Object.values(libraryItems)]))}
+                    options={libraries.map(l => l.id)}
+                    renderInput={(params) => <TextField {...params} label="Library" />}
+                    onInputChange={(_e, value) => setSelectedLibrary(parseInt(value) || 1)}
+                />
+                <Autocomplete
+                    style={{ flexGrow: "1" }}
+                    freeSolo
+                    options={Array.from(new Set(libraryItems.flatMap(i => [i.positions, i.word])))}
                     renderInput={(params) => <TextField {...params} label="Filter" />}
                     onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
                 />
