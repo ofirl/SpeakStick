@@ -11,7 +11,7 @@ def getLibraryItems(self, query_parameters):
     library_items = db_utils.get_library_items(libraryId)
     print("22222")
     print(library_items)
-    if library_items:
+    if library_items != None:
         response_utils.okWithData(self, library_items)
     else:
         response_utils.InternalServerError(self)
