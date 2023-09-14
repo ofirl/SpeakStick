@@ -95,9 +95,10 @@ def create_default_db(database_file):
         # Create the 'library_items' table with a foreign key constraint
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS library_items (
-                libraryId INTEGER PRIMARY KEY,
-                positions TEXT PRIMARY KEY,
+                libraryId INTEGER,
+                positions TEXT,
                 word TEXT,
+                PRIMARY KEY (libraryId, position),
                 FOREIGN KEY (libraryId) REFERENCES libraries(id)
             )
         ''')
