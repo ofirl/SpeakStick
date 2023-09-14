@@ -6,7 +6,7 @@ import response_utils
 def getLibraryItems(self, query_parameters):
     libraryId = None
     if query_parameters != None:
-        libraryId = query_parameters["libraryId"]
+        libraryId = query_parameters["libraryId"][0]
 
     library_items = db_utils.get_library_items(libraryId)
     print("22222")
