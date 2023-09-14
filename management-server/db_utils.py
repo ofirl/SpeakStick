@@ -44,7 +44,7 @@ def get_configs():
     return configs
 
 def get_library_items(libraryId):
-    library_items = None
+    library_items = []
     connection = None
 
     try:
@@ -61,7 +61,14 @@ def get_library_items(libraryId):
             cursor.execute("SELECT * FROM library_items WHERE libraryId = ?", (libraryId,))
         
         # Fetch all the rows of data
-        library_items = cursor.fetchall()
+        rows = cursor.fetchall()
+        for row in rows:
+            libraryId, positions, word = row
+            library_items.append({
+                "libraryId": libraryId,
+                "positions": positions,
+                "word": word,
+            })
         
     except sqlite3.Error as e:
         print("An error occurred:", e)
