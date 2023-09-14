@@ -98,7 +98,7 @@ def create_default_db(database_file):
                 libraryId INTEGER,
                 positions INTEGER,
                 word TEXT,
-                PRIMARY KEY (libraryId, position),
+                PRIMARY KEY (libraryId, positions),
                 FOREIGN KEY (libraryId) REFERENCES libraries(id)
             )
         ''')
