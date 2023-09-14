@@ -79,7 +79,7 @@ export const AddWordModal = ({ libraryId }: AddWordModalProps) => {
                     >
                         {
                             files?.map(file => (
-                                <MenuItem value={file}>{file}</MenuItem>
+                                <MenuItem key={file} value={file}>{file}</MenuItem>
                             ))
                         }
                     </Select>

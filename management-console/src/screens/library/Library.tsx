@@ -16,13 +16,13 @@ import { useDeleteLibraryItem, useGetLibraryItems } from '../../api/libraryItems
 import { AddWordModal } from './AddLibraryItemModal';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useGetLibraries } from '../../api/libraries';
+import { Library as LibraryT, useGetLibraries } from '../../api/libraries';
 
 export const Library = () => {
     const [filter, setFilter] = useState("");
-    const { data: libraries = [] } = useGetLibraries();
-    const [selectedLibrary, setSelectedLibrary] = useState(1);
-    const { data: libraryItems = [], isLoading } = useGetLibraryItems(selectedLibrary);
+    const { data: libraries = [], isLoading: isLoadingLibraries } = useGetLibraries();
+    const [selectedLibrary, setSelectedLibrary] = useState<LibraryT | undefined>();
+    const { data: libraryItems = [], isLoading } = useGetLibraryItems(selectedLibrary?.id);
 
     const onFilterChange = useCallback((value: string) => {
         setFilter(value.toLowerCase())
@@ -33,22 +33,30 @@ export const Library = () => {
 
     return (
         <div style={{ maxWidth: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>
+            <div>
+                {
+                    isLoadingLibraries ?
+                        <CircularProgress /> :
+                        <Autocomplete
+                            style={{ flexGrow: "1" }}
+                            defaultValue={libraries.find(l => l.active)}
+                            getOptionLabel={(option) => typeof option === "string" ? option : option.name}
+                            options={libraries}
+                            renderInput={(params) => <TextField {...params} label="Library" />}
+                            onChange={(_e, value) => setSelectedLibrary(value || undefined)}
+                        />
+                }
+            </div>
             <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Autocomplete
                     style={{ flexGrow: "1" }}
                     freeSolo
-                    options={libraries.map(l => l.id)}
-                    renderInput={(params) => <TextField {...params} label="Library" />}
-                    onInputChange={(_e, value) => setSelectedLibrary(parseInt(value) || 1)}
-                />
-                <Autocomplete
-                    style={{ flexGrow: "1" }}
-                    freeSolo
-                    options={Array.from(new Set(libraryItems.flatMap(i => [i.positions, i.word])))}
+                    // options={Array.from(new Set(libraryItems.flatMap(i => [{ value: i.positions.toString(), label: `Positions: ${i.positions}` }, { value: i.word, label: `Word: ${i.word}` }])))}
+                    options={Array.from(new Set(libraryItems.flatMap(i => [i.positions.toString(), i.word])))}
                     renderInput={(params) => <TextField {...params} label="Filter" />}
-                    onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
+                    onInputChange={(_e, value) => { console.log(value); onFilterChangeDebounced(value || "") }}
                 />
-                <AddWordModal libraryId={selectedLibrary} />
+                <AddWordModal libraryId={selectedLibrary?.id || 1} />
             </div>
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">

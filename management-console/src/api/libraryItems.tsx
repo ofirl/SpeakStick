@@ -10,7 +10,7 @@ type LibraryItem = {
     word: string,
 }
 export const useGetLibraryItems = (libraryId?: number) => {
-    return useQuery(['libraryItems'], () => axios.get(`${baseUrl}/library_items`, { params: { libraryId } }).then(value => value.data as LibraryItem[]))
+    return useQuery(['libraryItems', libraryId], () => axios.get(`${baseUrl}/library_items`, { params: { libraryId } }).then(value => value.data as LibraryItem[]))
 };
 
 type UpdateLibrartItemsParams = { libraryId: number, position: string, word: string };

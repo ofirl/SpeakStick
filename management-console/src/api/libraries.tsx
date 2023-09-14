@@ -4,7 +4,7 @@ import { baseUrl } from "./consts";
 
 // import { toast } from "react-toastify";
 
-type Library = {
+export type Library = {
     id: number,
     name: string,
     description: string,

@@ -110,7 +110,7 @@ def create_default_db(database_file):
             
             if existing_row is None:
                 # Insert default values into the "words" table
-                cursor.execute('INSERT INTO libraries (name, description, editable) VALUES (?, ?, ?)', (libraryName, libraryInfo.get("description"), True))
+                cursor.execute('INSERT INTO libraries (name, description, editable, active) VALUES (?, ?, ?)', (libraryName, libraryInfo.get("description"), False, True))
 
             cursor.execute('SELECT * FROM libraries WHERE name = ?', (libraryName,))
             libraryRow = cursor.fetchone()
