@@ -78,6 +78,8 @@ def get_library_items(libraryId):
         if connection:
             connection.close()
     
+    print("1111")
+    print(library_items)
     return library_items
 
 def update_config(key, value):

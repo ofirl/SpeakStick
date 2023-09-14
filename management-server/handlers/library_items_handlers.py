@@ -8,9 +8,11 @@ def getLibraryItems(self, query_parameters):
     if query_parameters != None:
         libraryId = query_parameters["libraryId"]
 
-    positions = db_utils.get_library_items(libraryId)
-    if positions:
-        response_utils.okWithData(self, positions)
+    library_items = db_utils.get_library_items(libraryId)
+    print("22222")
+    print(library_items)
+    if library_items:
+        response_utils.okWithData(self, library_items)
     else:
         response_utils.InternalServerError(self)
 
