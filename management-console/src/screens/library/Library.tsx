@@ -22,7 +22,7 @@ export const Library = () => {
     const [filter, setFilter] = useState("");
     // const { data: libraries } = useGetLibraries();
     const [selectedLibrary] = useState(0);
-    const { data: positions = {}, isLoading } = useGetLibraryItems(selectedLibrary);
+    const { data: libraryItems = [], isLoading } = useGetLibraryItems(selectedLibrary);
 
     const onFilterChange = useCallback((value: string) => {
         setFilter(value.toLowerCase())
@@ -37,7 +37,7 @@ export const Library = () => {
                 <Autocomplete
                     style={{ flexGrow: "1" }}
                     freeSolo
-                    options={Array.from(new Set([...Object.keys(positions), ...Object.values(positions)]))}
+                    options={Array.from(new Set([...Object.keys(libraryItems), ...Object.values(libraryItems)]))}
                     renderInput={(params) => <TextField {...params} label="Filter" />}
                     onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
                 />
@@ -65,10 +65,10 @@ export const Library = () => {
                                 </TableRow>
                             ))
                             :
-                            Object.entries(positions).filter(([positions, word]) =>
-                                positions.toLowerCase().includes(filter) ||
+                            libraryItems.filter(({ positions, word }) =>
+                                positions.toString().toLowerCase().includes(filter) ||
                                 word.toLowerCase().includes(filter))
-                                .map(([positions, word]) => (
+                                .map(({ positions, word }) => (
                                     <TableRow
                                         key={positions}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -81,7 +81,7 @@ export const Library = () => {
                                                 size="large"
                                                 color="inherit"
                                                 aria-label="delete word"
-                                                onClick={() => deletePosition({ libraryId: selectedLibrary, position: positions })}
+                                                onClick={() => deletePosition({ libraryId: selectedLibrary, position: positions.toString() })}
                                             >
                                                 {isDeleting ? <CircularProgress /> : <DeleteIcon />}
                                             </IconButton>

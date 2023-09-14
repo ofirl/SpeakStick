@@ -4,8 +4,13 @@ import { baseUrl } from "./consts";
 
 import { toast } from "react-toastify";
 
+type LibraryItem = {
+    libraryId: number,
+    positions: number,
+    word: string,
+}
 export const useGetLibraryItems = (libraryId?: number) => {
-    return useQuery(['libraryItems'], () => axios.get(`${baseUrl}/library_items${libraryId ? `?libraryId=${libraryId}` : ""}`).then(value => value.data as Record<string, string>))
+    return useQuery(['libraryItems'], () => axios.get(`${baseUrl}/library_items${libraryId ? `?libraryId=${libraryId}` : ""}`).then(value => value.data as LibraryItem[]))
 };
 
 type UpdateLibrartItemsParams = { libraryId: number, position: string, word: string };

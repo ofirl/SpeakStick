@@ -49,10 +49,10 @@ export const Words = () => {
 
     const { mutateAsync: uploadWord, isLoading: isUploading } = useUploadWord();
     const { mutateAsync: deleteWord, isLoading: isDeleting } = useDeleteWord();
-    const { data: positions = {} } = useGetLibraryItems();
+    const { data: libraryItems = [] } = useGetLibraryItems();
 
     const onDeleteWord = (word: string) => {
-        const wordPositions = Object.entries(positions).filter(([, positionWord]) => positionWord === word).map(([position]) => position);
+        const wordPositions = libraryItems.filter(({ word: positionWord }) => positionWord === word).map(({ positions }) => positions);
         if (wordPositions.length === 0) {
             deleteWord({ word });
             return;
@@ -62,7 +62,7 @@ export const Words = () => {
                 deleteWord({ word });
                 setDeleteConfirmationOpen(false);
             },
-            positions: wordPositions,
+            positions: wordPositions.map(p => p.toString()),
             word: word
         });
         setDeleteConfirmationOpen(true);
