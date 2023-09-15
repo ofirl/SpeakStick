@@ -41,3 +41,12 @@ def deleteLibrary(self, query_parameters):
         response_utils.okResponse(self)
     else:
         response_utils.InternalServerError(self)
+
+def activateLibrary(self, query_parameters):
+    libraryId = query_parameters.get('libraryId')[0]
+
+    success = db_utils.activate_library(libraryId)
+    if success:
+        response_utils.okResponse(self)
+    else:
+        response_utils.InternalServerError(self)
