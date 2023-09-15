@@ -194,6 +194,7 @@ def update_library_item(libraryId, positions, new_word):
     return output
 
 def add_library(name, description):
+    output = True
     connection = None
 
     try:
@@ -223,6 +224,7 @@ def add_library(name, description):
         connection.commit()
         
     except sqlite3.Error as e:
+        output = False
         print("An error occurred:", e)
         
     finally:
@@ -230,9 +232,10 @@ def add_library(name, description):
         if connection:
             connection.close()
 
-    return True
+    return output
 
 def duplicate_library(name, description, baseLibraryId):
+    output = True
     connection = None
 
     try:
@@ -277,6 +280,7 @@ def duplicate_library(name, description, baseLibraryId):
         connection.commit()
         
     except sqlite3.Error as e:
+        output = False
         print("An error occurred:", e)
         
     finally:
@@ -284,9 +288,10 @@ def duplicate_library(name, description, baseLibraryId):
         if connection:
             connection.close()
 
-    return True
+    return output
 
 def delete_library_item(libraryId, position):
+    output = True
     connection = None
 
     try:
@@ -308,6 +313,7 @@ def delete_library_item(libraryId, position):
             raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
         
     except sqlite3.Error as e:
+        output = False
         print("An error occurred:", e)
         
     finally:
@@ -315,9 +321,10 @@ def delete_library_item(libraryId, position):
         if connection:
             connection.close()
 
-    return True
+    return output
 
 def delete_library(libraryId):
+    output = True
     connection = None
 
     try:
@@ -327,7 +334,7 @@ def delete_library(libraryId):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        cursor.execute('DELETE FROM libraries WHERE libraryId = ?', (libraryId,))
+        cursor.execute('DELETE FROM libraries WHERE id = ?', (libraryId,))
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
@@ -339,6 +346,7 @@ def delete_library(libraryId):
             raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
         
     except sqlite3.Error as e:
+        output = False
         print("An error occurred:", e)
         
     finally:
@@ -346,7 +354,7 @@ def delete_library(libraryId):
         if connection:
             connection.close()
 
-    return True
+    return output
 
 def delete_library_items_for_word(word):
     output = True
@@ -365,6 +373,7 @@ def delete_library_items_for_word(word):
         connection.commit()
 
     except sqlite3.Error as e:
+        output = False
         print("An error occurred:", e)
         
     finally:

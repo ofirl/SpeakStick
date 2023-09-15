@@ -85,7 +85,7 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                         <AddLibraryModal baseLibraryId={selectedLibrary?.id} />
                         <Tooltip title="Delete library">
                             <IconButton
-                                disabled={!selectedLibrary || !isDeletingLibrary}
+                                disabled={!selectedLibrary || isDeletingLibrary}
                                 size="large"
                                 color="inherit"
                                 aria-label="delete library"
