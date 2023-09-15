@@ -37,7 +37,8 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                         <Autocomplete
                             style={{ flexGrow: "1" }}
                             sx={{ flexGrow: "1", }}
-                            defaultValue={libraries.find(l => l.active)}
+                            // defaultValue={libraries.find(l => l.active)}
+                            value={selectedLibrary || libraries.find(l => l.active)}
                             getOptionLabel={(option) => typeof option === "string" ? option : option.name}
                             options={libraries}
                             renderOption={(props, option) => (

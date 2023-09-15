@@ -65,14 +65,14 @@ routes = [
         "handler": handlers.libraries_handlers.duplicateLibrary,
     },
     {
-        "path": "/library",
-        "method": "POST",
-        "handler": handlers.libraries_handlers.addLibrary,
-    },
-    {
         "path": "/library_item",
         "method": "POST",
         "handler": handlers.library_items_handlers.updateLibraryItem,
+    },
+    {
+        "path": "/library",
+        "method": "POST",
+        "handler": handlers.libraries_handlers.addLibrary,
     },
     {
         "path": "/word",
