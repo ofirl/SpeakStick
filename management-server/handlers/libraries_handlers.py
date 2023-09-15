@@ -34,7 +34,7 @@ def duplicateLibrary(self, post_data):
         response_utils.InternalServerError(self)
 
 def deleteLibrary(self, query_parameters):
-    libraryId = query_parameters.get('libraryId')
+    libraryId = query_parameters.get('libraryId')[0]
 
     success = db_utils.delete_library(libraryId)
     if success:

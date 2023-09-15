@@ -324,7 +324,6 @@ def delete_library_item(libraryId, position):
     return output
 
 def delete_library(libraryId,):
-    print(libraryId)
     output = True
     connection = None
 
