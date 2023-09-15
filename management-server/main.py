@@ -86,14 +86,14 @@ routes = [
     },
     # DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE ---
     {
-        "path": "/library",
-        "method": "DELETE",
-        "handler": handlers.libraries_handlers.deleteLibrary,
-    },
-    {
         "path": "/library_item",
         "method": "DELETE",
         "handler": handlers.library_items_handlers.deleteLibraryItem,
+    },
+    {
+        "path": "/library",
+        "method": "DELETE",
+        "handler": handlers.libraries_handlers.deleteLibrary,
     },
     {
         "path": "/word",
