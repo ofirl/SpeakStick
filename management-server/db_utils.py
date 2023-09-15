@@ -323,7 +323,7 @@ def delete_library_item(libraryId, position):
 
     return output
 
-def delete_library(libraryId):
+def delete_library(libraryId,):
     output = True
     connection = None
 
