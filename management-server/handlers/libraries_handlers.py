@@ -15,9 +15,9 @@ def addLibrary(self, post_data):
     name = json_data.get('name')
     description = json_data.get('description')
 
-    libraries = db_utils.add_library(name, description)
-    if libraries:
-        response_utils.okWithData(self, libraries)
+    success = db_utils.add_library(name, description)
+    if success:
+        response_utils.okResponse(self)
     else:
         response_utils.InternalServerError(self)
 
@@ -27,8 +27,17 @@ def duplicateLibrary(self, post_data):
     description = json_data.get('description')
     baseLibraryId = json_data.get('baseLibraryId')
 
-    libraries = db_utils.duplicate_library(name, description, baseLibraryId)
-    if libraries:
-        response_utils.okWithData(self, libraries)
+    success = db_utils.duplicate_library(name, description, baseLibraryId)
+    if success:
+        response_utils.okResponse(self)
+    else:
+        response_utils.InternalServerError(self)
+
+def deleteLibrary(self, query_parameters):
+    libraryId = query_parameters.get('libraryId')
+
+    success = db_utils.delete_library(libraryId)
+    if success:
+        response_utils.okResponse(self)
     else:
         response_utils.InternalServerError(self)

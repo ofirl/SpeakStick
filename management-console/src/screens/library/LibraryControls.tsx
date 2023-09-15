@@ -6,12 +6,11 @@ import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 
 import LockIcon from '@mui/icons-material/Lock';
-import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
 import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
 import CheckIcon from '@mui/icons-material/Check';
 
-import { Library, useGetLibraries } from "../../api/libraries";
+import { Library, useDeleteLibrary, useGetLibraries } from "../../api/libraries";
 import { useEffect } from 'react';
 import { Tooltip } from '@mui/material';
 import { AddLibraryModal } from './AddLIbraryModal';
@@ -26,6 +25,8 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
         if (libraries && libraries.length > 0)
             onChange(libraries.find(l => l.active))
     }, [libraries, onChange])
+
+    const { mutateAsync: deleteLibrary, isLoading: isDeletingLibrary } = useDeleteLibrary();
 
     return (
         <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -84,11 +85,13 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                         <AddLibraryModal baseLibraryId={selectedLibrary?.id} />
                         <Tooltip title="Delete library">
                             <IconButton
+                                disabled={!selectedLibrary || !isDeletingLibrary}
                                 size="large"
                                 color="inherit"
                                 aria-label="delete library"
+                                onClick={() => selectedLibrary && deleteLibrary({ libraryId: selectedLibrary.id })}
                             >
-                                <FolderDeleteIcon />
+                                {isDeletingLibrary ? <CircularProgress /> : <FolderDeleteIcon />}
                             </IconButton>
                         </Tooltip>
                     </>

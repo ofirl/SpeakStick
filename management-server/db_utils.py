@@ -287,7 +287,6 @@ def duplicate_library(name, description, baseLibraryId):
     return True
 
 def delete_library_item(libraryId, position):
-    output = True
     connection = None
 
     try:
@@ -306,8 +305,7 @@ def delete_library_item(libraryId, position):
         connection.commit()
 
         if affected_rows != 1:
-            print("Error: Updated ", affected_rows, " rows. Expected 1.")
-            output = False
+            raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
         
     except sqlite3.Error as e:
         print("An error occurred:", e)
@@ -317,7 +315,38 @@ def delete_library_item(libraryId, position):
         if connection:
             connection.close()
 
-    return output
+    return True
+
+def delete_library(libraryId):
+    connection = None
+
+    try:
+        # Connect to the SQLite database
+        connection = sqlite3.connect(db_file)
+        
+        # Create a cursor object to interact with the database
+        cursor = connection.cursor()
+        
+        cursor.execute('DELETE FROM libraries WHERE libraryId = ?', (libraryId,))
+
+        # Check how many rows were affected by the update
+        affected_rows = cursor.rowcount
+
+        # Commit the changes to the database
+        connection.commit()
+
+        if affected_rows != 1:
+            raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
+        
+    except sqlite3.Error as e:
+        print("An error occurred:", e)
+        
+    finally:
+        # Close the database connection
+        if connection:
+            connection.close()
+
+    return True
 
 def delete_library_items_for_word(word):
     output = True

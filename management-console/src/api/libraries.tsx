@@ -49,3 +49,20 @@ export const useCreateLibrary = () => {
         }
     )
 };
+
+type DeleteLibraryParams = { libraryId: number };
+export const useDeleteLibrary = () => {
+    const queryClient = useQueryClient();
+    return useMutation((params: DeleteLibraryParams) =>
+        axios.delete(`${baseUrl}/library`, { params }).then(value => value.status === 200),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(["libraries"]);
+                toast.success("Library deleted")
+            },
+            onError: () => {
+                toast.error("Error deleting library")
+            }
+        }
+    )
+};
