@@ -41,8 +41,8 @@ defaultConfigs = [
 ]
 
 libraries = {
-    "defaultLibrary": {
-        "description": "Default library",
+    "Default Library": {
+        "description": "Basic library to get started",
         "words": {
             "8": "Big.wav",
             "852": "Yes.wav",
