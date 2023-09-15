@@ -60,6 +60,16 @@ routes = [
         "handler": handlers.configs_handlers.updateConfig,
     },
     {
+        "path": "/library",
+        "method": "POST",
+        "handler": handlers.libraries_handlers.addLibrary,
+    },
+    {
+        "path": "/duplicate_library",
+        "method": "POST",
+        "handler": handlers.libraries_handlers.duplicateLibrary,
+    },
+    {
         "path": "/library_item",
         "method": "POST",
         "handler": handlers.library_items_handlers.updateLibraryItem,
