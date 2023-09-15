@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { baseUrl } from "./consts";
 
@@ -12,6 +12,6 @@ export type Library = {
     editable: boolean
 }
 
-export const useGetLibraries = () => {
-    return useQuery(['libraries'], () => axios.get(`${baseUrl}/libraries`).then(value => value.data as Library[]))
+export const useGetLibraries = (options: UseQueryOptions<Library[], unknown, Library[], string[]> = {}) => {
+    return useQuery(['libraries'], () => axios.get(`${baseUrl}/libraries`).then(value => value.data as Library[]), options)
 };

@@ -16,12 +16,13 @@ import { useDeleteLibraryItem, useGetLibraryItems } from '../../api/libraryItems
 import { AddWordModal } from './AddLibraryItemModal';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Library as LibraryT, useGetLibraries } from '../../api/libraries';
+import { Library as LibraryT } from '../../api/libraries';
+import { LibraryControls } from './LibraryControls';
 
 export const Library = () => {
     const [filter, setFilter] = useState("");
-    const { data: libraries = [], isLoading: isLoadingLibraries } = useGetLibraries();
     const [selectedLibrary, setSelectedLibrary] = useState<LibraryT | undefined>();
+
     const { data: libraryItems = [], isLoading } = useGetLibraryItems(selectedLibrary?.id);
 
     const onFilterChange = useCallback((value: string) => {
@@ -33,21 +34,7 @@ export const Library = () => {
 
     return (
         <div style={{ maxWidth: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>
-            <div>
-                {
-                    isLoadingLibraries ?
-                        <CircularProgress /> :
-                        <Autocomplete
-                            style={{ flexGrow: "1" }}
-                            defaultValue={libraries.find(l => l.active)}
-                            getOptionLabel={(option) => typeof option === "string" ? option : option.name}
-                            options={libraries}
-                            renderInput={(params) => <TextField {...params} label="Library" />}
-                            onChange={(_e, value) => setSelectedLibrary(value || undefined)}
-                            disableClearable
-                        />
-                }
-            </div>
+            <LibraryControls selectedLibrary={selectedLibrary} onChange={setSelectedLibrary} />
             <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Autocomplete
                     style={{ flexGrow: "1" }}
@@ -93,11 +80,11 @@ export const Library = () => {
                                         <TableCell> {word} </TableCell>
                                         <TableCell>
                                             <IconButton
-                                                disabled={isDeleting}
+                                                disabled={isDeleting || !selectedLibrary}
                                                 size="large"
                                                 color="inherit"
                                                 aria-label="delete word"
-                                                onClick={() => deletePosition({ libraryId: selectedLibrary, position: positions.toString() })}
+                                                onClick={() => selectedLibrary && deletePosition({ libraryId: selectedLibrary.id, position: positions.toString() })}
                                             >
                                                 {isDeleting ? <CircularProgress /> : <DeleteIcon />}
                                             </IconButton>
