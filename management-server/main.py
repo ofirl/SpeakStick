@@ -115,6 +115,7 @@ def getRouteHandler(self, method):
         if routeHandler == None:
             response_utils.NotFound(self)
         else:
+            print("Running handler for ", route.get("path"))
             return routeHandler
         
     return None
