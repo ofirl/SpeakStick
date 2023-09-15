@@ -408,7 +408,7 @@ def activate_library(libraryId,):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
-        cursor.execute('UPDATE libraries SET active = False WHERE active = True', (libraryId,))
+        cursor.execute('UPDATE libraries SET active = False WHERE active = True')
         affected_rows = cursor.rowcount
         if affected_rows != 1:
             raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
