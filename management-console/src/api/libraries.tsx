@@ -66,3 +66,20 @@ export const useDeleteLibrary = () => {
         }
     )
 };
+
+type ActivateLibraryParams = { libraryId: number };
+export const useActivateLibrary = () => {
+    const queryClient = useQueryClient();
+    return useMutation((params: ActivateLibraryParams) =>
+        axios.get(`${baseUrl}/library/activate`, { params }).then(value => value.status === 200),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(["libraries"]);
+                toast.success("Library activated")
+            },
+            onError: () => {
+                toast.error("Error activating library")
+            }
+        }
+    )
+};

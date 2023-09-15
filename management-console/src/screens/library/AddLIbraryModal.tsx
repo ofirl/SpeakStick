@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
@@ -11,7 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 
-import { useCreateLibrary, useDuplicateLibrary } from "../../api/libraries";
+import { useCreateLibrary, useDuplicateLibrary, useGetLibraries } from "../../api/libraries";
 
 const modalBoxStyle = {
     position: 'absolute',
@@ -34,22 +34,27 @@ type AddLibraryModalProps = {
 }
 export const AddLibraryModal = ({ baseLibraryId }: AddLibraryModalProps) => {
     const [modalOpen, setModalOpen] = useState(false);
-    const nameRef = useRef<HTMLInputElement>(null)
+    const [libraryName, setLibraryName] = useState("")
     const descriptionRef = useRef<HTMLInputElement>(null)
+
+    const { data: libraries = [] } = useGetLibraries();
+    const nameError = useMemo(() =>
+        libraries.find(l => l.name === libraryName) != null ? "Name already exists" : ""
+        , [libraries, libraryName])
 
     const { mutateAsync: createLibrary, isLoading: isCreatingLibrary } = useCreateLibrary();
     const { mutateAsync: duplicateLibrary, isLoading: isDuplicatingLibrary } = useDuplicateLibrary();
     const isLoading = isCreatingLibrary || isDuplicatingLibrary;
 
     const onSave = () => {
-        if (!nameRef.current || !descriptionRef.current)
+        if (!libraryName || !descriptionRef.current)
             return;
 
         let promise;
         if (baseLibraryId != null)
-            promise = duplicateLibrary({ baseLibraryId, name: nameRef.current.value, description: descriptionRef.current.value })
+            promise = duplicateLibrary({ baseLibraryId, name: libraryName, description: descriptionRef.current.value })
         else
-            promise = createLibrary({ name: nameRef.current.value, description: descriptionRef.current.value })
+            promise = createLibrary({ name: libraryName, description: descriptionRef.current.value })
 
         promise.then(() => {
             setModalOpen(false)
@@ -81,9 +86,16 @@ export const AddLibraryModal = ({ baseLibraryId }: AddLibraryModalProps) => {
                         }
                         library
                     </Typography>
-                    <TextField fullWidth label="Name" variant="outlined" inputRef={nameRef} />
+                    <TextField fullWidth
+                        label="Name"
+                        variant="outlined"
+                        value={libraryName}
+                        onInput={(e) => setLibraryName((e.target as HTMLInputElement).value)}
+                        error={!!nameError}
+                        helperText={nameError || undefined}
+                    />
                     <TextField fullWidth label="Description" variant="outlined" inputRef={descriptionRef} />
-                    <Button disabled={isLoading} variant="contained" style={{ marginTop: "1rem", alignSelf: "end" }} onClick={onSave}>
+                    <Button disabled={isLoading || !!nameError} variant="contained" style={{ marginTop: "1rem", alignSelf: "end" }} onClick={onSave}>
                         {isLoading ? <CircularProgress /> : "Save"}
                     </Button>
                 </Box>

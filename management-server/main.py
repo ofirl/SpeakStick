@@ -19,6 +19,11 @@ routes = [
         "handler": handlers.configs_handlers.getConfigs,
     },
     {
+        "path": "/library/activate",
+        "method": "GET",
+        "handler": handlers.libraries_handlers.activateLibrary,
+    },
+    {
         "path": "/libraries",
         "method": "GET",
         "handler": handlers.libraries_handlers.getLibraries,

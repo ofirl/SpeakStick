@@ -10,7 +10,7 @@ import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
 import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
 import CheckIcon from '@mui/icons-material/Check';
 
-import { Library, useDeleteLibrary, useGetLibraries } from "../../api/libraries";
+import { Library, useActivateLibrary, useDeleteLibrary, useGetLibraries } from "../../api/libraries";
 import { useEffect } from 'react';
 import { Tooltip } from '@mui/material';
 import { AddLibraryModal } from './AddLIbraryModal';
@@ -27,6 +27,7 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
     }, [libraries, onChange])
 
     const { mutateAsync: deleteLibrary, isLoading: isDeletingLibrary } = useDeleteLibrary();
+    const { mutateAsync: activateLibrary, isLoading: isActivatingLibrary } = useActivateLibrary();
 
     return (
         <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -37,7 +38,6 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                         <Autocomplete
                             style={{ flexGrow: "1" }}
                             sx={{ flexGrow: "1", }}
-                            // defaultValue={libraries.find(l => l.active)}
                             value={selectedLibrary || libraries.find(l => l.active)}
                             getOptionLabel={(option) => typeof option === "string" ? option : option.name}
                             options={libraries}
@@ -76,9 +76,11 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                         <AddLibraryModal />
                         <Tooltip title="Activate library">
                             <IconButton
+                                disabled={isActivatingLibrary || selectedLibrary?.active}
                                 size="large"
                                 color="inherit"
                                 aria-label="activate library"
+                                onClick={() => selectedLibrary && activateLibrary({ libraryId: selectedLibrary.id })}
                             >
                                 <FolderSpecialIcon />
                             </IconButton>
@@ -86,7 +88,7 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                         <AddLibraryModal baseLibraryId={selectedLibrary?.id} />
                         <Tooltip title="Delete library">
                             <IconButton
-                                disabled={!selectedLibrary || isDeletingLibrary}
+                                disabled={!selectedLibrary || isDeletingLibrary || selectedLibrary.active}
                                 size="large"
                                 color="inherit"
                                 aria-label="delete library"
