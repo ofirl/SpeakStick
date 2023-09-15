@@ -345,6 +345,8 @@ def delete_library(libraryId,):
         if affected_rows != 1:
             raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
         
+        cursor.execute('DELETE FROM library_items WHERE libraryId = ?', (libraryId,))
+
     except sqlite3.Error as e:
         output = False
         print("An error occurred:", e)
