@@ -99,7 +99,7 @@ def create_default_db(database_file):
                 positions INTEGER,
                 word TEXT,
                 PRIMARY KEY (libraryId, positions),
-                FOREIGN KEY (libraryId) REFERENCES libraries(id)
+                FOREIGN KEY (libraryId) REFERENCES libraries(id) ON DELETE CASCADE
             )
         ''')
 
