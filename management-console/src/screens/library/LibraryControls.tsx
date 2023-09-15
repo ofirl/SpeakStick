@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import LockIcon from '@mui/icons-material/Lock';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
@@ -15,6 +14,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Library, useGetLibraries } from "../../api/libraries";
 import { useEffect } from 'react';
 import { Tooltip } from '@mui/material';
+import { AddLibraryModal } from './AddLIbraryModal';
 
 type LibraryControlsProps = {
     selectedLibrary: Library | undefined,
@@ -71,15 +71,7 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                             disableClearable
                             blurOnSelect
                         />
-                        <Tooltip title="Add library">
-                            <IconButton
-                                size="large"
-                                color="inherit"
-                                aria-label="add library"
-                            >
-                                <LibraryAddIcon />
-                            </IconButton>
-                        </Tooltip>
+                        <AddLibraryModal />
                         <Tooltip title="Activate library">
                             <IconButton
                                 size="large"
@@ -89,15 +81,7 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                                 <FolderSpecialIcon />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Duplicate library">
-                            <IconButton
-                                size="large"
-                                color="inherit"
-                                aria-label="duplicate library"
-                            >
-                                <FolderCopyIcon />
-                            </IconButton>
-                        </Tooltip>
+                        <AddLibraryModal baseLibraryId={selectedLibrary?.id} />
                         <Tooltip title="Delete library">
                             <IconButton
                                 size="large"

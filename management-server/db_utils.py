@@ -267,7 +267,8 @@ def duplicate_library(name, description, baseLibraryId):
 
         baseLibraryItems = get_library_items(baseLibraryId)
         for item in baseLibraryItems:
-            # libraryId, positions, word
+            print(item.positions)
+            print(item.word)
             cursor.execute('INSERT INTO library_items (libraryId, positions, word) VALUES (:libraryId, :positions, :word)', (createdLibraryId, item.positions, item.word))
 
             affected_rows = cursor.rowcount
