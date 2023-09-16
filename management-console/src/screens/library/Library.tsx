@@ -43,7 +43,7 @@ export const Library = () => {
                     freeSolo
                     options={Array.from(new Set(libraryItems.flatMap(i => [i.positions.toString(), i.word])))}
                     renderInput={(params) => <TextField {...params} label="Filter words" />}
-                    onInputChange={(_e, value) => { console.log(value); onFilterChangeDebounced(value || "") }}
+                    onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
                 />
                 <AddWordModal libraryId={selectedLibrary?.id || 1} />
             </div>

@@ -14,6 +14,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Words } from './screens/words/Words';
 import { MuiThemeProvider } from './theme/theme';
+import { AdvancedSettings } from './screens/AdvancedSettings/AdvancedSettings';
 
 const queryClient = new QueryClient()
 
@@ -30,6 +31,7 @@ function App() {
                             <Route path="/settings" Component={Settings} />
                             <Route path="/library" Component={Library} />
                             <Route path="/words" Component={Words} />
+                            <Route path="/advanced_settings" Component={AdvancedSettings} />
                             {/* default route */}
                             <Route path="/" Component={Library} />
                         </Routes>

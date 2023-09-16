@@ -5,6 +5,8 @@ workdir="/opt/SpeakStick"
 cd "${workdir}"
 git pull
 
+pip3 install -r requirements.txt
+
 cd management-console
 yarn deploy
 

@@ -18,6 +18,14 @@ export const useRestartStickController = () => {
     )
 };
 
+export const useApplicationVersions = (options: UseQueryOptions<string[], unknown, string[], string[]> = {}) => {
+    return useQuery(
+        ['versions'],
+        () => axios.get(baseUrl + "/versions").then(value => value.data as string[]),
+        options
+    )
+};
+
 export const useUpgradeApplication = () => {
     return useMutation(() =>
         axios.get(baseUrl + "/upgrade").then(value => value.status === 200),
