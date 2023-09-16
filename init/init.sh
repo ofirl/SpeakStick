@@ -4,6 +4,8 @@
 # cd /opt
 # git clone https://github.com/ofirl/SpeakStick.git
 
+# git tag -l | sort ???? | head -n 1
+
 sudo apt update
 sudo apt upgrade
 
