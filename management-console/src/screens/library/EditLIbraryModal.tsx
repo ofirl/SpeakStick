@@ -8,7 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import EditIcon from '@mui/icons-material/Edit';
 
-import { useCreateLibrary, useDuplicateLibrary, useGetLibraries } from "../../api/libraries";
+import { useEditLibrary, useGetLibraries } from "../../api/libraries";
 import MenuItem from "@mui/material/MenuItem";
 
 const modalBoxStyle = {
@@ -28,10 +28,11 @@ const modalBoxStyle = {
 };
 
 type EditLibraryModalProps = {
-    baseLibraryId?: number,
+    libraryId?: number,
+    disabled?: boolean
     closeMenu: () => void
 }
-export const EditLibraryModal = ({ baseLibraryId, closeMenu }: EditLibraryModalProps) => {
+export const EditLibraryModal = ({ libraryId, closeMenu, disabled }: EditLibraryModalProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [libraryName, setLibraryName] = useState("");
     const descriptionRef = useRef<HTMLInputElement>(null);
@@ -41,21 +42,13 @@ export const EditLibraryModal = ({ baseLibraryId, closeMenu }: EditLibraryModalP
         libraries.find(l => l.name === libraryName) != null ? "Name already exists" : ""
         , [libraries, libraryName]);
 
-    const { mutateAsync: createLibrary, isLoading: isCreatingLibrary } = useCreateLibrary();
-    const { mutateAsync: duplicateLibrary, isLoading: isDuplicatingLibrary } = useDuplicateLibrary();
-    const isLoading = isCreatingLibrary || isDuplicatingLibrary;
+    const { mutateAsync: updateLibrary, isLoading: isUpdatingLibrary } = useEditLibrary();
 
     const onSave = () => {
-        if (!libraryName || !descriptionRef.current)
+        if (libraryId == null || !libraryName || !descriptionRef.current)
             return;
 
-        let promise;
-        if (baseLibraryId != null)
-            promise = duplicateLibrary({ baseLibraryId, name: libraryName, description: descriptionRef.current.value });
-        else
-            promise = createLibrary({ name: libraryName, description: descriptionRef.current.value });
-
-        promise.then(() => {
+        updateLibrary({ libraryId: libraryId, name: libraryName, description: descriptionRef.current.value }).then(() => {
             setModalOpen(false);
             closeMenu();
         })
@@ -64,6 +57,7 @@ export const EditLibraryModal = ({ baseLibraryId, closeMenu }: EditLibraryModalP
     return (
         <>
             <MenuItem
+                disabled={disabled}
                 onClick={() => setModalOpen(true)}
                 sx={{ gap: "0.5rem" }}
                 disableRipple
@@ -88,8 +82,8 @@ export const EditLibraryModal = ({ baseLibraryId, closeMenu }: EditLibraryModalP
                         helperText={nameError || undefined}
                     />
                     <TextField fullWidth label="Description" variant="outlined" inputRef={descriptionRef} />
-                    <Button disabled={isLoading || !!nameError} variant="contained" style={{ marginTop: "1rem", alignSelf: "end" }} onClick={onSave}>
-                        {isLoading ? <CircularProgress /> : "Save"}
+                    <Button disabled={isUpdatingLibrary || !!nameError} variant="contained" style={{ marginTop: "1rem", alignSelf: "end" }} onClick={onSave}>
+                        {isUpdatingLibrary ? <CircularProgress /> : "Save"}
                     </Button>
                 </Box>
             </Modal >

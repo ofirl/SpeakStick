@@ -15,6 +15,7 @@ import { Library, useActivateLibrary, useDeleteLibrary, useGetLibraries } from "
 import { useEffect, useRef, useState } from 'react';
 import { Menu, MenuItem, Tooltip } from '@mui/material';
 import { AddLibraryModal } from './AddLIbraryModal';
+import { EditLibraryModal } from './EditLIbraryModal';
 
 type LibraryControlsProps = {
     selectedLibrary: Library | undefined,
@@ -99,6 +100,7 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                             open={menuOpen}
                             onClose={() => closeMenu()}
                         >
+                            <EditLibraryModal closeMenu={closeMenu} libraryId={selectedLibrary?.id} disabled={!selectedLibrary?.editable} />
                             <AddLibraryModal closeMenu={closeMenu} />
                             <MenuItem
                                 disabled={isActivatingLibrary || selectedLibrary?.active}

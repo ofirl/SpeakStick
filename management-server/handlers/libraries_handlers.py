@@ -37,9 +37,11 @@ def editLibrary(self, post_data, match_groups):
     json_data = json.loads(post_data.decode('utf-8'))
     name = json_data.get('name')
     description = json_data.get('description')
-    baseLibraryId = json_data.get('baseLibraryId')
 
-    success = db_utils.duplicate_library(name, description, baseLibraryId)
+    print(match_groups)
+    print(match_groups.get("id"))
+
+    success = db_utils.duplicate_library(name, description, match_groups.get("id"))
     if success:
         response_utils.okResponse(self)
     else:

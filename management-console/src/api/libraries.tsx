@@ -50,6 +50,23 @@ export const useCreateLibrary = () => {
     )
 };
 
+type EditLibraryParams = { libraryId: number, name: string, description: string };
+export const useEditLibrary = () => {
+    const queryClient = useQueryClient();
+    return useMutation((params: EditLibraryParams) =>
+        axios.post(`${baseUrl}/library/${params.libraryId}`, { params: { name: params.name, description: params.description } }).then(value => value.status === 200),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(["libraries"]);
+                toast.success("Library updated")
+            },
+            onError: () => {
+                toast.error("Error updating library")
+            }
+        }
+    )
+};
+
 type DeleteLibraryParams = { libraryId: number };
 export const useDeleteLibrary = () => {
     const queryClient = useQueryClient();
