@@ -20,8 +20,9 @@ jobs:
         id: get_latest_tag
         run: |
           latest_tag="$(git tag -l --sort=-v:refname | head -n 1)"
-          echo "latest_tag=$latest_tag" >> "$GITHUB_OUTPUT"
-          echo "latest_tag=`${latest_tag}`" >> "$GITHUB_STEP_SUMMARY"
+          latest_tag="${latest_tag%"$'\n'"}"  # Remove trailing newline
+          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+          echo "latest_tag=`${latest_tag}`" >> $GITHUB_STEP_SUMMARY
 
       - name: Increment Minor Version
         id: increment_version
@@ -31,7 +32,7 @@ jobs:
           minor_version=$((version_parts[1] + 1))
           new_tag="${version_parts[0]}.${minor_version}.0"
           echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
-          echo "new_tag=$new_tag" >> $GITHUB_STEP_SUMMARY
+          echo "new_tag=`$new_tag`" >> $GITHUB_STEP_SUMMARY
 
       - name: Create Tag
         run: |
