@@ -42,27 +42,7 @@ jobs:
           git tag $new_tag
           git push origin $new_tag
 
-      # - name: Build Management Console
-      #   run: |
-      #     npm install -g pnpm
-      #     cd management-console
-      #     pnpm install
-      #     pnpm run build
-      #     zip -r dist/management-console.zip dist
-
-      # - name: Create Release
-      #   id: create_release
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     tag_name: ${{ steps.increment_version.outputs.new_tag }}
-      #     generate_release_notes: true
-      #     files: |
-      #       management-console/dist/management-console.zip
-
-      # - name: Set Release URL
-      #   run: echo "[${{ steps.increment_version.outputs.new_tag }}](https://github.com/${{ github.repository }}/releases/tag/${{ steps.increment_version.outputs.new_tag }})" >> $GITHUB_STEP_SUMMARY
-
-  call-workflow-passing-data:
+  build_and_release:
     needs: create_tag
     uses: ofirl/SpeakStick/.github/workflows/build_and_release.yml@master
     with:
