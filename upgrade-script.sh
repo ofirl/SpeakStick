@@ -4,10 +4,10 @@ workdir="/opt/SpeakStick"
 cd "${workdir}"
 
 latest_tag=$1
+git fetch
 
 if [ -z latest_tag ]
 then
-    git fetch
     latest_tag=$(git tag -l --sort=-v:refname | head -n 1)
 fi
 
