@@ -20,7 +20,7 @@ jobs:
         id: get_latest_tag
         run: |
           latest_tag="$(git tag -l --sort=-v:refname | head -n 1)"
-          latest_tag=$(echo "$latest_tag" | tr -d '\n')
+          # latest_tag=$(echo "$latest_tag" | tr -d '\n')
           echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
           echo "latest_tag=`${latest_tag}`" >> $GITHUB_STEP_SUMMARY
 

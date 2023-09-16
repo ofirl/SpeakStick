@@ -15,8 +15,13 @@ git checkout $latest_tag
 
 pip3 install -r requirements.txt
 
-cd management-console
-yarn deploy
+# Download console-management artifact
+wget -P /tmp https://github.com/ofirl/SpeakStick/releases/download/$latest_tag/management-console.zip
+# Decompress console-management artifact
+rm -r /opt/SpeakStick/management-console/dist
+unzip /tmp/management-console.zip -d /opt/SpeakStick/management-console
+# Clean up
+rm /tmp/management-console.zip
 
 # always restart the services last
 sudo systemctl restart speakstick speakstick-management-server
