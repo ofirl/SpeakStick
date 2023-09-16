@@ -8,7 +8,7 @@ on:
         type: string
 
 jobs:
-  bild_and_release:
+  build_and_release:
     runs-on: ubuntu-latest
 
     steps:
