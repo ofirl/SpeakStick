@@ -258,11 +258,8 @@ def switch_version(version):
 
 def get_versions():
     try:
-        print("starting versions")
         repo = git.Repo("/opt/SpeakStick")
-        print(repo)
         tags = [str(tag) for tag in repo.tags]
-        print(tags)
         return tags
 
     except Exception as e:
