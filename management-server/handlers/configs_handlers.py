@@ -3,14 +3,14 @@ import json
 import db_utils
 import response_utils
 
-def getConfigs(self, query_parameters):
+def getConfigs(self, query_parameters, match_groups):
     configs = db_utils.get_configs()
     if configs:
         response_utils.okWithData(self, configs)
     else:
         response_utils.InternalServerError(self)
 
-def updateConfig(self, post_data):
+def updateConfig(self, post_data, match_groups):
     json_data = json.loads(post_data.decode('utf-8'))
     key = json_data.get('key')
     value = json_data.get('value')

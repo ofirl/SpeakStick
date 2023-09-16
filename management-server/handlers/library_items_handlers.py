@@ -3,7 +3,7 @@ import json
 import db_utils
 import response_utils
 
-def getLibraryItems(self, query_parameters):
+def getLibraryItems(self, query_parameters, match_groups):
     libraryId = None
     if query_parameters != None:
         libraryId = query_parameters["libraryId"][0]
@@ -14,7 +14,7 @@ def getLibraryItems(self, query_parameters):
     else:
         response_utils.InternalServerError(self)
 
-def updateLibraryItem(self, post_data):
+def updateLibraryItem(self, post_data, match_groups):
     json_data = json.loads(post_data.decode('utf-8'))
     libraryId = json_data.get('libraryId')
     position = json_data.get('position')
@@ -25,7 +25,7 @@ def updateLibraryItem(self, post_data):
     else:
         response_utils.InternalServerError(self, "error updating position")
 
-def deleteLibraryItem(self, query_parameters):
+def deleteLibraryItem(self, query_parameters, match_groups):
     position = query_parameters.get('position')[0]
     libraryId = query_parameters.get('libraryId')[0]
     if position == None:

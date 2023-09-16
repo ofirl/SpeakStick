@@ -1,3 +1,4 @@
+import re
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
@@ -75,6 +76,11 @@ routes = [
         "handler": handlers.library_items_handlers.updateLibraryItem,
     },
     {
+        "path": "/library/(?'id'\\d+)",
+        "method": "POST",
+        "handler": handlers.libraries_handlers.editLibrary,
+    },
+    {
         "path": "/library",
         "method": "POST",
         "handler": handlers.libraries_handlers.addLibrary,
@@ -107,23 +113,46 @@ routes = [
     },
 ]
 
-def getRouteHandler(self, method):
-    route = next((route for route in routes if route.get("method") == method and \
-            ( \
-                self.path.startswith(BASE_ROUTE + str(route.get("path"))) \
-            ) \
-        ), None)
-    if route == None:
-        response_utils.NotFound(self)
-    else:
-        routeHandler = route.get("handler")
-        if routeHandler == None:
-            response_utils.NotFound(self)
-        else:
-            print("Running handler for ", route.get("path"))
-            return routeHandler
+# def getRouteHandler(self, method):
+#     route = next((route for route in routes if route.get("method") == method and \
+#             ( \
+#                 self.path.startswith(BASE_ROUTE + str(route.get("path"))) \
+#             ) \
+#         ), None)
+#     if route == None:
+#         response_utils.NotFound(self)
+#     else:
+#         routeHandler = route.get("handler")
+#         if routeHandler == None:
+#             response_utils.NotFound(self)
+#         else:
+#             print("Running handler for ", route.get("path"))
+#             return routeHandler
         
-    return None
+#     return None
+
+def getRouteHandler(self, method):
+    for route in routes:
+        if route.get("method") != method:
+            continue
+
+        pattern = BASE_ROUTE + str(route.get("path"))
+        match = re.match(pattern, self.path)
+        if match is None:
+            continue
+
+        routeHandler = route.get("handler")
+        if routeHandler is None:
+            response_utils.InternalServerError(self)
+            return None, None
+
+        print("Running handler for", route.get("path"), "with the match groups ", match.groups())
+        # Extract match groups and return them along with the handler
+        groups = match.groups()
+        return routeHandler, groups
+
+    response_utils.NotFound(self)
+    return None, None
 
 # Define the HTTP request handler class
 class RequestHandler(BaseHTTPRequestHandler):
@@ -140,27 +169,27 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        routeHandler = getRouteHandler(self, "GET")
+        routeHandler, matchGroups = getRouteHandler(self, "GET")
         if routeHandler != None:
             query_parameters = None
             if len(self.path.split('?')) > 1:
                 query_parameters = parse_qs(self.path.split('?')[1])
-            routeHandler(self, query_parameters)
+            routeHandler(self, query_parameters, matchGroups)
 
     def do_POST(self):
-        routeHandler = getRouteHandler(self, "POST")
+        routeHandler, matchGroups = getRouteHandler(self, "POST")
         if routeHandler != None:
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
-            routeHandler(self, post_data)
+            routeHandler(self, post_data, matchGroups)
 
     def do_DELETE(self):
-        routeHandler = getRouteHandler(self, "DELETE")
+        routeHandler, matchGroups = getRouteHandler(self, "DELETE")
         if routeHandler != None:
             query_parameters = None
             if len(self.path.split('?')) > 1:
                 query_parameters = parse_qs(self.path.split('?')[1])
-            routeHandler(self, query_parameters)
+            routeHandler(self, query_parameters, matchGroups)
 
 # Run the HTTP server
 def run():

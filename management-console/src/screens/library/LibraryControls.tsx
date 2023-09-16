@@ -9,10 +9,11 @@ import LockIcon from '@mui/icons-material/Lock';
 import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
 import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
 import CheckIcon from '@mui/icons-material/Check';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { Library, useActivateLibrary, useDeleteLibrary, useGetLibraries } from "../../api/libraries";
-import { useEffect } from 'react';
-import { Tooltip } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { Menu, MenuItem, Tooltip } from '@mui/material';
 import { AddLibraryModal } from './AddLIbraryModal';
 
 type LibraryControlsProps = {
@@ -24,10 +25,15 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
     useEffect(() => {
         if (libraries && libraries.length > 0)
             onChange(libraries.find(l => l.active))
-    }, [libraries, onChange])
+    }, [libraries, onChange]);
 
     const { mutateAsync: deleteLibrary, isLoading: isDeletingLibrary } = useDeleteLibrary();
     const { mutateAsync: activateLibrary, isLoading: isActivatingLibrary } = useActivateLibrary();
+
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuAnchorRef = useRef(null);
+
+    const closeMenu = () => setMenuOpen(false);
 
     return (
         <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -73,30 +79,55 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                             disableClearable
                             blurOnSelect
                         />
-                        <AddLibraryModal />
-                        <Tooltip title="Activate library">
+                        <Tooltip title="More actions">
                             <IconButton
-                                disabled={isActivatingLibrary || selectedLibrary?.active}
                                 size="large"
                                 color="inherit"
                                 aria-label="activate library"
-                                onClick={() => selectedLibrary && activateLibrary({ libraryId: selectedLibrary.id })}
+                                onClick={() => setMenuOpen(true)}
+                                ref={menuAnchorRef}
+                            >
+                                <MoreVertIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            id="long-menu"
+                            MenuListProps={{
+                                'aria-labelledby': 'long-button',
+                            }}
+                            anchorEl={menuAnchorRef.current}
+                            open={menuOpen}
+                            onClose={() => closeMenu()}
+                        >
+                            <AddLibraryModal closeMenu={closeMenu} />
+                            <MenuItem
+                                disabled={isActivatingLibrary || selectedLibrary?.active}
+                                onClick={() => {
+                                    selectedLibrary && activateLibrary({ libraryId: selectedLibrary.id }).then(() => {
+                                        closeMenu();
+                                    })
+                                }}
+                                sx={{ gap: "0.5rem" }}
+                                disableRipple
                             >
                                 <FolderSpecialIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <AddLibraryModal baseLibraryId={selectedLibrary?.id} />
-                        <Tooltip title="Delete library">
-                            <IconButton
-                                disabled={!selectedLibrary || isDeletingLibrary || selectedLibrary.active}
-                                size="large"
-                                color="inherit"
-                                aria-label="delete library"
-                                onClick={() => selectedLibrary && deleteLibrary({ libraryId: selectedLibrary.id })}
+                                Activate
+                            </MenuItem>
+                            <AddLibraryModal closeMenu={closeMenu} baseLibraryId={selectedLibrary?.id} />
+                            <MenuItem
+                                disabled={!selectedLibrary || isDeletingLibrary || selectedLibrary.active || !selectedLibrary.editable}
+                                onClick={() => {
+                                    selectedLibrary && deleteLibrary({ libraryId: selectedLibrary.id }).then(() => {
+                                        closeMenu();
+                                    });
+                                }}
+                                sx={{ gap: "0.5rem" }}
+                                disableRipple
                             >
                                 {isDeletingLibrary ? <CircularProgress /> : <FolderDeleteIcon />}
-                            </IconButton>
-                        </Tooltip>
+                                Delete
+                            </MenuItem>
+                        </Menu>
                     </>
             }
         </div >

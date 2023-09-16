@@ -45,7 +45,7 @@ export const NavigationDrawer = ({ open, onClose }: NavigationDrawerProps) => {
         >
             <List>
                 {menuItems.map(({ text, icon: Icon, link }) => (
-                    <ListItem disablePadding key="text">
+                    <ListItem disablePadding key={text}>
                         <Link to={link} style={{ width: "100%" }}>
                             <ListItemButton>
                                 <ListItemIcon>

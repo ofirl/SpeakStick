@@ -6,8 +6,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { useCreateLibrary, useDuplicateLibrary, useGetLibraries } from "../../api/libraries";
 import MenuItem from "@mui/material/MenuItem";
@@ -28,11 +27,11 @@ const modalBoxStyle = {
     gap: "0.5rem"
 };
 
-type AddLibraryModalProps = {
+type EditLibraryModalProps = {
     baseLibraryId?: number,
     closeMenu: () => void
 }
-export const AddLibraryModal = ({ baseLibraryId, closeMenu }: AddLibraryModalProps) => {
+export const EditLibraryModal = ({ baseLibraryId, closeMenu }: EditLibraryModalProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [libraryName, setLibraryName] = useState("");
     const descriptionRef = useRef<HTMLInputElement>(null);
@@ -69,8 +68,8 @@ export const AddLibraryModal = ({ baseLibraryId, closeMenu }: AddLibraryModalPro
                 sx={{ gap: "0.5rem" }}
                 disableRipple
             >
-                {baseLibraryId ? <FolderCopyIcon /> : <LibraryAddIcon />}
-                {baseLibraryId ? "Duplicate" : "Create"}
+                <EditIcon />
+                Edit
             </MenuItem>
             <Modal
                 open={modalOpen}
@@ -78,11 +77,7 @@ export const AddLibraryModal = ({ baseLibraryId, closeMenu }: AddLibraryModalPro
             >
                 <Box sx={modalBoxStyle}>
                     <Typography variant="h6" component="h2">
-                        {
-                            baseLibraryId ? "Duplicate" : "Create"
-                        }
-                        {" "}
-                        library
+                        Edit library
                     </Typography>
                     <TextField fullWidth
                         label="Name"

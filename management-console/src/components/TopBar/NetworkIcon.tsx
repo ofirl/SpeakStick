@@ -82,6 +82,7 @@ export const NetworkIcon = () => {
                     return (
                         <MenuItem
                             selected={network.ssid === networkStatus?.ssid}
+                            key={network.ssid}
                             onClick={() => network.secured ? setSelectedNetwork(network) : updateNetworkConfiguration({ ssid: network.ssid, key_mgmt: network.key_mgmt })}
                         >
                             <ListItemIcon>

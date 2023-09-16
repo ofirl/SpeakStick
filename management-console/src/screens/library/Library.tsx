@@ -18,6 +18,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Library as LibraryT } from '../../api/libraries';
 import { LibraryControls } from './LibraryControls';
+import { Divider } from '@mui/material';
 
 export const Library = () => {
     const [filter, setFilter] = useState("");
@@ -33,15 +34,15 @@ export const Library = () => {
     const { mutateAsync: deletePosition, isLoading: isDeleting } = useDeleteLibraryItem();
 
     return (
-        <div style={{ maxWidth: "50rem", gap: "0.5rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>
+        <div style={{ maxWidth: "50rem", gap: "1rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>
             <LibraryControls selectedLibrary={selectedLibrary} onChange={setSelectedLibrary} />
+            <Divider />
             <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Autocomplete
                     style={{ flexGrow: "1" }}
                     freeSolo
-                    // options={Array.from(new Set(libraryItems.flatMap(i => [{ value: i.positions.toString(), label: `Positions: ${i.positions}` }, { value: i.word, label: `Word: ${i.word}` }])))}
                     options={Array.from(new Set(libraryItems.flatMap(i => [i.positions.toString(), i.word])))}
-                    renderInput={(params) => <TextField {...params} label="Filter" />}
+                    renderInput={(params) => <TextField {...params} label="Filter words" />}
                     onInputChange={(_e, value) => { console.log(value); onFilterChangeDebounced(value || "") }}
                 />
                 <AddWordModal libraryId={selectedLibrary?.id || 1} />
@@ -80,7 +81,7 @@ export const Library = () => {
                                         <TableCell> {word} </TableCell>
                                         <TableCell>
                                             <IconButton
-                                                disabled={isDeleting || !selectedLibrary}
+                                                disabled={isDeleting || !selectedLibrary || !selectedLibrary.editable}
                                                 size="large"
                                                 color="inherit"
                                                 aria-label="delete word"

@@ -117,6 +117,46 @@ def get_libraries():
     
     return libraries
 
+def get_library_by_id(libraryId):
+    library = None
+    connection = None
+
+    try:
+        # Connect to the SQLite database
+        connection = sqlite3.connect(db_file)
+        
+        # Create a cursor object to interact with the database
+        cursor = connection.cursor()
+        
+        # Execute a query to retrieve data from the "libraries" table
+        cursor.execute("SELECT * FROM libraries where id = ?", (libraryId,))
+        
+        # Fetch all the rows of data
+        libraryRow = cursor.fetchone()
+
+        if libraryRow is None:
+            raise BaseException("Could not find library with ID ", libraryId)
+
+        id, name, description, active, editable = libraryRow
+
+        library = {
+                "id": id,
+                "name": name,
+                "description": description,
+                "active": active == 1,
+                "editable": editable == 1,
+            }
+        
+    except sqlite3.Error as e:
+        print("An error occurred:", e)
+        
+    finally:
+        # Close the database connection
+        if connection:
+            connection.close()
+    
+    return library
+
 def update_config(key, value):
     output = True
     connection = None
@@ -137,12 +177,12 @@ def update_config(key, value):
         connection.commit()
 
         if affected_rows != 1:
-            print("Error: Updated ", affected_rows, " rows. Expected 1.")
-            output = False
+            raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
         
         restartStickController()
 
     except sqlite3.Error as e:
+        output = False
         print("An error occurred:", e)
         
     finally:
@@ -177,13 +217,13 @@ def update_library_item(libraryId, positions, new_word):
         affected_rows = cursor.rowcount
 
         if affected_rows != 1:
-            print("Error: Updated ", affected_rows, " rows. Expected 1.")
-            output = False
+            raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
         else:
             # Commit the changes to the database
             connection.commit()
         
     except sqlite3.Error as e:
+        output = False
         print("An error occurred:", e)
         
     finally:
@@ -213,6 +253,47 @@ def add_library(name, description):
             raise NameError("Library with the name '", name, "' already exists")
         
         cursor.execute('INSERT INTO libraries (name, description, editable, active) VALUES (:name, :description, True, False)', data)
+
+        # Check how many rows were affected by the update
+        affected_rows = cursor.rowcount
+
+        if affected_rows != 1:
+            raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
+        
+        # Commit the changes to the database
+        connection.commit()
+        
+    except sqlite3.Error as e:
+        output = False
+        print("An error occurred:", e)
+        
+    finally:
+        # Close the database connection
+        if connection:
+            connection.close()
+
+    return output
+
+def update_library(libraryId, name, description):
+    output = True
+    connection = None
+
+    try:
+        # Connect to the SQLite database
+        connection = sqlite3.connect(db_file)
+        
+        # Create a cursor object to interact with the database
+        cursor = connection.cursor()
+        
+        data = {"id": libraryId, "name": name, "description": description}
+
+        library = get_library_by_id(libraryId)
+        if library is None:
+            raise NameError("Library with the ID '", libraryId, "' does not exists")
+        if library.get("editable") == 0:
+            raise NameError("Library with the ID '", libraryId, "' is not editable")
+
+        cursor.execute('UPDATE libraries SET name = :name, description = :description WHERE id = :id', data)
 
         # Check how many rows were affected by the update
         affected_rows = cursor.rowcount
@@ -323,7 +404,7 @@ def delete_library_item(libraryId, position):
 
     return output
 
-def delete_library(libraryId,):
+def delete_library(libraryId):
     output = True
     connection = None
 
@@ -334,6 +415,13 @@ def delete_library(libraryId,):
         # Create a cursor object to interact with the database
         cursor = connection.cursor()
         
+        library = get_library_by_id(libraryId)
+        if library is None:
+            raise BaseException("Could not get library with ID ", libraryId)
+
+        if library.get("editable") == 1 or library.get("active") == 1:
+            raise BaseException("Can't delete locked or active library")
+
         cursor.execute('DELETE FROM libraries WHERE id = ?', (libraryId,))
 
         # Check how many rows were affected by the update
