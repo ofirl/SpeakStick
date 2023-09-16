@@ -21,7 +21,7 @@ jobs:
         run: |
           latest_tag=$(git tag -l --sort=-v:refname | head -n 1)
           echo "${latest_tag}"
-          echo "tag=${latest_tag}" >> "$GITHUB_OUTPUT"
+          echo "tag=${latest_tag}" >> $GITHUB_OUTPUT
           echo "latest_tag=`${latest_tag}`" >> $GITHUB_STEP_SUMMARY
 
       - name: Increment Minor Version
