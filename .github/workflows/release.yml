@@ -1,0 +1,51 @@
+name: Create Release and Upload Frontend
+
+on:
+  push:
+    branches:
+      - advanced-settings
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Get Latest Tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git tag -l --sort=-v:refname | head -n 1)
+          echo "::set-output name=tag::$latest_tag"
+
+      - name: Increment Minor Version
+        id: increment_version
+        run: |
+          tag=${{ steps.get_latest_tag.outputs.tag }}
+          IFS='.' read -ra version_parts <<< "$tag"
+          minor_version=$((version_parts[1] + 1))
+          new_tag="${version_parts[0]}.${minor_version}.0"
+          echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Create Tag
+        run: |
+          new_tag=${{ steps.increment_version.outputs.new_tag }}
+          git tag $new_tag
+          git push origin $new_tag
+
+      - name: Build Management Console
+        run: |
+          cd management-console
+          pnpm install
+          pnpm run build
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            management-console/dist/*
+
+      - name: Set Release URL
+        run: echo "[${{ steps.create_release.outputs.id }}](https://github.com/${{ github.repository }}/releases/tag/${{ steps.create_release.outputs.id }})" >> $GITHUB_STEP_SUMMARY
