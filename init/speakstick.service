@@ -1,0 +1,14 @@
+ [Unit]
+ Description=SpeakStick
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ ExecStart=/opt/SpeakStick/stick-controller/startStickController.sh
+ Environment="SDL_AUDIODRIVER=alsa"
+ Environment="SDL_AUDIODEV=/dev/audio"
+ Restart=on-failure
+ RestartSec=5s
+
+ [Install]
+ WantedBy=multi-user.target

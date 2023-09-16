@@ -1,0 +1,12 @@
+ [Unit]
+ Description=SpeakStick Management Server
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ ExecStart=/usr/bin/python3 -u /opt/SpeakStick/management-server/main.py
+ Restart=on-failure
+ RestartSec=5s
+
+ [Install]
+ WantedBy=multi-user.target
