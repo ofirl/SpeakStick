@@ -60,9 +60,9 @@ def getApplicationVersions(self, query_parameters, match):
 
 
 def getApplicationCurrentVersion(self, query_parameters, match):
-    versions = system_utils.get_current_version()
-    if versions is not None:
-        response_utils.okWithData(self, versions)
+    version = system_utils.get_current_version()
+    if version is not None:
+        response_utils.okWithData(self, version)
     else:
         response_utils.InternalServerError(
             self, "Error getting application current version"

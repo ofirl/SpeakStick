@@ -270,7 +270,7 @@ def get_versions():
 def get_current_version():
     try:
         repo = git.Repo("/opt/SpeakStick")
-        return repo.active_branch
+        return repo.active_branch.commit
 
     except Exception as e:
         print(f"An error occurred: {e}")
