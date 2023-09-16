@@ -1,13 +1,21 @@
-import { Autocomplete, Switch, TextField, Typography } from "@mui/material";
-import { useApplicationCurrentVersion, useApplicationVersions, useSwitchApplicationVersion } from "../../api/system";
 import { useMemo, useState } from "react";
+import { useApplicationCurrentVersion, useApplicationVersions, useSwitchApplicationVersion, useUpdateApplicationVersions } from "../../api/system";
+
+import Autocomplete from "@mui/material/Autocomplete";
+import CircularProgress from "@mui/material/CircularProgress";
+import IconButton from "@mui/material/IconButton";
+import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 export const AdvancedSettings = () => {
-    const [developmentBuildsEnabled, setDevelopmentBuildsEnabled] = useState(false)
+    const [developmentBuildsEnabled, setDevelopmentBuildsEnabled] = useState(false);
     const { data: versions = [] } = useApplicationVersions();
     const { data: currentVersion = "" } = useApplicationCurrentVersion();
 
-    const { mutateAsync: switchApplicationVersion } = useSwitchApplicationVersion()
+    const { mutateAsync: switchApplicationVersion } = useSwitchApplicationVersion();
+    const { mutateAsync: updateApplicationVersions, isLoading: isUpdatingApplicationVersions } = useUpdateApplicationVersions();
 
     const filteredVersions = useMemo(() =>
         developmentBuildsEnabled ? versions.filter(v => !v.includes("rc")) : versions,
@@ -22,15 +30,20 @@ export const AdvancedSettings = () => {
                     Enable development builds
                 </Typography>
             </div>
-            <Autocomplete
-                style={{ flexGrow: "1" }}
-                value={currentVersion}
-                options={filteredVersions}
-                renderInput={(params) => <TextField {...params} label="Version" />}
-                onChange={(_e, value) => switchApplicationVersion({ version: value })}
-                disableClearable
-                blurOnSelect
-            />
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+                <Autocomplete
+                    style={{ flexGrow: "1" }}
+                    value={currentVersion}
+                    options={filteredVersions}
+                    renderInput={(params) => <TextField {...params} label="Version" />}
+                    onChange={(_e, value) => switchApplicationVersion({ version: value })}
+                    disableClearable
+                    blurOnSelect
+                />
+                <IconButton onClick={() => updateApplicationVersions()}>
+                    {isUpdatingApplicationVersions ? <CircularProgress /> : <RefreshIcon />}
+                </IconButton>
+            </div>
         </div>
     )
 };

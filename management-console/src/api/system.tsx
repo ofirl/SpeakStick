@@ -1,4 +1,4 @@
-import { UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
+import { UseQueryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { baseUrl } from "./consts";
 
@@ -43,6 +43,23 @@ export const useSwitchApplicationVersion = () => {
         {
             onSuccess: () => {
                 toast.success("Application is switching, this might take a few minutes")
+            },
+            onError: () => {
+                toast.error("Error switching application version")
+            }
+        }
+    )
+};
+
+export const useUpdateApplicationVersions = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation(() =>
+        axios.get(baseUrl + "/versions/update").then(value => value.status === 200),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['versions'])
+                toast.success("Application versions were updated")
             },
             onError: () => {
                 toast.error("Error switching application version")

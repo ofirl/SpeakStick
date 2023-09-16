@@ -78,3 +78,11 @@ def switchApplicationVersion(self, post_data, match):
         response_utils.okResponse(self)
     else:
         response_utils.InternalServerError(self, "Error switching application versions")
+
+
+def updateApplicationVersions(self, query_parameters, match):
+    success = system_utils.update_available_versions()
+    if success is not None:
+        response_utils.okResponse(self)
+    else:
+        response_utils.InternalServerError(self, "Error updating application versions")

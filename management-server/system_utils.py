@@ -278,3 +278,14 @@ def get_current_version():
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
+
+
+def update_available_versions():
+    try:
+        repo = git.Repo("/opt/SpeakStick")
+        repo.git.fetch()
+        return True
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None

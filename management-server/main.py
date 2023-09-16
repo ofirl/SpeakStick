@@ -60,6 +60,11 @@ routes = [
         "handler": handlers.system_handlers.getNetworkStatus,
     },
     {
+        "path": "/versions/update",
+        "method": "GET",
+        "handler": handlers.system_handlers.updateApplicationVersions,
+    },
+    {
         "path": "/versions/current",
         "method": "GET",
         "handler": handlers.system_handlers.getApplicationCurrentVersion,
