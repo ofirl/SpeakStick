@@ -76,7 +76,7 @@ routes = [
         "handler": handlers.library_items_handlers.updateLibraryItem,
     },
     {
-        "path": "/library/(?'id'\\d+)",
+        "path": "/library/(?P<id>\\d+)",
         "method": "POST",
         "handler": handlers.libraries_handlers.editLibrary,
     },
@@ -150,7 +150,7 @@ def getRouteHandler(self, method):
         # Extract match groups and return them along with the handler
         groups = match.groups()
         print(groups)
-        
+
         return routeHandler, groups
 
     response_utils.NotFound(self)
