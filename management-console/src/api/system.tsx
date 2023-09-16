@@ -26,6 +26,14 @@ export const useApplicationVersions = (options: UseQueryOptions<string[], unknow
     )
 };
 
+export const useApplicationCurrentVersion = (options: UseQueryOptions<string, unknown, string, string[]> = {}) => {
+    return useQuery(
+        ['current_version'],
+        () => axios.get(baseUrl + "/versions/current").then(value => value.data as string),
+        options
+    )
+};
+
 export const useUpgradeApplication = () => {
     return useMutation(() =>
         axios.get(baseUrl + "/upgrade").then(value => value.status === 200),

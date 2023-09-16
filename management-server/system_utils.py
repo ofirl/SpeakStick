@@ -260,22 +260,18 @@ def get_versions():
     try:
         repo = git.Repo("/opt/SpeakStick")
         tags = [str(tag) for tag in repo.tags]
-        return tags
+        return tags.sort(reverse=True)
 
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
 
 
-# def get_versions():
-#     try:
-#         code, output = runCommand(f"cd /opt/SpeakStick && git tag -l")
-#         if code != 0:
-#             raise BaseException(
-#                 f"Error getting tags, return code: {code}, output: {output}"
-#             )
+def get_current_version():
+    try:
+        repo = git.Repo("/opt/SpeakStick")
+        return repo.active_branch.ref
 
-#         return output
-#     except Exception as e:
-#         print(f"Error: {e}")
-#         return False
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None

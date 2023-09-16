@@ -1,10 +1,12 @@
 import { Autocomplete, TextField } from "@mui/material";
-import { useApplicationVersions } from "../../api/system";
+import { useApplicationCurrentVersion, useApplicationVersions } from "../../api/system";
 import { useState } from "react";
 
 export const AdvancedSettings = () => {
     const [developmentBuildsEnabled, setDevelopmentBuildsEnabled] = useState(false)
     const { data: versions } = useApplicationVersions();
+    const { data: currrentVersion } = useApplicationCurrentVersion();
+
     const currentVersion = "0.1";
     // const versions = ["0.1", "0.2"]
 
