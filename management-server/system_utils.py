@@ -260,6 +260,7 @@ def get_versions():
     try:
         repo = git.Repo("/opt/SpeakStick")
         tags = [str(tag) for tag in repo.tags]
+        print(tags)
         return tags.sort(reverse=True)
 
     except Exception as e:
