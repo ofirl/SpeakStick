@@ -148,10 +148,8 @@ def getRouteHandler(self, method):
 
         print("Running handler for", route.get("path"), "with the match groups ", match.groups())
         # Extract match groups and return them along with the handler
-        groups = match.groups()
-        print(groups)
 
-        return routeHandler, groups
+        return routeHandler, match
 
     response_utils.NotFound(self)
     return None, None
@@ -171,27 +169,27 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        routeHandler, matchGroups = getRouteHandler(self, "GET")
+        routeHandler, match = getRouteHandler(self, "GET")
         if routeHandler != None:
             query_parameters = None
             if len(self.path.split('?')) > 1:
                 query_parameters = parse_qs(self.path.split('?')[1])
-            routeHandler(self, query_parameters, matchGroups)
+            routeHandler(self, query_parameters, match)
 
     def do_POST(self):
-        routeHandler, matchGroups = getRouteHandler(self, "POST")
+        routeHandler, match = getRouteHandler(self, "POST")
         if routeHandler != None:
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
-            routeHandler(self, post_data, matchGroups)
+            routeHandler(self, post_data, match)
 
     def do_DELETE(self):
-        routeHandler, matchGroups = getRouteHandler(self, "DELETE")
+        routeHandler, match = getRouteHandler(self, "DELETE")
         if routeHandler != None:
             query_parameters = None
             if len(self.path.split('?')) > 1:
                 query_parameters = parse_qs(self.path.split('?')[1])
-            routeHandler(self, query_parameters, matchGroups)
+            routeHandler(self, query_parameters, match)
 
 # Run the HTTP server
 def run():

@@ -7,14 +7,14 @@ import db_utils
 from consts import words_directory
 from urllib.parse import parse_qs
 
-def getWords(self, query_parameters, match_groups):
+def getWords(self, query_parameters, match):
     positions = system_utils.getWordFiles()
     if positions:
         response_utils.okWithData(self, positions)
     else:
         response_utils.InternalServerError(self)
 
-def updateWord(self, post_data, match_groups):
+def updateWord(self, post_data, match):
     file_name = self.headers.get('filename', '')
     if file_name == "":
         response_utils.BadRequest(self, "Mssing 'filename' header")
@@ -27,7 +27,7 @@ def updateWord(self, post_data, match_groups):
 
     response_utils.okWithText(self, f"File '{file_name}' uploaded successfully" )
 
-def deleteWord(self, query_parameters, match_groups):
+def deleteWord(self, query_parameters, match):
     word = query_parameters.get('word')
     if not word:
         response_utils.BadRequest(self, "Missing required parameter: 'word'")
