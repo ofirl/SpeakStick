@@ -21,7 +21,7 @@ jobs:
         run: |
           latest_tag=$(git tag -l --sort=-v:refname | head -n 1)
           echo "${latest_tag}"
-          echo "tag=${latest_tag}" >> $GITHUB_OUTPUT
+          echo "tag=$latest_tag" >> $GITHUB_OUTPUT
           echo "latest_tag=`${latest_tag}`" >> $GITHUB_STEP_SUMMARY
 
       - name: Increment Minor Version
@@ -31,8 +31,8 @@ jobs:
           IFS='.' read -ra version_parts <<< "$tag"
           minor_version=$((version_parts[1] + 1))
           new_tag="${version_parts[0]}.${minor_version}.0"
-          echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
-          echo "new_tag=$new_tag" >> "$GITHUB_STEP_SUMMARY"
+          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
+          echo "new_tag=$new_tag" >> $GITHUB_STEP_SUMMARY
 
       - name: Create Tag
         run: |
