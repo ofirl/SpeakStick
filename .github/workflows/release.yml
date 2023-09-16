@@ -52,6 +52,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.increment_version.outputs.new_tag }}
+          generate_release_notes: true
           files: |
             management-console/dist/*
 
