@@ -1,0 +1,70 @@
+name: Create Tag
+
+on:
+  push:
+    branches:
+      - advanced-settings
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+    outputs:
+      latest_tag: ${{ steps.increment_version.outputs.latest_tag }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Get Latest Tag
+        id: get_latest_tag
+        run: |
+          latest_tag="$(git tag -l --sort=-v:refname | head -n 1)"
+          # latest_tag=$(echo "$latest_tag" | tr -d '\n')
+          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+          echo "latest_tag=`${latest_tag}`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Increment Minor Version
+        id: increment_version
+        run: |
+          tag=${{ steps.get_latest_tag.outputs.latest_tag }}
+          IFS='.' read -ra version_parts <<< "$tag"
+          minor_version=$((version_parts[1] + 1))
+          new_tag="${version_parts[0]}.${minor_version}.0"
+          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
+          echo "new_tag=`$new_tag`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create Tag
+        run: |
+          new_tag=${{ steps.increment_version.outputs.new_tag }}
+          git tag $new_tag
+          git push origin $new_tag
+
+      # - name: Build Management Console
+      #   run: |
+      #     npm install -g pnpm
+      #     cd management-console
+      #     pnpm install
+      #     pnpm run build
+      #     zip -r dist/management-console.zip dist
+
+      # - name: Create Release
+      #   id: create_release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: ${{ steps.increment_version.outputs.new_tag }}
+      #     generate_release_notes: true
+      #     files: |
+      #       management-console/dist/management-console.zip
+
+      # - name: Set Release URL
+      #   run: echo "[${{ steps.increment_version.outputs.new_tag }}](https://github.com/${{ github.repository }}/releases/tag/${{ steps.increment_version.outputs.new_tag }})" >> $GITHUB_STEP_SUMMARY
+
+  call-workflow-passing-data:
+    needs: create_tag
+    uses: ofirl/SpeakStick/.github/workflows/build_and_release.yml@master
+    with:
+      tag: ${{ needs.create_tag.outputs.latest_tag }}
+    secrets: inherit
