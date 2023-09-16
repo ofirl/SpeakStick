@@ -259,7 +259,7 @@ def switch_version(version):
 def get_versions():
     try:
         print("starting versions")
-        repo = git.Repo(search_parent_directories=True)
+        repo = git.Repo("/opt/SpeakStick")
         print(repo)
         tags = [str(tag) for tag in repo.tags]
         print(tags)
