@@ -148,7 +148,9 @@ def getRouteHandler(self, method):
 
         print("Running handler for", route.get("path"), "with the match groups ", match.groups())
         # Extract match groups and return them along with the handler
-        groups = match.groups().__dict__
+        groups = match.groups()
+        if groups is not None:
+            groups = groups.__dict__
         return routeHandler, groups
 
     response_utils.NotFound(self)
