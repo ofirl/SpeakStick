@@ -18,6 +18,39 @@ export const useRestartStickController = () => {
     )
 };
 
+export const useApplicationVersions = (options: UseQueryOptions<string[], unknown, string[], string[]> = {}) => {
+    return useQuery(
+        ['versions'],
+        () => axios.get(baseUrl + "/versions").then(value => value.data as string[]),
+        options
+    )
+};
+
+export const useApplicationCurrentVersion = (options: UseQueryOptions<string, unknown, string, string[]> = {}) => {
+    return useQuery(
+        ['current_version'],
+        () => axios.get(baseUrl + "/versions/current").then(value => value.data as string),
+        options
+    )
+};
+
+type SwitchApplicationVersionParams = {
+    version: string
+}
+export const useSwitchApplicationVersion = () => {
+    return useMutation((params: SwitchApplicationVersionParams) =>
+        axios.post(baseUrl + "/versions/switch", params).then(value => value.status === 200),
+        {
+            onSuccess: () => {
+                toast.success("Application is switching, this might take a few minutes")
+            },
+            onError: () => {
+                toast.error("Error switching application version")
+            }
+        }
+    )
+};
+
 export const useUpgradeApplication = () => {
     return useMutation(() =>
         axios.get(baseUrl + "/upgrade").then(value => value.status === 200),

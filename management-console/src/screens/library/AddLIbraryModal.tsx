@@ -97,7 +97,7 @@ export const AddLibraryModal = ({ baseLibraryId, closeMenu }: AddLibraryModalPro
                         {isLoading ? <CircularProgress /> : "Save"}
                     </Button>
                 </Box>
-            </Modal >
+            </Modal>
         </>
     )
 };
