@@ -1,10 +1,9 @@
 #! /bin/bash
 
-# Run this script after cloning hte repository:
+# Run this script after cloning the repository:
 # cd /opt
 # git clone https://github.com/ofirl/SpeakStick.git
-
-# git tag -l | sort ???? | head -n 1
+# cd SpeakStick
 
 sudo apt update
 sudo apt upgrade
