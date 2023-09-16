@@ -75,7 +75,20 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                                     }
                                 </Box>
                             )}
-                            renderInput={(params) => <> <TextField {...params} InputProps={{ ...params.InputProps, startAdornment: !selectedLibrary?.editable && <LockIcon fontSize="small" /> }} label="Library" /> </>}
+                            renderInput={(params) =>
+                                <>
+                                    <TextField {...params}
+                                        InputProps={{
+                                            ...params.InputProps, startAdornment:
+                                                <>
+                                                    {!selectedLibrary?.editable && <LockIcon fontSize="small" />}
+                                                    {selectedLibrary?.active && <CheckIcon fontSize="small" />}
+                                                </>
+                                        }}
+                                        label="Library"
+                                    />
+                                </>
+                            }
                             onChange={(_e, value) => onChange(value)}
                             disableClearable
                             blurOnSelect
