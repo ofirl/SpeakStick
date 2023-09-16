@@ -1,4 +1,4 @@
-import { Autocomplete, Switch, TextField } from "@mui/material";
+import { Autocomplete, Switch, TextField, Typography } from "@mui/material";
 import { useApplicationCurrentVersion, useApplicationVersions, useSwitchApplicationVersion } from "../../api/system";
 import { useMemo, useState } from "react";
 
@@ -16,7 +16,12 @@ export const AdvancedSettings = () => {
 
     return (
         <div style={{ maxWidth: "50rem", gap: "1rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>
-            <Switch value={developmentBuildsEnabled} onChange={() => setDevelopmentBuildsEnabled(prev => !prev)} />
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <Switch value={developmentBuildsEnabled} onChange={() => setDevelopmentBuildsEnabled(prev => !prev)} />
+                <Typography variant="body1">
+                    Enable development builds
+                </Typography>
+            </div>
             <Autocomplete
                 style={{ flexGrow: "1" }}
                 value={currentVersion}
