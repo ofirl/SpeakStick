@@ -12,6 +12,7 @@ sudo apt upgrade
 sudo apt-get -y install python3-pip
 sudo pip3 install adafruit-blinka
 sudo pip3 install adafruit-circuitpython-mcp3xxx
+sduo pip3 install -r /opt/SpeakStick/requirements.txt
 sudo apt-get -y install python3-pygame
 
 # yarn & node
