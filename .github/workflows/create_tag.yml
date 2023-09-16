@@ -3,7 +3,7 @@ name: Create Tag
 on:
   push:
     branches:
-      - advanced-settings
+      - master
 
 jobs:
   create_tag:
