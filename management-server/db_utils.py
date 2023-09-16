@@ -286,6 +286,7 @@ def update_library(libraryId, name, description):
         cursor = connection.cursor()
         
         data = {"id": libraryId, "name": name, "description": description}
+        print(data)
 
         library = get_library_by_id(libraryId)
         if library is None:
