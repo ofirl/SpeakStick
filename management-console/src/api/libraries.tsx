@@ -54,7 +54,7 @@ type EditLibraryParams = { libraryId: number, name: string, description: string 
 export const useEditLibrary = () => {
     const queryClient = useQueryClient();
     return useMutation((params: EditLibraryParams) =>
-        axios.post(`${baseUrl}/library/${params.libraryId}`, { params: { name: params.name, description: params.description } }).then(value => value.status === 200),
+        axios.post(`${baseUrl}/library/${params.libraryId}`, { name: params.name, description: params.description }).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["libraries"]);

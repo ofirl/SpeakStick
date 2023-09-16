@@ -38,9 +38,6 @@ def editLibrary(self, post_data, match):
     name = json_data.get('name')
     description = json_data.get('description')
 
-    print("name: " + name)
-    print("description:" + description)
-
     success = db_utils.update_library(match.group("id"), name, description)
     if success:
         response_utils.okResponse(self)
