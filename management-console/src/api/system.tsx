@@ -34,6 +34,23 @@ export const useApplicationCurrentVersion = (options: UseQueryOptions<string, un
     )
 };
 
+type SwitchApplicationVersionParams = {
+    version: string
+}
+export const useSwitchApplicationVersion = () => {
+    return useMutation((params: SwitchApplicationVersionParams) =>
+        axios.post(baseUrl + "/versions/switch", params).then(value => value.status === 200),
+        {
+            onSuccess: () => {
+                toast.success("Application is switching, this might take a few minutes")
+            },
+            onError: () => {
+                toast.error("Error switching application version")
+            }
+        }
+    )
+};
+
 export const useUpgradeApplication = () => {
     return useMutation(() =>
         axios.get(baseUrl + "/upgrade").then(value => value.status === 200),

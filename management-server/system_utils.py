@@ -48,7 +48,7 @@ def runCommandBackground(command):
 
     except Exception as e:
         print(f"Error running command '{command}': {str(e)}")
-        return None, None
+        return None, e
 
 
 def restartNetworkServices():
@@ -59,8 +59,8 @@ def restartStickController():
     return runCommand("sudo systemctl restart speakstick")
 
 
-def runUpgrade():
-    return runCommandBackground("/opt/SpeakStick/upgrade-script.sh")
+def runUpgrade(version=""):
+    return runCommandBackground(f"/opt/SpeakStick/upgrade-script.sh {version}")
 
 
 def getWordFiles():
@@ -248,12 +248,15 @@ def get_wifi_connection_status(interface="wlan0"):
 
 def switch_version(version):
     try:
-        code, _ = runCommand(f"cd /opt/SpeakStick && git checkout {version}")
-        return code != 0
+        pid, err = runUpgrade(version)
+        if err is not None or pid is None:
+            raise BaseException("Error running upgrade script")
+
+        return True
 
     except Exception as e:
-        print(f"Error: {e}")
-        return False
+        print(f"An error occurred: {e}")
+        return None
 
 
 def get_versions():

@@ -67,3 +67,14 @@ def getApplicationCurrentVersion(self, query_parameters, match):
         response_utils.InternalServerError(
             self, "Error getting application current version"
         )
+
+
+def switchApplicationVersion(self, post_data, match):
+    json_data = json.loads(post_data.decode("utf-8"))
+    version = json_data.get("version")
+
+    success = system_utils.switch_version(version)
+    if success is not None:
+        response_utils.okResponse(self)
+    else:
+        response_utils.InternalServerError(self, "Error switching application versions")

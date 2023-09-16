@@ -105,6 +105,11 @@ routes = [
         "method": "POST",
         "handler": handlers.system_handlers.connectToNetwork,
     },
+    {
+        "path": "/versions/switch",
+        "method": "POST",
+        "handler": handlers.system_handlers.switchApplicationVersion,
+    },
     # DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE ---
     {
         "path": "/library_item",
