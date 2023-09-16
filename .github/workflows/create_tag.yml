@@ -9,7 +9,7 @@ jobs:
   create_tag:
     runs-on: ubuntu-latest
     outputs:
-      latest_tag: ${{ steps.increment_version.outputs.latest_tag }}
+      new_tag: ${{ steps.increment_version.outputs.new_tag }}
 
     steps:
       - name: Checkout Repository
@@ -66,5 +66,5 @@ jobs:
     needs: create_tag
     uses: ofirl/SpeakStick/.github/workflows/build_and_release.yml@master
     with:
-      tag: ${{ needs.create_tag.outputs.latest_tag }}
+      tag: ${{ needs.create_tag.outputs.new_tag }}
     secrets: inherit
