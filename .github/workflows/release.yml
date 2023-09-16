@@ -3,7 +3,7 @@ name: Create Release and Upload Frontend
 on:
   push:
     branches:
-      - advanced-settings
+      - master
 
 jobs:
   build_and_release:
