@@ -8,7 +8,7 @@ import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { Button, Divider } from "@mui/material";
+import { Button, Divider, Tooltip } from "@mui/material";
 import { useResetToFactorySettings } from "../../api/system";
 
 export const AdvancedSettings = () => {
@@ -43,9 +43,11 @@ export const AdvancedSettings = () => {
                     disableClearable
                     blurOnSelect
                 />
-                <IconButton onClick={() => updateApplicationVersions()}>
-                    {isUpdatingApplicationVersions ? <CircularProgress /> : <RefreshIcon />}
-                </IconButton>
+                <Tooltip title="Refresh">
+                    <IconButton onClick={() => updateApplicationVersions()}>
+                        {isUpdatingApplicationVersions ? <CircularProgress /> : <RefreshIcon />}
+                    </IconButton>
+                </Tooltip>
             </div>
             <Divider />
             <Button color="error" variant="contained" onClick={() => resetToFactorySettings()}>
