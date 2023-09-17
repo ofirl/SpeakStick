@@ -36,5 +36,6 @@ jobs:
           IFS='.' read -ra version_parts <<< "$tag"
           minor_version=$((version_parts[1] + 1))
           new_tag="${version_parts[0]}.${minor_version}.0"
-          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
-          echo "new_tag=`$new_tag`" >> $GITHUB_STEP_SUMMARY
+
+          #   echo "new_tag=${new_tag}" >> $GITHUB_OUTPUT
+          echo "new_tag=\`${new_tag}\`" >> $GITHUB_STEP_SUMMARY
