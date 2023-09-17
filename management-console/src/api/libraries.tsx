@@ -20,7 +20,7 @@ type DuplicateLibraryParams = { name: string, description: string, baseLibraryId
 export const useDuplicateLibrary = () => {
     const queryClient = useQueryClient();
     return useMutation((params: DuplicateLibraryParams) =>
-        axios.post(`${baseUrl}/library/duplicate`, params).then(value => value.status === 200),
+        axios.post(`${baseUrl}/libraries/${params.baseLibraryId}/duplicate`, { name: params.name, description: params.description }).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["libraries"]);
@@ -37,7 +37,7 @@ type CreateLibraryParams = { name: string, description: string };
 export const useCreateLibrary = () => {
     const queryClient = useQueryClient();
     return useMutation((params: CreateLibraryParams) =>
-        axios.post(`${baseUrl}/library`, params).then(value => value.status === 200),
+        axios.post(`${baseUrl}/libraries`, params).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["libraries"]);
@@ -54,7 +54,7 @@ type EditLibraryParams = { libraryId: number, name: string, description: string 
 export const useEditLibrary = () => {
     const queryClient = useQueryClient();
     return useMutation((params: EditLibraryParams) =>
-        axios.post(`${baseUrl}/library/${params.libraryId}`, { name: params.name, description: params.description }).then(value => value.status === 200),
+        axios.post(`${baseUrl}/libraries/${params.libraryId}`, { name: params.name, description: params.description }).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["libraries"]);
@@ -71,7 +71,7 @@ type DeleteLibraryParams = { libraryId: number };
 export const useDeleteLibrary = () => {
     const queryClient = useQueryClient();
     return useMutation((params: DeleteLibraryParams) =>
-        axios.delete(`${baseUrl}/library`, { params }).then(value => value.status === 200),
+        axios.delete(`${baseUrl}/libraries/${params.libraryId}`).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["libraries"]);
@@ -88,7 +88,7 @@ type ActivateLibraryParams = { libraryId: number };
 export const useActivateLibrary = () => {
     const queryClient = useQueryClient();
     return useMutation((params: ActivateLibraryParams) =>
-        axios.get(`${baseUrl}/library/activate`, { params }).then(value => value.status === 200),
+        axios.get(`${baseUrl}/libraries/${params.libraryId}/activate`).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["libraries"]);

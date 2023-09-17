@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, TextField, Tooltip } from "@mui/material"
 import SignalWifiOffIcon from '@mui/icons-material/SignalWifiOff';
-import { NetowrkScanResult, useGetNetworkStatus, useScanNetworks, useUpdateNetworkConfiguration } from "../../api/system";
+import { NetowrkScanResult, useGetNetworkStatus, useScanNetworks, useUpdateNetworkConfiguration } from "../../api/network";
 
 import SignalWifi0BarIcon from '@mui/icons-material/SignalWifi0Bar';
 import SignalWifi1BarIcon from '@mui/icons-material/SignalWifi1Bar';

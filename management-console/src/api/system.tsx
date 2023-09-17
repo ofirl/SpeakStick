@@ -1,4 +1,4 @@
-import { UseQueryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { baseUrl } from "./consts";
 
@@ -18,62 +18,12 @@ export const useRestartStickController = () => {
     )
 };
 
-export const useApplicationVersions = (options: UseQueryOptions<string[], unknown, string[], string[]> = {}) => {
-    return useQuery(
-        ['versions'],
-        () => axios.get(baseUrl + "/versions").then(value => value.data as string[]),
-        options
-    )
-};
-
-export const useApplicationCurrentVersion = (options: UseQueryOptions<string, unknown, string, string[]> = {}) => {
-    return useQuery(
-        ['current_version'],
-        () => axios.get(baseUrl + "/versions/current").then(value => value.data as string),
-        options
-    )
-};
-
-type SwitchApplicationVersionParams = {
-    version: string
-}
-export const useSwitchApplicationVersion = () => {
-    return useMutation((params: SwitchApplicationVersionParams) =>
-        axios.post(baseUrl + "/versions/switch", params).then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                toast.success("Application is switching, this might take a few minutes")
-            },
-            onError: () => {
-                toast.error("Error switching application version")
-            }
-        }
-    )
-};
-
-export const useUpdateApplicationVersions = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation(() =>
-        axios.get(baseUrl + "/versions/update").then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries(['versions'])
-                toast.success("Application versions were updated")
-            },
-            onError: () => {
-                toast.error("Error switching application version")
-            }
-        }
-    )
-};
-
 export const useUpgradeApplication = () => {
     return useMutation(() =>
         axios.get(baseUrl + "/upgrade").then(value => value.status === 200),
         {
             onSuccess: () => {
-                toast.success("Application is upgrading, this might take a few minutes")
+                toast.success("Application is upgrading, this might take a few seconds")
             },
             onError: () => {
                 toast.error("Error starting application upgrade")
@@ -82,43 +32,16 @@ export const useUpgradeApplication = () => {
     )
 };
 
-export type NetworkStatusResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string };
-export const useGetNetworkStatus = (options: UseQueryOptions<NetworkStatusResult, unknown, NetworkStatusResult, string[]> = {}) => {
-    return useQuery(
-        ['network', 'status'],
-        () => axios.get(baseUrl + "/network/status").then(value => value.data as NetworkStatusResult),
-        {
-            refetchInterval: 10000,
-            ...options
-        },
-    )
-};
 
-export type NetowrkScanResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string };
-export const useScanNetworks = (options: UseQueryOptions<NetowrkScanResult[], unknown, NetowrkScanResult[], string[]> = {}) => {
-    return useQuery(
-        ['network', 'scan'],
-        () => axios.get(baseUrl + "/network/scan").then(value => value.data as NetowrkScanResult[]),
-        options
-    )
-};
-
-type NetworkConfiguration = {
-    ssid: string,
-    psk?: string,
-    key_mgmt: string
-}
-export const useUpdateNetworkConfiguration = () => {
-    return useMutation(({ ssid, psk, key_mgmt }: NetworkConfiguration) =>
-        axios.post(baseUrl + "/network/update", {
-            ssid, psk, key_mgmt
-        }).then(value => value.status === 200),
+export const useResetToFactorySettings = () => {
+    return useMutation(() =>
+        axios.get(baseUrl + "/reset_factory_settings").then(value => value.status === 200),
         {
             onSuccess: () => {
-                toast.success("Network configuration updated")
+                toast.success("Application is resetting to factory settings, this might take a few seconds")
             },
             onError: () => {
-                toast.error("Error updating network configuration")
+                toast.error("Error resetting application to factory settings")
             }
         }
     )

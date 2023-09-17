@@ -18,7 +18,7 @@ type updateConfigParams = { key: string, value: string };
 export const useUpdateConfig = () => {
     const queryClient = useQueryClient();
     return useMutation((params: updateConfigParams) =>
-        axios.post(baseUrl + "/config", params).then(value => value.status === 200),
+        axios.post(baseUrl + "/configs", params).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["configs"]);

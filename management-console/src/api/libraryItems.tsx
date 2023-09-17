@@ -17,7 +17,7 @@ type UpdateLibrartItemsParams = { libraryId: number, position: string, word: str
 export const useUpdateLibraryItems = () => {
     const queryClient = useQueryClient();
     return useMutation((params: UpdateLibrartItemsParams) =>
-        axios.post(`${baseUrl}/library_item`, params).then(value => value.status === 200),
+        axios.post(`${baseUrl}/library_items`, params).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["libraryItems"]);
@@ -34,14 +34,14 @@ type DeleteLibraryItemParams = { libraryId: number, position: string };
 export const useDeleteLibraryItem = () => {
     const queryClient = useQueryClient();
     return useMutation((params: DeleteLibraryItemParams) =>
-        axios.delete(`${baseUrl}/library_item`, { params }).then(value => value.status === 200),
+        axios.delete(`${baseUrl}/library_items`, { params }).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["libraryItems"]);
-                toast.success("Position Deleted")
+                toast.success("Library item Deleted")
             },
             onError: () => {
-                toast.error("Error updating position")
+                toast.error("Error updating library items")
             }
         }
     )
