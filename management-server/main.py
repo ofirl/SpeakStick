@@ -2,12 +2,14 @@ import re
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
-import response_utils
+import utils.response_utils
 import handlers.configs_handlers
 import handlers.library_items_handlers
 import handlers.libraries_handlers
 import handlers.words_handlers
 import handlers.system_handlers
+import handlers.versions_handlers
+import handlers.network_handlers
 
 port = 8090
 BASE_ROUTE = "/api"
@@ -52,27 +54,27 @@ routes = [
     {
         "path": "/network/scan",
         "method": "GET",
-        "handler": handlers.system_handlers.scanForNetworks,
+        "handler": handlers.network_handlers.scanForNetworks,
     },
     {
         "path": "/network/status",
         "method": "GET",
-        "handler": handlers.system_handlers.getNetworkStatus,
+        "handler": handlers.network_handlers.getNetworkStatus,
     },
     {
         "path": "/versions/update",
         "method": "GET",
-        "handler": handlers.system_handlers.updateApplicationVersions,
+        "handler": handlers.versions_handlers.updateApplicationVersions,
     },
     {
         "path": "/versions/current",
         "method": "GET",
-        "handler": handlers.system_handlers.getApplicationCurrentVersion,
+        "handler": handlers.versions_handlers.getApplicationCurrentVersion,
     },
     {
         "path": "/versions",
         "method": "GET",
-        "handler": handlers.system_handlers.getApplicationVersions,
+        "handler": handlers.versions_handlers.getApplicationVersions,
     },
     # POST --- POST --- POST --- POST --- POST --- POST --- POST --- POST ---
     {
@@ -108,12 +110,12 @@ routes = [
     {
         "path": "/network/update",
         "method": "POST",
-        "handler": handlers.system_handlers.connectToNetwork,
+        "handler": handlers.network_handlers.connectToNetwork,
     },
     {
         "path": "/versions/switch",
         "method": "POST",
-        "handler": handlers.system_handlers.switchApplicationVersion,
+        "handler": handlers.versions_handlers.switchApplicationVersion,
     },
     # DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE --- DELETE ---
     {
@@ -146,7 +148,7 @@ def getRouteHandler(self, method):
 
         routeHandler = route.get("handler")
         if routeHandler is None:
-            response_utils.InternalServerError(self)
+            utils.response_utils.InternalServerError(self)
             return None, None
 
         print(
@@ -159,7 +161,7 @@ def getRouteHandler(self, method):
 
         return routeHandler, match
 
-    response_utils.NotFound(self)
+    utils.response_utils.NotFound(self)
     return None, None
 
 
