@@ -195,7 +195,7 @@ def getRouteHandler(self, method, baseRoute=BASE_ROUTE, routes=routes2):
 
         print(
             "Running handler for ",
-            route.get("path"),
+            pattern,
             "with the match groups ",
             match.groups(),
         )
