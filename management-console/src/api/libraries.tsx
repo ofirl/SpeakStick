@@ -20,7 +20,7 @@ type DuplicateLibraryParams = { name: string, description: string, baseLibraryId
 export const useDuplicateLibrary = () => {
     const queryClient = useQueryClient();
     return useMutation((params: DuplicateLibraryParams) =>
-        axios.post(`${baseUrl}/libraries/duplicate`, params).then(value => value.status === 200),
+        axios.post(`${baseUrl}/libraries/${params.baseLibraryId}/duplicate`, { name: params.name, description: params.description }).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["libraries"]);

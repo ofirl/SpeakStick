@@ -467,7 +467,7 @@ def delete_library(libraryId):
         if library is None:
             raise BaseException("Could not get library with ID ", libraryId)
 
-        if library.get("editable") == 1 or library.get("active") == 1:
+        if library.get("editable") == False or library.get("active") == True:
             raise BaseException("Can't delete locked or active library")
 
         cursor.execute("DELETE FROM libraries WHERE id = ?", (libraryId,))
