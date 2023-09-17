@@ -71,7 +71,7 @@ def getWordFiles():
 
 def resetToFactorySettings():
     try:
-        code, output = runCommand("sudo rm configs.db")
+        code, output = runCommand("sudo rm /opt/SpeakStick/configs.db")
         if code != 0:
             raise BaseException("Error clearing DB")
 
