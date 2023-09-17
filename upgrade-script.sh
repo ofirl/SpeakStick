@@ -6,10 +6,12 @@ cd "${workdir}"
 latest_tag=$1
 git fetch
 
-if [ -z latest_tag ]
+if [ -z "$latest_tag" ]
 then
     latest_tag=$(git tag -l --sort=-v:refname | head -n 1)
 fi
+
+echo "Upgrading to $latest_tag"
 
 git checkout $latest_tag
 
