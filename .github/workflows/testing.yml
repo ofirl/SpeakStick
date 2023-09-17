@@ -39,7 +39,7 @@ jobs:
           echo "latest_tag=v0.4.0" >> $GITHUB_OUTPUT
 
           testing="latest_tag=${latest_tag}"
-          echo "latest_tag=${testing}" >> $GITHUB_OUTPUT
+          echo $testing >> $GITHUB_OUTPUT
           echo "latest_tag=`${latest_tag}`" >> $GITHUB_STEP_SUMMARY
 
       - name: Increment Minor Version
