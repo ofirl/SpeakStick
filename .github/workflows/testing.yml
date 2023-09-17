@@ -28,10 +28,6 @@ jobs:
       - name: Increment Minor Version
         id: increment_version
         run: |
-          echo "latest_tag1=testing1" >> $GITHUB_OUTPUT
-          echo "latest_tag=testing1" >> $GITHUB_OUTPUT
-          echo "new_tag=testing1" >> $GITHUB_OUTPUT
-
           tag=${{ steps.get_latest_tag.outputs.latest_tag }}
           IFS='.' read -ra version_parts <<< "$tag"
           minor_version=$((version_parts[1] + 1))
