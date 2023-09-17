@@ -222,7 +222,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         routeHandler, match = getRouteHandler(self, "GET")
-        if routeHandler != None:
+        if routeHandler is not None:
             query_parameters = None
             if len(self.path.split("?")) > 1:
                 query_parameters = parse_qs(self.path.split("?")[1])
@@ -230,14 +230,14 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         routeHandler, match = getRouteHandler(self, "POST")
-        if routeHandler != None:
+        if routeHandler is not None:
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             routeHandler(self, post_data, match)
 
     def do_DELETE(self):
         routeHandler, match = getRouteHandler(self, "DELETE")
-        if routeHandler != None:
+        if routeHandler is not None:
             query_parameters = None
             if len(self.path.split("?")) > 1:
                 query_parameters = parse_qs(self.path.split("?")[1])

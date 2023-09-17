@@ -6,11 +6,11 @@ import utils.response_utils
 
 def getLibraryItems(self, query_parameters, match):
     libraryId = None
-    if query_parameters != None:
+    if query_parameters is not None:
         libraryId = query_parameters["libraryId"][0]
 
     library_items = utils.db_utils.get_library_items(libraryId)
-    if library_items != None:
+    if library_items is not None:
         utils.response_utils.okWithData(self, library_items)
     else:
         utils.response_utils.InternalServerError(self)
@@ -31,7 +31,7 @@ def updateLibraryItem(self, post_data, match):
 def deleteLibraryItem(self, query_parameters, match):
     position = query_parameters.get("position")[0]
     libraryId = query_parameters.get("libraryId")[0]
-    if position == None:
+    if position is None:
         utils.response_utils.BadRequest(self, "Missing required parameter: 'position'")
         return
 

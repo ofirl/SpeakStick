@@ -37,7 +37,7 @@ def deleteWord(self, query_parameters, match):
         return
 
     error = utils.db_utils.delete_word("".join(word))
-    if error == None:
+    if error is None:
         utils.response_utils.okResponse(self)
     else:
         print(error.__str__().encode())

@@ -59,7 +59,7 @@ def get_library_items(libraryId):
         cursor = connection.cursor()
 
         # Execute a query to retrieve data from the "library_items" table
-        if libraryId == None:
+        if libraryId is None:
             cursor.execute("SELECT * FROM library_items")
         else:
             cursor.execute(

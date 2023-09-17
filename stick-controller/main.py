@@ -32,11 +32,7 @@ chan1 = AnalogIn(mcp, MCP.P1)
 mixer.init()
 
 # Define grid layout and cell numbers
-GRID = [
-    ["1", "2", "3"],
-    ["4", "5", "6"],
-    ["7", "8", "9"]
-]
+GRID = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]]
 
 # Define stick position thresholds
 GRID_BORDER_SIZE = float(configs["GRID_BORDER_SIZE"])
@@ -62,19 +58,25 @@ ERROR_SOUND = SOURCE_DIR + "/sfx/error.wav"
 
 SLEEPING = False
 
+
 def play_audio(file):
     sound = mixer.Sound(file)
     sound.play()
 
+
 def get_cell(position):
     if position < POSITION_LOW - GRID_DEAD_ZONE:
         return 0
-    elif position < POSITION_MEDIUM - GRID_DEAD_ZONE and position > POSITION_LOW + GRID_DEAD_ZONE:
+    elif (
+        position < POSITION_MEDIUM - GRID_DEAD_ZONE
+        and position > POSITION_LOW + GRID_DEAD_ZONE
+    ):
         return 1
     elif position > POSITION_MEDIUM + GRID_DEAD_ZONE:
         return 2
     else:
         return -1
+
 
 def main():
     global SLEEPING
@@ -83,7 +85,7 @@ def main():
     current_col = 1
     recorded_cells = []
     wait_for_reset = False
-    
+
     cell_update_time = datetime.datetime.now()
 
     print("Starting loop")
@@ -97,19 +99,24 @@ def main():
                 sleepDuration = float(configs["STICK_CHECK_INTERVAL_S"])
             time.sleep(sleepDuration)
 
-            if not SLEEPING and datetime.datetime.now() > cell_update_time + datetime.timedelta(minutes=float(configs["SLEEP_TIMEOUT_M"])):
+            if (
+                not SLEEPING
+                and datetime.datetime.now()
+                > cell_update_time
+                + datetime.timedelta(minutes=float(configs["SLEEP_TIMEOUT_M"]))
+            ):
                 SLEEPING = True
 
             horizontal_position = chan1.voltage
             vertical_position = chan0.voltage
-            
+
             new_row = get_cell(vertical_position)
             new_col = get_cell(horizontal_position)
 
             # dead zone check
             if new_row == -1 or new_col == -1:
                 continue
-            
+
             if new_row != current_row or new_col != current_col:
                 current_row = new_row
                 current_col = new_col
@@ -117,7 +124,7 @@ def main():
 
                 if SLEEPING:
                     SLEEPING = False
-            
+
             current_cell = GRID[current_row][current_col]
 
             if wait_for_reset:
@@ -127,7 +134,11 @@ def main():
                 continue
 
             # end word
-            if (len(recorded_cells) > 0 and datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["END_WORD_TIMEOUT_S"]))):
+            if len(
+                recorded_cells
+            ) > 0 and datetime.datetime.now() > cell_update_time + datetime.timedelta(
+                seconds=float(configs["END_WORD_TIMEOUT_S"])
+            ):
                 print("word positions:")
                 print("".join(recorded_cells))
 
@@ -137,7 +148,7 @@ def main():
 
                 # get file to play
                 route_filename = get_word_by_position("".join(recorded_cells))
-                if route_filename != None:
+                if route_filename is not None:
                     print("Playing audio:", route_filename)
                     play_audio(WORDS_SOUND_FILES_DIR + route_filename)
 
@@ -148,11 +159,16 @@ def main():
                 continue
 
             # record cell change
-            if datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["CELL_CHANGE_DELAY_S"])) or (
+            if datetime.datetime.now() > cell_update_time + datetime.timedelta(
+                seconds=float(configs["CELL_CHANGE_DELAY_S"])
+            ) or (
                 # 5 is a special case, we want to be able to go over it quickly so it has it's own delay
-                datetime.datetime.now() > cell_update_time + datetime.timedelta(seconds=float(configs["MIDDLE_CELL_CHANGE_DELAY_S"]))
-                and
-                current_cell == "5"
+                datetime.datetime.now()
+                > cell_update_time
+                + datetime.timedelta(
+                    seconds=float(configs["MIDDLE_CELL_CHANGE_DELAY_S"])
+                )
+                and current_cell == "5"
             ):
                 # we are in the middle, our starting position
                 if len(recorded_cells) == 0 and current_cell == "5":
@@ -166,13 +182,14 @@ def main():
                 cell_update_time = datetime.datetime.now()
                 print("record new position:")
                 print(recorded_cells)
-            
+
     except KeyboardInterrupt:
         print("Exiting on keyboard interrupt")
         play_audio(ERROR_SOUND)
     except Exception as error:
         print("An exception occurred:", type(error).__name__, ":", error)
         play_audio(ERROR_SOUND)
+
 
 if __name__ == "__main__":
     main()
