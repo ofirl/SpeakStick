@@ -8,7 +8,7 @@ git fetch
 
 if [ -z "$latest_tag" ]
 then
-    latest_tag=$(git tag -l --sort=-v:refname | head -n 1)
+    latest_tag=$(git tag -l --sort=-v:refname | grep -vE 'rc|dev' | head -n 1)
 fi
 
 echo "Upgrading to $latest_tag"
