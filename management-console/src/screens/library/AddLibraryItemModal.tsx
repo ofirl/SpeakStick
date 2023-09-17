@@ -31,8 +31,9 @@ const modalBoxStyle = {
 
 type AddWordModalProps = {
     libraryId: number
+    disabled?: boolean
 }
-export const AddWordModal = ({ libraryId }: AddWordModalProps) => {
+export const AddWordModal = ({ libraryId, disabled }: AddWordModalProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const positionsRef = useRef<HTMLInputElement>(null)
     const wordRef = useRef<HTMLSelectElement>(null)
@@ -52,6 +53,7 @@ export const AddWordModal = ({ libraryId }: AddWordModalProps) => {
     return (
         <>
             <IconButton
+                disabled={disabled}
                 size="large"
                 color="inherit"
                 aria-label="add word"

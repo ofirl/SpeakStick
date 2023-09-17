@@ -45,7 +45,7 @@ export const Library = () => {
                     renderInput={(params) => <TextField {...params} label="Filter words" />}
                     onInputChange={(_e, value) => onFilterChangeDebounced(value || "")}
                 />
-                <AddWordModal libraryId={selectedLibrary?.id || 1} />
+                <AddWordModal disabled={!selectedLibrary?.editable} libraryId={selectedLibrary?.id || 1} />
             </div>
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">

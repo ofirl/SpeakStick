@@ -8,7 +8,7 @@ import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import { useResetToFactorySettings } from "../../api/system";
 
 export const AdvancedSettings = () => {
@@ -47,6 +47,7 @@ export const AdvancedSettings = () => {
                     {isUpdatingApplicationVersions ? <CircularProgress /> : <RefreshIcon />}
                 </IconButton>
             </div>
+            <Divider />
             <Button color="error" variant="contained" onClick={() => resetToFactorySettings()}>
                 Reset to Factory Settings (NON-REVERSIBLE)
             </Button>
