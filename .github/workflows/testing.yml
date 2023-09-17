@@ -36,10 +36,6 @@ jobs:
           n=${#latest_tag}
           echo "Length of the string is : $n "
 
-          #   testing1="test"
-          #   echo "testing1=${testing1}" >> $GITHUB_OUTPUT
-          #   echo "testing123=${latest_tag}" >> $GITHUB_OUTPUT
-
           echo "latest_tag=${latest_tag}" >> $GITHUB_OUTPUT
 
           echo "latest_tag=\`${latest_tag}\`" >> /tmp/summary.txt
