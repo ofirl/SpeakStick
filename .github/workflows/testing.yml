@@ -36,17 +36,11 @@ jobs:
           n=${#latest_tag}
           echo "Length of the string is : $n "
 
-          # latest_tag=$(echo "$latest_tag" | tr -d '\n')
-          echo $GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
-          #   echo "latest_tag=v0.4.0" >> $GITHUB_OUTPUT
-
           testing="latest_tag=\"${latest_tag}\""
           echo $testing >> /tmp/output.txt
           cat /tmp/output.txt
           cat /tmp/output.txt >> $GITHUB_OUTPUT
 
-          #   echo $testing >> $GITHUB_OUTPUT
           echo "latest_tag=`${latest_tag}`" >> /tmp/summary.txt
           cat /tmp/summary.txt >> $GITHUB_STEP_SUMMARY
 
