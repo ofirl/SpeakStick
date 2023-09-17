@@ -28,9 +28,8 @@ def duplicateLibrary(self, post_data, match):
     json_data = json.loads(post_data.decode("utf-8"))
     name = json_data.get("name")
     description = json_data.get("description")
-    baseLibraryId = json_data.get("baseLibraryId")
 
-    success = utils.db_utils.duplicate_library(name, description, baseLibraryId)
+    success = utils.db_utils.duplicate_library(name, description, match.group("id"))
     if success:
         utils.response_utils.okResponse(self)
     else:
@@ -50,9 +49,7 @@ def editLibrary(self, post_data, match):
 
 
 def deleteLibrary(self, query_parameters, match):
-    libraryId = query_parameters.get("libraryId")[0]
-
-    success = utils.db_utils.delete_library(libraryId)
+    success = utils.db_utils.delete_library(match.group("id"))
     if success:
         utils.response_utils.okResponse(self)
     else:
@@ -60,9 +57,7 @@ def deleteLibrary(self, query_parameters, match):
 
 
 def activateLibrary(self, query_parameters, match):
-    libraryId = query_parameters.get("libraryId")[0]
-
-    success = utils.db_utils.activate_library(libraryId)
+    success = utils.db_utils.activate_library(match.group("id"))
     if success:
         utils.response_utils.okResponse(self)
     else:

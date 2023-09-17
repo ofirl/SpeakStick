@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useApplicationCurrentVersion, useApplicationVersions, useSwitchApplicationVersion, useUpdateApplicationVersions } from "../../api/system";
+import { useApplicationCurrentVersion, useApplicationVersions, useSwitchApplicationVersion, useUpdateApplicationVersions } from "../../api/versions";
 
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";

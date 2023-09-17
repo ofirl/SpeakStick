@@ -12,7 +12,7 @@ type DeleteWordParams = { word: string };
 export const useDeleteWord = () => {
     const queryClient = useQueryClient();
     return useMutation((params: DeleteWordParams) =>
-        axios.delete(baseUrl + "/word", { params }).then(value => value.status === 200),
+        axios.delete(baseUrl + "/words", { params }).then(value => value.status === 200),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["words"]);
@@ -29,7 +29,7 @@ type UploadWordParams = { file: File, fileName: string };
 export const useUploadWord = () => {
     const queryClient = useQueryClient();
     return useMutation(({ file, fileName }: UploadWordParams) =>
-        axios.post(baseUrl + "/word", file, {
+        axios.post(baseUrl + "/words", file, {
             headers: {
                 filename: fileName
             }
