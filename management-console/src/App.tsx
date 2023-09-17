@@ -15,6 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Words } from './screens/words/Words';
 import { MuiThemeProvider } from './theme/theme';
 import { AdvancedSettings } from './screens/AdvancedSettings/AdvancedSettings';
+import { ChangeLog } from './screens/ChangeLog/ChangeLog';
 
 const queryClient = new QueryClient()
 
@@ -32,6 +33,7 @@ function App() {
                             <Route path="/library" Component={Library} />
                             <Route path="/words" Component={Words} />
                             <Route path="/advanced_settings" Component={AdvancedSettings} />
+                            <Route path="/change_log" Component={ChangeLog} />
                             {/* default route */}
                             <Route path="/" Component={Library} />
                         </Routes>
