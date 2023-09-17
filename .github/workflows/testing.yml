@@ -44,6 +44,7 @@ jobs:
           testing="latest_tag=\"${latest_tag}\""
           echo $testing >> /tmp/tmp.txt
           cat /tmp/tmp.txt
+          cat /tmp/tmp.txt >> $GITHUB_OUTPUT
 
           echo $testing >> $GITHUB_OUTPUT
           echo "latest_tag=`${latest_tag}`" >> $GITHUB_STEP_SUMMARY
