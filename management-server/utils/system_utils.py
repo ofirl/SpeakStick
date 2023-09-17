@@ -1,5 +1,4 @@
 import subprocess
-import re
 import os
 
 from consts import words_directory

@@ -1,11 +1,11 @@
 from git.repo import Repo
 
-import system_utils
+import utils.system_utils
 
 
 def switch_version(version):
     try:
-        pid, err = system_utils.runUpgrade(version)
+        pid, err = utils.system_utils.runUpgrade(version)
         if err is not None or pid is None:
             raise BaseException("Error running upgrade script")
 
