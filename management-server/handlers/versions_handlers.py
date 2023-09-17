@@ -48,8 +48,10 @@ def updateApplicationVersions(self, query_parameters, match):
 
 
 def getChageLog(self, query_parameters, match):
-    changeLog = utils.versions_utils.get_github_releases()
+    changeLog, error = utils.versions_utils.get_github_releases()
     if changeLog is not None:
         utils.response_utils.okWithData(self, changeLog)
     else:
-        utils.response_utils.InternalServerError(self, "Error getting change log")
+        utils.response_utils.InternalServerError(
+            self, f"Error getting change log, {error}"
+        )

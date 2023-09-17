@@ -1,5 +1,6 @@
 from git.repo import Repo
 import requests
+import datetime
 
 import utils.system_utils
 
@@ -76,12 +77,21 @@ def get_github_releases():
                     {"title": release_title, "description": release_description}
                 )
 
-            return release_info
+            return release_info, None
         else:
-            # Handle errors, e.g., repository not found
+            error = None
             print(f"Failed to retrieve releases. Status code: {response.status_code}")
-            return None
+            if response.status_code == 403:
+                timestamp = response.headers.get("x-ratelimit-reset")
+                if timestamp is not None:
+                    date = datetime.datetime.fromtimestamp(float(timestamp))
+                    formatted_date = date.strftime("%Y-%m-%d %H:%M:%S")
+                    error = (
+                        f"Rate limit reached, limit will be reset at {formatted_date}"
+                    )
+
+            return None, error
 
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
-        return None
+        return None, e.strerror
