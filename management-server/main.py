@@ -129,6 +129,11 @@ routes2 = [
                 "handler": handlers.versions_handlers.switchApplicationVersion,
             },
             {
+                "path": "/change_log",
+                "method": "POST",
+                "handler": handlers.versions_handlers.getChageLog,
+            },
+            {
                 "path": "",
                 "method": "GET",
                 "handler": handlers.versions_handlers.getApplicationVersions,

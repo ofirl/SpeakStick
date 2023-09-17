@@ -11,6 +11,18 @@ export const useApplicationVersions = (options: UseQueryOptions<string[], unknow
     )
 };
 
+type ChangeLog = {
+    title: string,
+    description: string
+}
+export const useVersionsChangeLog = (options: UseQueryOptions<ChangeLog[], unknown, ChangeLog[], string[]> = {}) => {
+    return useQuery(
+        ['versions', 'changeLog'],
+        () => axios.get(baseUrl + "/versions/change_log").then(value => value.data as ChangeLog[]),
+        options
+    )
+};
+
 export const useApplicationCurrentVersion = (options: UseQueryOptions<string, unknown, string, string[]> = {}) => {
     return useQuery(
         ['current_version'],

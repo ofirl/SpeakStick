@@ -7,6 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import AbcIcon from '@mui/icons-material/Abc';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import { Link } from 'react-router-dom';
 import { AdvancedSettingsNavItem } from './AdvancedSettingsNavItem';
 import { Divider } from '@mui/material';
@@ -56,6 +57,17 @@ export const NavigationDrawer = ({ open, onClose }: NavigationDrawerProps) => {
                         </Link>
                     </ListItem>
                 ))}
+                <Divider />
+                <ListItem disablePadding>
+                    <Link to={"/change_log"} style={{ width: "100%" }} onClick={() => onClose()}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <SummarizeIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Change Log"} />
+                        </ListItemButton>
+                    </Link>
+                </ListItem>
                 <Divider />
                 <AdvancedSettingsNavItem closeDrawer={onClose} />
             </List>
