@@ -130,7 +130,7 @@ routes2 = [
             },
             {
                 "path": "/change_log",
-                "method": "POST",
+                "method": "GET",
                 "handler": handlers.versions_handlers.getChageLog,
             },
             {
