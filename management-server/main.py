@@ -165,6 +165,11 @@ routes2 = [
         "method": "GET",
         "handler": handlers.system_handlers.performUpgrade,
     },
+    {
+        "path": "/reset_factory_settings",
+        "method": "GET",
+        "handler": handlers.system_handlers.resetToFactorySettings,
+    },
 ]
 
 

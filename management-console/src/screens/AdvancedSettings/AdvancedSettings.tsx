@@ -8,6 +8,8 @@ import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { Button } from "@mui/material";
+import { useResetToFactorySettings } from "../../api/system";
 
 export const AdvancedSettings = () => {
     const [developmentBuildsEnabled, setDevelopmentBuildsEnabled] = useState(false);
@@ -16,6 +18,7 @@ export const AdvancedSettings = () => {
 
     const { mutateAsync: switchApplicationVersion } = useSwitchApplicationVersion();
     const { mutateAsync: updateApplicationVersions, isLoading: isUpdatingApplicationVersions } = useUpdateApplicationVersions();
+    const { mutateAsync: resetToFactorySettings } = useResetToFactorySettings()
 
     const filteredVersions = useMemo(() =>
         developmentBuildsEnabled ? versions.filter(v => !v.includes("rc")) : versions,
@@ -44,6 +47,9 @@ export const AdvancedSettings = () => {
                     {isUpdatingApplicationVersions ? <CircularProgress /> : <RefreshIcon />}
                 </IconButton>
             </div>
+            <Button color="error" variant="contained" onClick={() => resetToFactorySettings()}>
+                Reset to Factory Settings (NON-REVERSIBLE)
+            </Button>
         </div>
     )
 };

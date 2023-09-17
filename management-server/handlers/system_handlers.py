@@ -16,3 +16,11 @@ def performUpgrade(self, query_parameters, match):
         utils.response_utils.okResponse(self)
     else:
         utils.response_utils.InternalServerError(self)
+
+
+def resetToFactorySettings(self, query_parameters, match):
+    success = utils.system_utils.resetToFactorySettings()
+    if success:
+        utils.response_utils.okResponse(self)
+    else:
+        utils.response_utils.InternalServerError(self)

@@ -67,3 +67,20 @@ def getWordFiles():
         if os.path.isfile(os.path.join(words_directory, filename)):
             file_names.append(filename)
     return file_names
+
+
+def resetToFactorySettings():
+    try:
+        code, output = runCommand("sudo rm configs.db")
+        if code != 0:
+            raise BaseException("Error clearing DB")
+
+        code, output = restartStickController()
+        if code != 0:
+            raise BaseException("Error restarting stick controller")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False
+
+    return True
