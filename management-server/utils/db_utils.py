@@ -7,7 +7,7 @@ from utils.system_utils import restartStickController
 print("db file:", db_file)
 
 
-def get_configs(key="", advanced=False):
+def get_configs(key="", advanced="0"):
     configs = []
     connection = None
 
@@ -19,6 +19,8 @@ def get_configs(key="", advanced=False):
         cursor = connection.cursor()
 
         # Execute a query to retrieve data from the "configs" table
+        print("advanced: ", advanced)
+        print("key: ", key)
         data = {"advanced": advanced, "key": key}
         baseQuery = "SELECT * FROM configs WHERE advanced = :advanced"
         if key != "":
