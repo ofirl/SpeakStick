@@ -24,7 +24,7 @@ def get_versions():
         )
         if configs != None and len(configs) > 0:
             _, value, _, _ = configs[0]
-            development_builds = value == 1
+            development_builds = value == "1"
 
         repo = Repo("/opt/SpeakStick")
         tags = [str(tag) for tag in repo.tags]
