@@ -10,10 +10,7 @@ import Typography from "@mui/material/Typography";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Button, Divider, Tooltip } from "@mui/material";
 import { useResetToFactorySettings } from "../../api/system";
-import { useGetConfigs, useUpdateConfig } from "../../api/configs";
-
-const DEVELOPMENT_BUILDS_CONFIG = "ENABLE_DEVELOPMENT_BUILDS"
-const AUTOMATIC_UPDATES_CONFIG = "ENBALE_AUTOMATIC_UPDATES"
+import { AUTOMATIC_UPDATES_CONFIG, DEVELOPMENT_BUILDS_CONFIG, useGetConfigs, useUpdateConfig } from "../../api/configs";
 
 export const AdvancedSettings = () => {
     const { data: versions = [] } = useApplicationVersions();
