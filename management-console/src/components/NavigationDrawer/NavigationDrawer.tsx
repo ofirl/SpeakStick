@@ -8,6 +8,7 @@ import AbcIcon from '@mui/icons-material/Abc';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SummarizeIcon from '@mui/icons-material/Summarize';
+import UpgradeIcon from '@mui/icons-material/Upgrade';
 import { Link } from 'react-router-dom';
 import { AdvancedSettingsNavItem } from './AdvancedSettingsNavItem';
 import { Divider } from '@mui/material';
@@ -58,6 +59,16 @@ export const NavigationDrawer = ({ open, onClose }: NavigationDrawerProps) => {
                     </ListItem>
                 ))}
                 <Divider />
+                <ListItem disablePadding>
+                    <Link to={"/check_updates"} style={{ width: "100%" }} onClick={() => onClose()}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <UpgradeIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Check for Updates"} />
+                        </ListItemButton>
+                    </Link>
+                </ListItem>
                 <ListItem disablePadding>
                     <Link to={"/change_log"} style={{ width: "100%" }} onClick={() => onClose()}>
                         <ListItemButton>

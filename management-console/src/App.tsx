@@ -16,6 +16,7 @@ import { Words } from './screens/words/Words';
 import { MuiThemeProvider } from './theme/theme';
 import { AdvancedSettings } from './screens/AdvancedSettings/AdvancedSettings';
 import { ChangeLog } from './screens/ChangeLog/ChangeLog';
+import { CheckUpdates } from './screens/CheckUpdates/CheckUpdates';
 
 const queryClient = new QueryClient()
 
@@ -34,6 +35,7 @@ function App() {
                             <Route path="/words" Component={Words} />
                             <Route path="/advanced_settings" Component={AdvancedSettings} />
                             <Route path="/change_log" Component={ChangeLog} />
+                            <Route path="/check_updates" Component={CheckUpdates} />
                             {/* default route */}
                             <Route path="/" Component={Library} />
                         </Routes>
