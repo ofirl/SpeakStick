@@ -23,10 +23,8 @@ def get_versions():
             advanced=1, key="ENABLE_DEVELOPMENT_BUILDS"
         )
         if configs != None and len(configs) > 0:
-            print(configs)
             development_builds = configs[0].get("value") == "1"
 
-        print(development_builds)
         repo = Repo("/opt/SpeakStick")
         tags = [str(tag) for tag in repo.tags]
 
