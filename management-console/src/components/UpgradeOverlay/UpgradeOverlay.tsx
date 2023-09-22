@@ -1,15 +1,19 @@
-import { Box, Modal, Typography } from "@mui/material"
+import Box from "@mui/material/Box"
+import Modal from "@mui/material/Modal"
+import Typography from "@mui/material/Typography"
+import { SxProps, Theme } from "@mui/material"
 
-const boxStyle = {
+const boxStyle: SxProps<Theme> = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: "80%",
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
-    p: 4,
+    padding: "1rem",
+    boxSizing: "border-box"
 };
 
 // type UpgradeOverlayProps = {}
@@ -20,10 +24,11 @@ export const UpgradeOverlay = () => {
         >
             <Box sx={boxStyle}>
                 <Typography variant="h3">
-                    Application is upgrading!
+                    Upgrading application!
                 </Typography>
+                <br />
                 <Typography variant="body1">
-                    This may take a minute, do not power off the machine while upgrading
+                    This may take a minute, do not power off the machine while upgrading!
                 </Typography>
             </Box>
         </Modal>
