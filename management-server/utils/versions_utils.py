@@ -12,6 +12,10 @@ def runUpgrade(version=""):
     )
 
 
+def isUpgradeRunning():
+    return utils.system_utils.is_process_running("upgrade-script.sh")
+
+
 def get_versions():
     try:
         development_builds = False

@@ -14,6 +14,14 @@ def performUpgrade(self, query_parameters, match):
         utils.response_utils.InternalServerError(self)
 
 
+def isUpgradeRunning(self, query_parameters, match):
+    isRunning = utils.versions_utils.isUpgradeRunning()
+    if isRunning is not None:
+        utils.response_utils.okWithData(self, isRunning)
+    else:
+        utils.response_utils.InternalServerError(self)
+
+
 def getApplicationVersions(self, query_parameters, match):
     versions = utils.versions_utils.get_versions()
     if versions is not None:

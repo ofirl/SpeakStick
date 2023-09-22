@@ -1,5 +1,6 @@
 import subprocess
 import os
+import psutil
 from git.repo import Repo
 
 from consts import words_directory
@@ -87,3 +88,10 @@ def resetToFactorySettings():
         return False
 
     return True
+
+
+def is_process_running(process_name):
+    for process in psutil.process_iter(attrs=["name"]):
+        if process_name in process.name:
+            return True
+    return False
