@@ -1,6 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { useApplicationCurrentVersion, useLatestVersion, useUpdateApplicationVersions, useUpgradeApplication } from "../../api/versions";
 import { Button, CircularProgress, Typography } from "@mui/material";
+import { useWaitForUpgrade } from "../../customHooks/useWaitForUpgrade";
 
 type VersionTextProps = {
     children: ReactNode
@@ -15,14 +16,16 @@ export const CheckUpdates = () => {
     const { data: latestVersion = "" } = useLatestVersion();
     const { data: currentVersion = "" } = useApplicationCurrentVersion();
 
-    const { mutate: upgradeApplication, isLoading: isUpgradingApplication } = useUpgradeApplication()
+    const { startWaitingForUpgrade, isUpgrading } = useWaitForUpgrade();
+
+    const { mutate: upgradeApplication, isLoading: isUpgradingApplication } = useUpgradeApplication();
 
     const { mutateAsync: updateApplicationVersions, isLoading: isUpdatingApplicationVersions } = useUpdateApplicationVersions();
     // this should happen on mount to update the avilable versions
     useEffect(() => {
         updateApplicationVersions()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
 
     return (
         <div style={{ maxWidth: "50rem", gap: "1rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1, alignItems: "center" }}>
@@ -46,9 +49,12 @@ export const CheckUpdates = () => {
                                     <span> , latest version is </span>
                                     <VersionText> {latestVersion} </VersionText>
                                 </div>
-                                <Button disabled={isUpgradingApplication} variant="contained" onClick={() => upgradeApplication({ version: latestVersion })}>
+                                <Button disabled={isUpgradingApplication} variant="contained" onClick={() => {
+                                    upgradeApplication({ version: latestVersion });
+                                    startWaitingForUpgrade();
+                                }}>
                                     {
-                                        isUpgradingApplication ?
+                                        isUpgradingApplication || isUpgrading ?
                                             <CircularProgress />
                                             :
                                             "Upgrade now"

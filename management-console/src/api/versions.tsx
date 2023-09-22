@@ -55,6 +55,14 @@ export const useUpgradeApplication = () => {
     )
 };
 
+export const useUpgradeStatus = (options: UseQueryOptions<boolean, unknown, boolean, string[]> = {}) => {
+    return useQuery(
+        ["upgrade", "status"],
+        () => axios.get(baseUrl + "/upgrade/status").then(value => value.data as boolean),
+        options
+    )
+};
+
 export const useUpdateApplicationVersions = () => {
     const queryClient = useQueryClient();
 
@@ -66,7 +74,7 @@ export const useUpdateApplicationVersions = () => {
                 toast.success("Application versions were updated")
             },
             onError: () => {
-                toast.error("Error switching application version")
+                toast.error("Error upgrading application")
             }
         }
     )
