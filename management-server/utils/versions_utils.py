@@ -26,7 +26,7 @@ def get_versions():
             advanced=True, key="ENABLE_DEVELOPMENT_BUILDS"
         )
         if configs != None and len(configs) > 0:
-            _, value, _, _, _ = configs[0]
+            _, value, _, _ = configs[0]
             development_builds = value == 1
 
         repo = Repo("/opt/SpeakStick")
