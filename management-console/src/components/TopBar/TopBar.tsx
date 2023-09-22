@@ -10,9 +10,11 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { useRestartStickController, useUpgradeApplication } from '../../api/system';
 import { Tooltip } from '@mui/material';
 import { NetworkIcon } from './NetworkIcon';
+import { useAutomaticUpdatesEnabled } from '../../api/configs';
 
 export const TopBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
+    const { data: automaticUpdatesEnabled = true } = useAutomaticUpdatesEnabled()
     const { mutate: restartStickController } = useRestartStickController()
     const { mutate: upgradeApplication } = useUpgradeApplication()
 
@@ -41,6 +43,7 @@ export const TopBar = () => {
                     <NetworkIcon />
                     <Tooltip title="Upgrade application">
                         <IconButton
+                            disabled={!automaticUpdatesEnabled}
                             size="large"
                             color="inherit"
                             aria-label="restart"

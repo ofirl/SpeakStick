@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { UseQueryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { baseUrl } from "./consts";
 import { toast } from "react-toastify";
@@ -13,8 +13,12 @@ type Config = {
 export const DEVELOPMENT_BUILDS_CONFIG = "ENABLE_DEVELOPMENT_BUILDS"
 export const AUTOMATIC_UPDATES_CONFIG = "ENBALE_AUTOMATIC_UPDATES"
 
-export const useGetConfigs = (IncludeAdvanced: boolean = false) => {
-    return useQuery(['configs', IncludeAdvanced], () => axios.get(baseUrl + "/configs", { params: { advanced: IncludeAdvanced ? 1 : 0 } }).then(value => value.data as Config[]))
+export const useGetConfigs = <T extends object | boolean = Config[]>(IncludeAdvanced: boolean = false, options: UseQueryOptions<Config[], unknown, T, string[]> = {}) => {
+    return useQuery(
+        ['configs', IncludeAdvanced.toString()],
+        () => axios.get(baseUrl + "/configs", { params: { advanced: IncludeAdvanced ? 1 : 0 } }).then(value => value.data as Config[]),
+        options
+    )
 };
 
 type updateConfigParams = { key: string, value: string };
@@ -36,3 +40,7 @@ export const useUpdateConfig = () => {
         }
     )
 };
+
+export const useAutomaticUpdatesEnabled = () => {
+    return useGetConfigs(true, { select: (data) => data.find(c => c.key === AUTOMATIC_UPDATES_CONFIG)?.value === "1" })
+}
