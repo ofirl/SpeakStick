@@ -29,9 +29,11 @@ def get_configs(key="", advanced=False):
 
         # Fetch all the rows of data
         rows = cursor.fetchall()
+        print(rows)
 
         # Populate the configs dictionary with retrieved data
         for row in rows:
+            print(row)
             key, value, description, default_value, _ = row
             configs.append(
                 {
