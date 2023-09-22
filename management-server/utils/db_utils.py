@@ -31,7 +31,7 @@ def get_configs(key="", advanced=False):
 
         # Populate the configs dictionary with retrieved data
         for row in rows:
-            key, value, description, default_value = row
+            key, value, description, default_value, _ = row
             configs.append(
                 {
                     "key": key,
