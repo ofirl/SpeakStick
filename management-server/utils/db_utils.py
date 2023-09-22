@@ -24,6 +24,7 @@ def get_configs(key="", advanced=False):
         if key != "":
             baseQuery += " AND key = :key"
 
+        print(baseQuery)
         cursor.execute(baseQuery, data)
 
         # Fetch all the rows of data
