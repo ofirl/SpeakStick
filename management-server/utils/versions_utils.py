@@ -23,6 +23,7 @@ def get_versions():
             advanced=1, key="ENABLE_DEVELOPMENT_BUILDS"
         )
         if configs != None and len(configs) > 0:
+            print(configs)
             _, value, _, _ = configs[0]
             print(value)
             development_builds = value == "1"
