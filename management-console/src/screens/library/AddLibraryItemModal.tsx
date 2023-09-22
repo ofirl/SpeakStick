@@ -7,12 +7,11 @@ import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useUpdateLibraryItems } from '../../api/libraryItems';
 import { useGetWords } from '../../api/words';
+import { Autocomplete } from '@mui/material';
 
 const modalBoxStyle = {
     position: 'absolute',
@@ -37,7 +36,7 @@ export const AddWordModal = ({ libraryId, disabled }: AddWordModalProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const positionsRef = useRef<HTMLInputElement>(null)
     const wordRef = useRef<HTMLSelectElement>(null)
-    const { data: files } = useGetWords();
+    const { data: files = [] } = useGetWords();
 
     const { mutateAsync: updateWord, isLoading } = useUpdateLibraryItems();
 
@@ -73,18 +72,11 @@ export const AddWordModal = ({ libraryId, disabled }: AddWordModalProps) => {
                     </Typography>
                     <TextField fullWidth label="Positions" variant="outlined" inputRef={positionsRef} />
                     <InputLabel id="word-label">Word</InputLabel>
-                    <Select
-                        fullWidth
-                        labelId="word-label"
-                        label="Word"
-                        inputRef={wordRef}
-                    >
-                        {
-                            files?.map(file => (
-                                <MenuItem key={file} value={file}>{file}</MenuItem>
-                            ))
-                        }
-                    </Select>
+                    <Autocomplete
+                        style={{ flexGrow: "1" }}
+                        options={files}
+                        renderInput={(params) => <TextField inputRef={wordRef} {...params} label="Word" />}
+                    />
                     <Button disabled={isLoading} variant="contained" style={{ marginTop: "1rem", alignSelf: "end" }} onClick={onSave}>
                         {isLoading ? <CircularProgress /> : "Save"}
                     </Button>

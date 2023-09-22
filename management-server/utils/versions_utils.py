@@ -3,6 +3,7 @@ import requests
 import datetime
 
 import utils.system_utils
+import utils.db_utils
 
 
 def switch_version(version):
@@ -20,8 +21,20 @@ def switch_version(version):
 
 def get_versions():
     try:
+        development_builds = False
+        configs = utils.db_utils.get_configs(
+            advanced=True, key="ENABLE_DEVELOPMENT_BUILDS"
+        )
+        if configs != None and len(configs) > 0:
+            _, value, _, _ = configs[0]
+            development_builds = value == 1
+
         repo = Repo("/opt/SpeakStick")
         tags = [str(tag) for tag in repo.tags]
+
+        if not development_builds:
+            tags = [tag for tag in tags if "rc" not in tag and "dev" not in tag]
+
         return sorted(tags, reverse=True)
 
     except Exception as e:

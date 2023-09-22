@@ -1,7 +1,10 @@
 import subprocess
 import os
+from git.repo import Repo
 
 from consts import words_directory
+
+from utils.versions_utils import update_available_versions
 
 
 def runCommand(command):
@@ -74,6 +77,10 @@ def resetToFactorySettings():
         code, output = runCommand("sudo rm /opt/SpeakStick/configs.db")
         if code != 0:
             raise BaseException("Error clearing DB")
+
+        runCommand("cd /opt/SpeakStick && git tag -l | xargs git tag -d")
+        runCommand("cd /opt/SpeakStick && git branch -l | xargs git branch -D")
+        update_available_versions()
 
         code, output = restartStickController()
         if code != 0:

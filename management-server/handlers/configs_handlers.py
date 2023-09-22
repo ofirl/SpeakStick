@@ -5,7 +5,15 @@ import utils.response_utils
 
 
 def getConfigs(self, query_parameters, match):
-    configs = utils.db_utils.get_configs()
+    advanced = query_parameters.get("advanced")
+    if advanced is not None:
+        advanced = query_parameters.get("advanced")[0]
+
+    key = query_parameters.get("key")
+    if key is not None:
+        key = query_parameters.get("key")[0]
+
+    configs = utils.db_utils.get_configs(key=key, advanced=advanced)
     if configs:
         utils.response_utils.okWithData(self, configs)
     else:
