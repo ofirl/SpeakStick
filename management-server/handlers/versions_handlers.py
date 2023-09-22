@@ -1,7 +1,25 @@
-import json
-
 import utils.versions_utils
 import utils.response_utils
+
+
+def performUpgrade(self, query_parameters, match):
+    version = query_parameters.get("version")
+    if version is not None:
+        version = version[0]
+
+    process, err = utils.versions_utils.runUpgrade(version)
+    if err is None and process is not None:
+        utils.response_utils.okResponse(self)
+    else:
+        utils.response_utils.InternalServerError(self)
+
+
+def isUpgradeRunning(self, query_parameters, match):
+    isRunning = utils.versions_utils.isUpgradeRunning()
+    if isRunning is not None:
+        utils.response_utils.okWithData(self, isRunning)
+    else:
+        utils.response_utils.InternalServerError(self)
 
 
 def getApplicationVersions(self, query_parameters, match):
@@ -21,19 +39,6 @@ def getApplicationCurrentVersion(self, query_parameters, match):
     else:
         utils.response_utils.InternalServerError(
             self, "Error getting application current version"
-        )
-
-
-def switchApplicationVersion(self, post_data, match):
-    json_data = json.loads(post_data.decode("utf-8"))
-    version = json_data.get("version")
-
-    success = utils.versions_utils.switch_version(version)
-    if success is not None:
-        utils.response_utils.okResponse(self)
-    else:
-        utils.response_utils.InternalServerError(
-            self, "Error switching application versions"
         )
 
 

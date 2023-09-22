@@ -1,21 +1,22 @@
 #! /bin/bash
 
+latest_tag=$1
+
 workdir="/opt/SpeakStick"
 cd "${workdir}"
 
-# check if automatic updates are enabled
-automatic_updates=$(sqlite3 ./configs.db "select value from configs where key='ENBALE_AUTOMATIC_UPDATES'")
-if [ $? = 0 ] && [ $automatic_updates = "0" ]
-then
-    echo "Automatic updates are disabled, exiting"
-    exit 0
-fi
-
-latest_tag=$1
 git fetch
 
 if [ -z "$latest_tag" ]
 then
+    # check if automatic updates are enabled
+    automatic_updates=$(sqlite3 ./configs.db "select value from configs where key='ENBALE_AUTOMATIC_UPDATES'")
+    if [ $? = 0 ] && [ $automatic_updates = "0" ]
+    then
+        echo "Automatic updates are disabled, exiting"
+        exit 0
+    fi
+
     # get all tags and filter development build if needed
     development_builds=$(sqlite3 ./configs.db "select value from configs where key='ENABLE_DEVELOPMENT_BUILDS'")
     if [ $? != 0 ] || [ $development_builds != "1" ]

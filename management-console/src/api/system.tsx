@@ -18,21 +18,6 @@ export const useRestartStickController = () => {
     )
 };
 
-export const useUpgradeApplication = () => {
-    return useMutation(() =>
-        axios.get(baseUrl + "/upgrade").then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                toast.success("Application is upgrading, this might take a few seconds")
-            },
-            onError: () => {
-                toast.error("Error starting application upgrade")
-            }
-        }
-    )
-};
-
-
 export const useResetToFactorySettings = () => {
     return useMutation(() =>
         axios.get(baseUrl + "/reset_factory_settings").then(value => value.status === 200),

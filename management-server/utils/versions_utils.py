@@ -6,28 +6,24 @@ import utils.system_utils
 import utils.db_utils
 
 
-def switch_version(version):
-    try:
-        pid, err = utils.system_utils.runUpgrade(version)
-        if err is not None or pid is None:
-            raise BaseException("Error running upgrade script")
+def runUpgrade(version=""):
+    return utils.system_utils.runCommandBackground(
+        f"/opt/SpeakStick/upgrade-script.sh {version}"
+    )
 
-        return True
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+def isUpgradeRunning():
+    return utils.system_utils.is_process_running("upgrade-script")
 
 
 def get_versions():
     try:
         development_builds = False
         configs = utils.db_utils.get_configs(
-            advanced=True, key="ENABLE_DEVELOPMENT_BUILDS"
+            advanced=1, key="ENABLE_DEVELOPMENT_BUILDS"
         )
         if configs != None and len(configs) > 0:
-            _, value, _, _ = configs[0]
-            development_builds = value == 1
+            development_builds = configs[0].get("value") == "1"
 
         repo = Repo("/opt/SpeakStick")
         tags = [str(tag) for tag in repo.tags]

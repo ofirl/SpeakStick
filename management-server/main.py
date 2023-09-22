@@ -124,11 +124,6 @@ routes2 = [
                 "handler": handlers.versions_handlers.updateApplicationVersions,
             },
             {
-                "path": "/switch",
-                "method": "POST",
-                "handler": handlers.versions_handlers.switchApplicationVersion,
-            },
-            {
                 "path": "/change_log",
                 "method": "GET",
                 "handler": handlers.versions_handlers.getChageLog,
@@ -161,14 +156,24 @@ routes2 = [
         ],
     },
     {
+        "path": "/upgrade",
+        "routes": [
+            {
+                "path": "/status",
+                "method": "GET",
+                "handler": handlers.versions_handlers.isUpgradeRunning,
+            },
+            {
+                "path": "",
+                "method": "GET",
+                "handler": handlers.versions_handlers.performUpgrade,
+            },
+        ],
+    },
+    {
         "path": "/restart/stick-controller",
         "method": "GET",
         "handler": handlers.system_handlers.restartStickController,
-    },
-    {
-        "path": "/upgrade",
-        "method": "GET",
-        "handler": handlers.system_handlers.performUpgrade,
     },
     {
         "path": "/reset_factory_settings",

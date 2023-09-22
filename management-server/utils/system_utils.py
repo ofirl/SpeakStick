@@ -1,5 +1,6 @@
 import subprocess
 import os
+import psutil
 from git.repo import Repo
 
 from consts import words_directory
@@ -60,10 +61,6 @@ def restartStickController():
     return runCommand("sudo systemctl restart speakstick")
 
 
-def runUpgrade(version=""):
-    return runCommandBackground(f"/opt/SpeakStick/upgrade-script.sh {version}")
-
-
 def getWordFiles():
     file_names = []
     for filename in os.listdir(words_directory):
@@ -91,3 +88,11 @@ def resetToFactorySettings():
         return False
 
     return True
+
+
+def is_process_running(process_name):
+    for process in psutil.process_iter(attrs=["name"]):
+        print(process.name())
+        if process_name in process.name():
+            return True
+    return False
