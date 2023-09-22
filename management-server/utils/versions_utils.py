@@ -13,7 +13,7 @@ def runUpgrade(version=""):
 
 
 def isUpgradeRunning():
-    return utils.system_utils.is_process_running("upgrade-script.sh")
+    return utils.system_utils.is_process_running("upgrade-script")
 
 
 def get_versions():
