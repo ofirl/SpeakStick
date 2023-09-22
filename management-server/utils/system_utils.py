@@ -60,10 +60,6 @@ def restartStickController():
     return runCommand("sudo systemctl restart speakstick")
 
 
-def runUpgrade(version=""):
-    return runCommandBackground(f"/opt/SpeakStick/upgrade-script.sh {version}")
-
-
 def getWordFiles():
     file_names = []
     for filename in os.listdir(words_directory):

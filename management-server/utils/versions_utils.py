@@ -6,17 +6,10 @@ import utils.system_utils
 import utils.db_utils
 
 
-def switch_version(version):
-    try:
-        pid, err = utils.system_utils.runUpgrade(version)
-        if err is not None or pid is None:
-            raise BaseException("Error running upgrade script")
-
-        return True
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+def runUpgrade(version=""):
+    return utils.system_utils.runCommandBackground(
+        f"/opt/SpeakStick/upgrade-script.sh {version}"
+    )
 
 
 def get_versions():

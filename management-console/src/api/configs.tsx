@@ -40,7 +40,3 @@ export const useUpdateConfig = () => {
         }
     )
 };
-
-export const useAutomaticUpdatesEnabled = () => {
-    return useGetConfigs(true, { select: (data) => data.find(c => c.key === AUTOMATIC_UPDATES_CONFIG)?.value === "1" })
-}

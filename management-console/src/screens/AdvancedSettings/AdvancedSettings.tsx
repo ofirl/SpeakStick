@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useApplicationCurrentVersion, useApplicationVersions, useSwitchApplicationVersion, useUpdateApplicationVersions } from "../../api/versions";
+import { useApplicationCurrentVersion, useApplicationVersions, useUpdateApplicationVersions, useUpgradeApplication } from "../../api/versions";
 
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -16,7 +16,7 @@ export const AdvancedSettings = () => {
     const { data: versions = [] } = useApplicationVersions();
     const { data: currentVersion = "" } = useApplicationCurrentVersion();
 
-    const { mutateAsync: switchApplicationVersion } = useSwitchApplicationVersion();
+    const { mutateAsync: upgradeApplication } = useUpgradeApplication();
     const { mutateAsync: updateApplicationVersions, isLoading: isUpdatingApplicationVersions } = useUpdateApplicationVersions();
     const { mutateAsync: resetToFactorySettings } = useResetToFactorySettings()
     const { data: configs, isLoading: isLoadingConfigs } = useGetConfigs(true)
@@ -62,7 +62,7 @@ export const AdvancedSettings = () => {
                     value={currentVersion}
                     options={versions}
                     renderInput={(params) => <TextField {...params} label="Version" />}
-                    onChange={(_e, value) => switchApplicationVersion({ version: value })}
+                    onChange={(_e, value) => upgradeApplication({ version: value })}
                     disableClearable
                     blurOnSelect
                 />
