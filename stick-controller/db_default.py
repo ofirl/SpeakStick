@@ -79,7 +79,7 @@ def create_default_db(database_file):
                 value TEXT,
                 description TEXT,
                 default_value TEXT,
-                advanced INTEGER CHECK (editable IN (0, 1)) DEFAULT 0
+                advanced INTEGER CHECK (advanced IN (0, 1)) DEFAULT 0
             )
         """
         )
