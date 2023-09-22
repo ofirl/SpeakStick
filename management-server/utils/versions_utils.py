@@ -24,9 +24,7 @@ def get_versions():
         )
         if configs != None and len(configs) > 0:
             print(configs)
-            _, value, _, _ = configs[0]
-            print(value)
-            development_builds = value == "1"
+            development_builds = configs[0].get("value") == "1"
 
         print(development_builds)
         repo = Repo("/opt/SpeakStick")
