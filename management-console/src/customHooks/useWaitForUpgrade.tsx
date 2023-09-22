@@ -18,7 +18,7 @@ export const useWaitForUpgrade = (timeout: number = 60000) => {
     }, [])
 
     useEffect(() => {
-        if (waitForUpgrade && !isUpgrading) {
+        if (waitForUpgrade && isUpgrading === false) {
             stopWaitingForUpgrade()
             setTimeout(() => {
                 window.location.reload()

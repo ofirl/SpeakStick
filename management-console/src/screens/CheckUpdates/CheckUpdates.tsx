@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { useApplicationCurrentVersion, useLatestVersion, useUpdateApplicationVersions, useUpgradeApplication } from "../../api/versions";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import { useWaitForUpgrade } from "../../customHooks/useWaitForUpgrade";
+import { UpgradeOverlay } from "../../components/UpgradeOverlay/UpgradeOverlay";
 
 type VersionTextProps = {
     children: ReactNode
@@ -49,12 +50,12 @@ export const CheckUpdates = () => {
                                     <span> , latest version is </span>
                                     <VersionText> {latestVersion} </VersionText>
                                 </div>
-                                <Button disabled={isUpgradingApplication} variant="contained" onClick={() => {
+                                <Button disabled={isUpgradingApplication || isUpgrading} variant="contained" onClick={() => {
                                     upgradeApplication({ version: latestVersion });
                                     startWaitingForUpgrade();
                                 }}>
                                     {
-                                        isUpgradingApplication || isUpgrading ?
+                                        isUpgradingApplication ?
                                             <CircularProgress />
                                             :
                                             "Upgrade now"
@@ -62,6 +63,9 @@ export const CheckUpdates = () => {
                                 </Button>
                             </>
                     )
+            }
+            {
+                isUpgrading && <UpgradeOverlay />
             }
         </div>
     );

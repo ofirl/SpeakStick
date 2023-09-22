@@ -20,7 +20,7 @@ def get_versions():
     try:
         development_builds = False
         configs = utils.db_utils.get_configs(
-            advanced=True, key="ENABLE_DEVELOPMENT_BUILDS"
+            advanced=1, key="ENABLE_DEVELOPMENT_BUILDS"
         )
         if configs != None and len(configs) > 0:
             _, value, _, _ = configs[0]

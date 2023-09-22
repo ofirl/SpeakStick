@@ -7,7 +7,7 @@ from utils.system_utils import restartStickController
 print("db file:", db_file)
 
 
-def get_configs(key=None, advanced=False):
+def get_configs(key=None, advanced=0):
     configs = []
     connection = None
 
