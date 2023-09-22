@@ -16,18 +16,14 @@ git fetch
 
 if [ -z "$latest_tag" ]
 then
-    # get all tags
-    latest_tag=$(git tag -l --sort=-v:refname)
-
-    # filter development build if needed
+    # get all tags and filter development build if needed
     development_builds=$(sqlite3 ./configs.db "select value from configs where key='ENABLE_DEVELOPMENT_BUILDS'")
     if [ $? != 0 ] || [ $development_builds != "1" ]
     then
-        latest_tag=$(echo $latest_tag | grep -vE 'rc|dev')
+        latest_tag=$(git tag -l --sort=-v:refname | grep -vE 'rc|dev' | head -n 1)
+    else
+        latest_tag=$(git tag -l --sort=-v:refname | head -n 1)
     fi
-
-    # get the latest tag
-    latest_tag=$(echo $latest_tag | head -n 1)
 fi
 
 echo "Upgrading to $latest_tag"
