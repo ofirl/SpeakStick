@@ -10,8 +10,8 @@ type Config = {
     default_value: string
 }
 
-export const useGetConfigs = () => {
-    return useQuery(['configs'], () => axios.get(baseUrl + "/configs").then(value => value.data as Config[]))
+export const useGetConfigs = (IncludeAdvanced: boolean = false) => {
+    return useQuery(['configs', IncludeAdvanced], () => axios.get(baseUrl + "/configs", { params: { advanced: IncludeAdvanced ? 1 : 0 } }).then(value => value.data as Config[]))
 };
 
 type updateConfigParams = { key: string, value: string };

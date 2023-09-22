@@ -40,6 +40,19 @@ defaultConfigs = [
     },
 ]
 
+advancedConfigs = [
+    {
+        "key": "ENBALE_AUTOMATIC_UPDATES",
+        "value": "True",
+        "description": "Enable automatic updates (every day at 1AM)",
+    },
+    {
+        "key": "ENABLE_DEVELOPMENT_BUILDS",
+        "value": "False",
+        "description": "When updating automatically consider updating to development builds as well",
+    },
+]
+
 libraries = {
     "Default Library": {
         "description": "Basic library to get started",
@@ -65,13 +78,13 @@ def create_default_db(database_file):
                 key TEXT PRIMARY KEY,
                 value TEXT,
                 description TEXT,
-                default_value TEXT
+                default_value TEXT,
+                advanced INTEGER CHECK (editable IN (0, 1)) DEFAULT 0
             )
         """
         )
 
-        for config in defaultConfigs:
-            print(config)
+        def addConfigToDb(config):
             # Check if the key already exists in the "configs" table
             cursor.execute("SELECT * FROM configs WHERE key = :key", config)
             existing_row = cursor.fetchone()
@@ -79,9 +92,17 @@ def create_default_db(database_file):
             if existing_row is None:
                 # Insert default values into the "configs" table
                 cursor.execute(
-                    "INSERT INTO configs (key, value, description, default_value) VALUES (:key, :value, :description, :value)",
+                    "INSERT INTO configs (key, value, description, default_value, advanced) VALUES (:key, :value, :description, :value, :advanced)",
                     config,
                 )
+
+        for config in defaultConfigs:
+            config["advanced"] = "0"
+            addConfigToDb(config)
+
+        for config in advancedConfigs:
+            config["advanced"] = "1"
+            addConfigToDb(config)
 
         # Create the 'libraries' table
         cursor.execute(

@@ -25,7 +25,7 @@ curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt -y install nodejs
 
 # Automatic Upgrades --- Automatic Upgrades --- Automatic Upgrades --- Automatic Upgrades --- Automatic Upgrades ---
-echo '0 1 * * * speakstickadmin /opt/SpeakStick/upgrade-script.sh' >> ~/speakstick-upgrade-cron
+echo '0 1 * * * speakstickadmin curl localhost:8090/api/upgrade' >> ~/speakstick-upgrade-cron
 sudo cp ~/speakstick-upgrade-cron /etc/cron.d/speakstick
 
 # Services --- Services --- Services --- Services --- Services --- Services --- Services --- Services ---
