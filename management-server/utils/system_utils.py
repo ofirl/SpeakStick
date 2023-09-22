@@ -92,6 +92,7 @@ def resetToFactorySettings():
 
 def is_process_running(process_name):
     for process in psutil.process_iter(attrs=["name"]):
+        print(process.name())
         if process_name in process.name():
             return True
     return False

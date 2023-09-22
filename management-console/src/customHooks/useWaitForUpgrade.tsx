@@ -10,7 +10,6 @@ export const useWaitForUpgrade = (timeout: number = 60000) => {
     const { data: isUpgrading } = useUpgradeStatus({
         enabled: waitForUpgrade,
         refetchInterval: 10000,
-        initialData: false,
     });
 
     const stopWaitingForUpgrade = useCallback(() => {
@@ -28,7 +27,10 @@ export const useWaitForUpgrade = (timeout: number = 60000) => {
     }, [waitForUpgrade, isUpgrading, stopWaitingForUpgrade])
 
     const startWaitingForUpgrade = useCallback((timeoutOverride: number = timeout) => {
-        setWaitForUpgrade(true)
+        setTimeout(() => {
+            setWaitForUpgrade(true)
+        }, 1000);
+
         timeoutRef.current = setTimeout(() => {
             setWaitForUpgrade(false)
             queryClient.setQueryData(["upgrade", "status"], false)
