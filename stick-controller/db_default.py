@@ -43,12 +43,12 @@ defaultConfigs = [
 advancedConfigs = [
     {
         "key": "ENBALE_AUTOMATIC_UPDATES",
-        "value": "True",
+        "value": "1",
         "description": "Enable automatic updates (every day at 1AM)",
     },
     {
         "key": "ENABLE_DEVELOPMENT_BUILDS",
-        "value": "False",
+        "value": "0",
         "description": "When updating automatically consider updating to development builds as well",
     },
 ]

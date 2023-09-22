@@ -19,23 +19,18 @@ def get_configs(key=None, advanced="0"):
         cursor = connection.cursor()
 
         # Execute a query to retrieve data from the "configs" table
-        print("advanced: ", advanced)
-        print("key: ", key)
         data = {"advanced": str(advanced), "key": key}
         baseQuery = "SELECT * FROM configs WHERE advanced = :advanced"
         if key is not None:
             baseQuery += " AND key = :key"
 
-        print(baseQuery)
         cursor.execute(baseQuery, data)
 
         # Fetch all the rows of data
         rows = cursor.fetchall()
-        print(rows)
 
         # Populate the configs dictionary with retrieved data
         for row in rows:
-            print(row)
             key, value, description, default_value, _ = row
             configs.append(
                 {

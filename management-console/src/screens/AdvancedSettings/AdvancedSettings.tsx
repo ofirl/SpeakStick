@@ -42,7 +42,7 @@ export const AdvancedSettings = () => {
                     isLoadingConfigs || isUpdatingConfig ?
                         <CircularProgress />
                         :
-                        <Switch value={automaticUpdates} onChange={() => updateConfig({ key: AUTOMATIC_UPDATES_CONFIG, value: automaticUpdates ? "0" : "1" })} />
+                        <Switch checked={automaticUpdates} onChange={() => updateConfig({ key: AUTOMATIC_UPDATES_CONFIG, value: automaticUpdates ? "0" : "1" })} />
                 }
                 <Typography variant="body1">
                     Enable automatic updates
@@ -53,7 +53,7 @@ export const AdvancedSettings = () => {
                     isLoadingConfigs || isUpdatingConfig ?
                         <CircularProgress />
                         :
-                        <Switch value={developmentBuilds} onChange={() => updateConfig({ key: DEVELOPMENT_BUILDS_CONFIG, value: developmentBuilds ? "0" : "1" })} />
+                        <Switch checked={developmentBuilds} onChange={() => updateConfig({ key: DEVELOPMENT_BUILDS_CONFIG, value: developmentBuilds ? "0" : "1" })} />
                 }
                 <Typography variant="body1">
                     Enable development builds
