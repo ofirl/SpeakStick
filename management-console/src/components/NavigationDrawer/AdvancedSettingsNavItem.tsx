@@ -44,7 +44,7 @@ export const AdvancedSettingsNavItem = ({ closeDrawer }: AdvancedSettingsProps) 
                     <ListItemIcon>
                         <DeveloperModeIcon />
                     </ListItemIcon>
-                    <ListItemText primary={"Advanced Settings"} />
+                    <ListItemText sx={{ color: "#646cff" }} primary={"Advanced Settings"} />
                 </ListItemButton>
             </ListItem>
             <Modal

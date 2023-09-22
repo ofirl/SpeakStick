@@ -4,19 +4,15 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
-import UpgradeIcon from '@mui/icons-material/Upgrade';
 import { NavigationDrawer } from '../../components/NavigationDrawer/NavigationDrawer';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { useRestartStickController, useUpgradeApplication } from '../../api/system';
-import { Tooltip } from '@mui/material';
+import { useRestartStickController } from '../../api/system';
+import Tooltip from '@mui/material/Tooltip';
 import { NetworkIcon } from './NetworkIcon';
-import { useAutomaticUpdatesEnabled } from '../../api/configs';
 
 export const TopBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
-    const { data: automaticUpdatesEnabled = true } = useAutomaticUpdatesEnabled()
     const { mutate: restartStickController } = useRestartStickController()
-    const { mutate: upgradeApplication } = useUpgradeApplication()
 
     return <>
         <AppBar position="sticky" sx={{ height: "4rem" }}>
@@ -35,24 +31,12 @@ export const TopBar = () => {
                     variant="h6"
                     noWrap
                     component="div"
-                    sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block', textAlign: "center" } }}
+                    sx={{ flexGrow: 1, textAlign: "center" }}
                 >
                     Speak Stick
                 </Typography>
-                <div style={{ flexGrow: "1", textAlign: "end" }}>
+                <div style={{ textAlign: "end" }}>
                     <NetworkIcon />
-                    <Tooltip title="Upgrade application">
-                        <IconButton
-                            disabled={!automaticUpdatesEnabled}
-                            size="large"
-                            color="inherit"
-                            aria-label="restart"
-                            sx={{ mr: 2 }}
-                            onClick={() => upgradeApplication()}
-                        >
-                            <UpgradeIcon />
-                        </IconButton>
-                    </Tooltip>
                     <Tooltip title="Restart stick controller">
                         <IconButton
                             size="large"

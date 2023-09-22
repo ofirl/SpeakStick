@@ -50,7 +50,7 @@ export const AdvancedSettings = () => {
                     isLoadingConfigs || isUpdatingConfig ?
                         <CircularProgress />
                         :
-                        <Switch checked={developmentBuilds} onChange={() => updateConfig({ key: DEVELOPMENT_BUILDS_CONFIG, value: developmentBuilds ? "0" : "1" })} />
+                        <Switch color="warning" checked={developmentBuilds} onChange={() => updateConfig({ key: DEVELOPMENT_BUILDS_CONFIG, value: developmentBuilds ? "0" : "1" })} />
                 }
                 <Typography variant="body1">
                     Enable development builds

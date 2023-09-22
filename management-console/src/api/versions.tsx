@@ -3,12 +3,16 @@ import axios from "axios";
 import { baseUrl } from "./consts";
 import { toast } from "react-toastify";
 
-export const useApplicationVersions = (options: UseQueryOptions<string[], unknown, string[], string[]> = {}) => {
+export const useApplicationVersions = <T extends object | string = string[]>(options: UseQueryOptions<string[], unknown, T, string[]> = {}) => {
     return useQuery(
         ['versions'],
         () => axios.get(baseUrl + "/versions").then(value => value.data as string[]),
         options
     )
+};
+
+export const useLatestVersion = () => {
+    return useApplicationVersions({ select: (data) => data[0] });
 };
 
 export type ChangeLog = {
