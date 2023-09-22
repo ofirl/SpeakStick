@@ -64,10 +64,9 @@ export const CheckUpdates = () => {
                             </>
                     )
             }
-            {/* {
+            {
                 isUpgrading && <UpgradeOverlay />
-            } */}
-            <UpgradeOverlay />
+            }
         </div>
     );
 };
