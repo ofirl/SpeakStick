@@ -41,5 +41,8 @@ unzip /tmp/management-console.zip -d /opt/SpeakStick/management-console
 # Clean up
 rm /tmp/management-console.zip
 
+# Run migrations
+/usr/bin/python3 -u /opt/SpeakStick/migrations/migrate.py
+
 # always restart the services last
 sudo systemctl restart speakstick speakstick-management-server

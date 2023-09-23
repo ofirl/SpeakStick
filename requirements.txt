@@ -93,6 +93,7 @@ RPi.GPIO==0.7.0
 RTIMULib==7.2.1
 scrollphat==0.0.7
 scrollphathd==1.2.1
+semver==3.0.1
 Send2Trash==1.6.0b1
 sense-hat==2.4.0
 simplejpeg==1.6.4
