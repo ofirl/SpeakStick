@@ -6,14 +6,14 @@ import digitalio
 import board
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
-from pygame import mixer, _sdl2_audio
+from pygame import mixer, _sdl2
 
 
 def get_devices(capture_devices: bool = False):
     init_by_me = not mixer.get_init()
     if init_by_me:
         mixer.init()
-    devices = tuple(_sdl2_audio.get_audio_device_names(capture_devices))
+    devices = tuple(_sdl2.audio.get_audio_device_names(capture_devices))
     if init_by_me:
         mixer.quit()
     return devices
