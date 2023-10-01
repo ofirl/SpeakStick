@@ -11,6 +11,7 @@ sudo apt upgrade
 # Installations --- Installations --- Installations --- Installations --- Installations --- Installations --- 
 # python libraries
 sudo apt-get -y install python3-pip
+sudo apt install -y libsdl2-dev
 sudo pip3 install -r /opt/SpeakStick/requirements.txt
 sudo apt-get -y install python3-pygame
 

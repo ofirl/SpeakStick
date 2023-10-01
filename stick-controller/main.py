@@ -80,6 +80,7 @@ SLEEPING = False
 
 def play_audio(file):
     sound = mixer.Sound(file)
+    sound.set_volume(1)
     sound.play()
 
 
