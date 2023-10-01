@@ -13,6 +13,9 @@ import db_default
 from config import configs
 from words import get_word_by_position
 
+print(os.environ.get("SDL_AUDIODRIVER"))
+print(os.environ.get("SDL_AUDIODEV"))
+
 print("configs:")
 print(configs)
 
