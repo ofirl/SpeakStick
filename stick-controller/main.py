@@ -11,7 +11,7 @@ from pygame import mixer
 import pygame
 
 
-def get_devices(capture_devices: bool = False) -> Tuple[str, ...]:
+def get_devices(capture_devices: bool = False):
     init_by_me = not pygame.mixer.get_init()
     if init_by_me:
         pygame.mixer.init()
