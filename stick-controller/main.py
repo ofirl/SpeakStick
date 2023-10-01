@@ -12,7 +12,7 @@ from adafruit_mcp3xxx.analog_in import AnalogIn
 import pygame
 
 
-def get_devices(capture_devices: bool = False):
+def get_devices(capture_devices=False):
     init_by_me = not pygame.mixer.get_init()
     if init_by_me:
         pygame.mixer.init()
