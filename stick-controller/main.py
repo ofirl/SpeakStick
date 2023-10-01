@@ -8,6 +8,7 @@ import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 from pygame import mixer
 
+import pygame
 import pygame._sdl2.audio as sdl2_audio
 
 
