@@ -153,9 +153,16 @@ def create_default_db(database_file):
             print(libraryWords)
             for positions, word in libraryWords.items():
                 cursor.execute(
-                    "INSERT INTO library_items (libraryId, positions, word) VALUES (?, ?, ?)",
-                    (libraryId, positions, word),
+                    "SELECT * FROM library_items WHERE libraryId = ? AND positions = ?",
+                    (libraryId, positions),
                 )
+                existing_row = cursor.fetchone()
+
+                if existing_row is None:
+                    cursor.execute(
+                        "INSERT INTO library_items (libraryId, positions, word) VALUES (?, ?, ?)",
+                        (libraryId, positions, word),
+                    )
 
         # Commit the changes to the database
         connection.commit()
