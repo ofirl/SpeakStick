@@ -22,8 +22,6 @@ def get_word_by_position(positions):
         # Fetch the row data
         row = cursor.fetchone()
 
-        print("row")
-        print(row)
         # If a row was found, extract the word
         if row:
             (word,) = row
