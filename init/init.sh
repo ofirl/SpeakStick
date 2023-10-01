@@ -11,7 +11,7 @@ sudo apt upgrade
 # Installations --- Installations --- Installations --- Installations --- Installations --- Installations --- 
 # python libraries
 sudo apt-get -y install python3-pip
-sduo pip3 install -r /opt/SpeakStick/requirements.txt
+sudo pip3 install -r /opt/SpeakStick/requirements.txt
 sudo apt-get -y install python3-pygame
 
 # yarn & node

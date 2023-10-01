@@ -8,21 +8,21 @@ import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 from pygame import mixer
 
-import pygame
+# import pygame
 
 
-def get_devices(capture_devices: bool = False):
-    init_by_me = not pygame.mixer.get_init()
-    if init_by_me:
-        pygame.mixer.init()
-    devices = tuple(pygame._sdl2_audio.get_audio_device_names(capture_devices))
-    if init_by_me:
-        pygame.mixer.quit()
-    return devices
+# def get_devices(capture_devices: bool = False):
+#     init_by_me = not pygame.mixer.get_init()
+#     if init_by_me:
+#         pygame.mixer.init()
+#     devices = tuple(pygame._sdl2_audio.get_audio_device_names(capture_devices))
+#     if init_by_me:
+#         pygame.mixer.quit()
+#     return devices
 
 
-devices = get_devices()
-print(devices)
+# devices = get_devices()
+# print(devices)
 
 import db_default
 
@@ -48,7 +48,7 @@ mcp = MCP.MCP3008(spi, cs)
 chan0 = AnalogIn(mcp, MCP.P0)
 chan1 = AnalogIn(mcp, MCP.P1)
 
-mixer.init()
+mixer.init(devicename="UACDemov1.0, USB Audio")
 
 # Define grid layout and cell numbers
 GRID = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]]
