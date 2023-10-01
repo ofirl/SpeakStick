@@ -26,7 +26,7 @@ def get_word_by_position(positions):
         print(row)
         # If a row was found, extract the word
         if row:
-            word = row
+            (word,) = row
 
     except sqlite3.Error as e:
         print("An error occurred:", e)
