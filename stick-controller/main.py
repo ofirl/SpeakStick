@@ -4,12 +4,12 @@ import datetime
 import busio
 import digitalio
 import board
-import subprocess
+# import subprocess
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
 # from pygame import mixer, _sdl2
-# import pygame
+import pygame
 
 # import pygame
 
@@ -82,10 +82,10 @@ SLEEPING = False
 
 
 def play_audio(file):
-    # sound = pygame.mixer.Sound(file)
-    # sound.set_volume(1)
-    # sound.play()
-    subprocess.Popen(['aplay', file])
+    sound = pygame.mixer.Sound(file)
+    sound.set_volume(1)
+    sound.play()
+    # subprocess.Popen(['aplay', file])
 
 
 def get_cell(position):
