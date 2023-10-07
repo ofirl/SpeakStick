@@ -110,7 +110,6 @@ def get_sound_cards():
         # Search for USB Audio devices in the output
         matches = re.findall(pattern, output)
 
-        print(matches)
         return matches
 
     except subprocess.CalledProcessError as e:
@@ -122,7 +121,7 @@ def get_sound_cards():
 def get_usb_sound_card():
     cards = get_sound_cards()
 
-    for card_number, card_name, device_name in matches:
+    for card_number, card_name, device_name in cards:
         if "USB Audio" in card_name:
             return int(card_number)
 
