@@ -122,7 +122,7 @@ def get_usb_sound_card():
     cards = get_sound_cards()
 
     for card_number, card_name, device_name in cards:
-        if "USB Audio" in card_name:
+        if "USB Audio" in device_name:
             return int(card_number)
 
     # If no USB Audio device is found, return None
