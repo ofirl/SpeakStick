@@ -131,7 +131,7 @@ def write_default_sound_config(card_number):
     except Exception as e:
         # Handle any errors that occur during the file write operation
         print(f"Error writing: {e}")
-        Return False, e
+        return False, e
 
 
 def get_usb_sound_card():
