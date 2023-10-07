@@ -13,20 +13,20 @@ import pygame
 
 # import pygame
 
-# def get_devices(capture_devices=False):
-#     init_by_me = not pygame.mixer.get_init()
-#     if init_by_me:
-#         pygame.mixer.init()
-#     print("raw output:")
-#     print(pygame._sdl2.audio.get_audio_device_names(capture_devices))
-#     devices = tuple(pygame._sdl2.audio.get_audio_device_names(capture_devices))
-#     if init_by_me:
-#         pygame.mixer.quit()
-#     return devices
+def get_devices(capture_devices=False):
+    init_by_me = not pygame.mixer.get_init()
+    if init_by_me:
+        pygame.mixer.init()
+    print("raw output:")
+    print(pygame._sdl2.audio.get_audio_device_names(capture_devices))
+    devices = tuple(pygame._sdl2.audio.get_audio_device_names(capture_devices))
+    if init_by_me:
+        pygame.mixer.quit()
+    return devices
 
 
-# devices = get_devices()
-# print(devices)
+devices = get_devices()
+print(devices)
 
 import db_default
 
