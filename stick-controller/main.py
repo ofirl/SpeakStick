@@ -8,20 +8,18 @@ import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
 # from pygame import mixer, _sdl2
-import pygame
+# import pygame
 
 # import pygame
 
-pygame.init()
-
-def get_devices(capture_devices=False):
-    init_by_me = not pygame.mixer.get_init()
-    if init_by_me:
-        pygame.mixer.init()
-    devices = tuple(pygame._sdl2.audio.get_audio_device_names(capture_devices))
-    if init_by_me:
-        pygame.mixer.quit()
-    return devices
+# def get_devices(capture_devices=False):
+#     init_by_me = not pygame.mixer.get_init()
+#     if init_by_me:
+#         pygame.mixer.init()
+#     devices = tuple(pygame._sdl2.audio.get_audio_device_names(capture_devices))
+#     if init_by_me:
+#         pygame.mixer.quit()
+#     return devices
 
 
 # devices = get_devices()
@@ -52,7 +50,7 @@ chan0 = AnalogIn(mcp, MCP.P0)
 chan1 = AnalogIn(mcp, MCP.P1)
 
 # pygame.mixer.init(devicename="UACDemov1.0, USB Audio")
-pygame.mixer.init()
+# pygame.mixer.init()
 
 # Define grid layout and cell numbers
 GRID = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]]
@@ -83,9 +81,10 @@ SLEEPING = False
 
 
 def play_audio(file):
-    sound = pygame.mixer.Sound(file)
-    sound.set_volume(1)
-    sound.play()
+    # sound = pygame.mixer.Sound(file)
+    # sound.set_volume(1)
+    # sound.play()
+    subprocess.Popen(['aplay', file])
 
 
 def get_cell(position):
