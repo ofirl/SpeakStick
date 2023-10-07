@@ -189,6 +189,16 @@ routes2 = [
         "method": "POST",
         "handler": handlers.system_handlers.setAudioOutput,
     },
+    {
+        "path": "/battery",
+        "routes": [
+            {
+                "path": "/percent",
+                "method": "GET",
+                "handler": handlers.system_handlers.getBatteryPercent,
+            },
+        ],
+    },
 ]
 
 

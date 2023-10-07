@@ -1,4 +1,5 @@
 import utils.system_utils
+import utils.battery_utils
 import utils.response_utils
 
 
@@ -28,3 +29,10 @@ def setAudioOutput(self, post_data, match):
         utils.response_utils.InternalServerError(
             self, "Error updating audio output"
         )
+
+def getBatteryPercent(self, query_parameters, match):
+    percent = utils.battery_utils.getBatteryPercent()
+    if percent is not None:
+        utils.response_utils.okWithData(self, percent)
+    else:
+        utils.response_utils.InternalServerError(self)
