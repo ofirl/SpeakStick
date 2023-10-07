@@ -184,6 +184,11 @@ routes2 = [
         "method": "GET",
         "handler": handlers.system_handlers.resetToFactorySettings,
     },
+    {
+        "path": "/audio_output",
+        "method": "POST",
+        "handler": handlers.system_handlers.setAudioOutput,
+    },
 ]
 
 

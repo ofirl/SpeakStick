@@ -117,6 +117,22 @@ def get_sound_cards():
         print(f"Error: {e}")
         return None
 
+def write_default_sound_config(card_number):
+    try:
+        # Open the file in write mode ('w')
+        with open("/etc/asound.conf", 'w') as file:
+            # Write the lines to the file
+            file.write(f"defaults.pcm.card {card_number}\n")
+            file.write(f"defaults.ctl.card {card_number}\n")
+
+        print(f"Configuration written successfully.")
+        return True, None
+
+    except Exception as e:
+        # Handle any errors that occur during the file write operation
+        print(f"Error writing: {e}")
+        Return False, e
+
 
 def get_usb_sound_card():
     cards = get_sound_cards()
@@ -132,17 +148,11 @@ def set_default_audio_output():
     try:
         card_number = get_usb_sound_card()
         if card_number is None:
-            print("No USB sound card found")
+            print("No USB sound card found") 
             return
 
-        # Open the file in write mode ('w')
-        with open("/etc/asound.conf", 'w') as file:
-            # Write the lines to the file
-            file.write(f"defaults.pcm.card {card_number}\n")
-            file.write(f"defaults.ctl.card {card_number}\n")
-
-        print(f"Configuration written successfully.")
+        write_default_sound_config(card_number)
 
     except Exception as e:
         # Handle any errors that occur during the file write operation
-        print(f"Error writing: {e}")
+        print(f"Error setting default audio output: {e}")

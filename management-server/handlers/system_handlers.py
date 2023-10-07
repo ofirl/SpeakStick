@@ -16,3 +16,15 @@ def resetToFactorySettings(self, query_parameters, match):
         utils.response_utils.okResponse(self)
     else:
         utils.response_utils.InternalServerError(self)
+
+def setAudioOutput(self, post_data, match):
+    json_data = json.loads(post_data.decode("utf-8"))
+    card_number = json_data.get("card_number")
+    
+    success, error = utils.system_utils.write_default_sound_config(card_number)
+    if success:
+        utils.response_utils.okResponse(self)
+    else:
+        utils.response_utils.InternalServerError(
+            self, "Error updating audio output"
+        )
