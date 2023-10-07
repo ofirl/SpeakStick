@@ -52,8 +52,8 @@ mcp = MCP.MCP3008(spi, cs)
 chan0 = AnalogIn(mcp, MCP.P0)
 chan1 = AnalogIn(mcp, MCP.P1)
 
-pygame.mixer.init(devicename="UACDemoV10 [UACDemoV1.0]")
-# pygame.mixer.init()
+# pygame.mixer.init(devicename="UACDemoV10 [UACDemoV1.0]")
+pygame.mixer.init()
 
 # Define grid layout and cell numbers
 GRID = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]]
