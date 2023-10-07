@@ -23,7 +23,7 @@ def get_devices(capture_devices=False):
     return devices
 
 
-devices = get_devices()
+# devices = get_devices()
 print(devices)
 
 import db_default
