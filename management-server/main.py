@@ -11,6 +11,10 @@ import handlers.system_handlers
 import handlers.versions_handlers
 import handlers.network_handlers
 
+# try to set the default output device on startup
+import utils.system_utils
+utils.system_utils.set_default_audio_output()
+
 port = 8090
 BASE_ROUTE = "/api"
 

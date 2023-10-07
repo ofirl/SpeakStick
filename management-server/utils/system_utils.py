@@ -96,3 +96,53 @@ def is_process_running(process_name):
         if process_name in process.name():
             return True
     return False
+
+
+def get_sound_cards():
+    try:
+        # Run the 'aplay -l' command and capture its output
+        output = subprocess.check_output(['aplay', '-l'], universal_newlines=True)
+
+        # Define a regular expression pattern to match lines with USB Audio devices
+        pattern = r"card (\d+): (.*) \[.*\], device \d+: (.*) \[.*\]"
+
+        # Search for USB Audio devices in the output
+        matches = re.findall(pattern, output)
+
+        print(matches)
+        return matches
+
+    except subprocess.CalledProcessError as e:
+        # Handle any errors that occur when running the command
+        print(f"Error: {e}")
+        return None
+
+
+def get_usb_sound_card():
+    cards = get_sound_cards()
+
+    for card_number, card_name, device_name in matches:
+        if "USB Audio" in card_name:
+            return int(card_number)
+
+    # If no USB Audio device is found, return None
+    return None
+
+def set_default_audio_output():
+    try:
+        card_number = get_usb_sound_card()
+        if card_number is None:
+            print("No USB sound card found")
+            return
+
+        # Open the file in write mode ('w')
+        with open("/etc/asound.conf", 'w') as file:
+            # Write the lines to the file
+            file.write(f"defaults.pcm.card {card_number}\n")
+            file.write(f"defaults.ctl.card {card_number}\n")
+
+        print(f"Configuration written successfully.")
+
+    except Exception as e:
+        # Handle any errors that occur during the file write operation
+        print(f"Error writing: {e}")
