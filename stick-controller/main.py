@@ -52,7 +52,7 @@ mcp = MCP.MCP3008(spi, cs)
 chan0 = AnalogIn(mcp, MCP.P0)
 chan1 = AnalogIn(mcp, MCP.P1)
 
-pygame.mixer.init(devicename="USB Audio")
+pygame.mixer.init(devicename="USB Audio [USB Audio]")
 # pygame.mixer.init()
 
 # Define grid layout and cell numbers
