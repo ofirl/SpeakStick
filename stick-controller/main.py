@@ -12,6 +12,7 @@ import pygame
 
 # import pygame
 
+pygame.init()
 
 def get_devices(capture_devices=False):
     init_by_me = not pygame.mixer.get_init()
