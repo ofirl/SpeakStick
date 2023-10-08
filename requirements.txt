@@ -3,6 +3,7 @@ adafruit-circuitpython-busdevice==5.2.6
 adafruit-circuitpython-mcp3xxx==1.4.15
 adafruit-circuitpython-requests==2.0.1
 adafruit-circuitpython-typing==1.9.4
+Adafruit-GPIO==1.0.3
 Adafruit-PlatformDetect==3.49.0
 Adafruit-PureIO==1.1.11
 arandr==0.1.10
@@ -44,6 +45,7 @@ lxml==4.6.3
 MarkupSafe==1.1.1
 mccabe==0.6.1
 microdotphat==0.2.1
+mock==5.1.0
 mote==0.0.4
 motephat==0.0.3
 mypy==0.812
@@ -55,6 +57,7 @@ parso==0.8.1
 pexpect==4.8.0
 pgzero==1.2
 phatbeat==0.1.1
+pi-ina219==1.4.1
 pianohat==0.1.0
 picamera==1.13
 picamera2==0.3.12
@@ -67,7 +70,7 @@ psutil==5.8.0
 pycairo==1.16.2
 pycups==2.0.1
 pyftdi==0.55.0
-pygame==1.9.6
+pygame==2.5.2
 Pygments==2.7.1
 PyGObject==3.38.0
 pyinotify==0.9.6
@@ -93,6 +96,7 @@ RPi.GPIO==0.7.0
 RTIMULib==7.2.1
 scrollphat==0.0.7
 scrollphathd==1.2.1
+semver==3.0.1
 Send2Trash==1.6.0b1
 sense-hat==2.4.0
 simplejpeg==1.6.4

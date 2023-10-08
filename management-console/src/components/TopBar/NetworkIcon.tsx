@@ -46,7 +46,6 @@ export const NetworkIcon = () => {
                     size="large"
                     color="inherit"
                     aria-label="restart"
-                    sx={{ mr: 2 }}
                     onClick={() => setNetworksMenuOpen(prev => !prev)}
                     ref={menuAnchorElement}
                 >

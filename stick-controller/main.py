@@ -4,9 +4,9 @@ import datetime
 import busio
 import digitalio
 import board
+import pygame
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
-from pygame import mixer
 
 import db_default
 
@@ -29,7 +29,7 @@ mcp = MCP.MCP3008(spi, cs)
 chan0 = AnalogIn(mcp, MCP.P0)
 chan1 = AnalogIn(mcp, MCP.P1)
 
-mixer.init()
+pygame.mixer.init()
 
 # Define grid layout and cell numbers
 GRID = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]]
@@ -60,7 +60,8 @@ SLEEPING = False
 
 
 def play_audio(file):
-    sound = mixer.Sound(file)
+    sound = pygame.mixer.Sound(file)
+    sound.set_volume(1)
     sound.play()
 
 

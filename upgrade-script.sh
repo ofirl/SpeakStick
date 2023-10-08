@@ -27,7 +27,9 @@ then
     fi
 fi
 
-echo "Upgrading to $latest_tag"
+current_version=$(git describe --tags)
+
+echo "Upgrading from $current_version to $latest_tag"
 
 git checkout $latest_tag
 
@@ -40,6 +42,9 @@ rm -r /opt/SpeakStick/management-console/dist
 unzip /tmp/management-console.zip -d /opt/SpeakStick/management-console
 # Clean up
 rm /tmp/management-console.zip
+
+# Run migrations
+/usr/bin/python3 -u /opt/SpeakStick/migrations/migrate.py ${current_version//v/} ${latest_tag//v/}
 
 # always restart the services last
 sudo systemctl restart speakstick speakstick-management-server

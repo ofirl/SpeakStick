@@ -1,5 +1,6 @@
 import subprocess
 import os
+import re
 import psutil
 from git.repo import Repo
 
@@ -96,3 +97,62 @@ def is_process_running(process_name):
         if process_name in process.name():
             return True
     return False
+
+
+def get_sound_cards():
+    try:
+        # Run the 'aplay -l' command and capture its output
+        output = subprocess.check_output(['aplay', '-l'], universal_newlines=True)
+
+        # Define a regular expression pattern to match lines with USB Audio devices
+        pattern = r"card (\d+): (.*) \[.*\], device \d+: (.*) \[.*\]"
+
+        # Search for USB Audio devices in the output
+        matches = re.findall(pattern, output)
+
+        return matches
+
+    except subprocess.CalledProcessError as e:
+        # Handle any errors that occur when running the command
+        print(f"Error: {e}")
+        return None
+
+def write_default_sound_config(card_number):
+    try:
+        # Open the file in write mode ('w')
+        with open("/etc/asound.conf", 'w') as file:
+            # Write the lines to the file
+            file.write(f"defaults.pcm.card {card_number}\n")
+            file.write(f"defaults.ctl.card {card_number}\n")
+
+        print(f"Configuration written successfully.")
+        return True, None
+
+    except Exception as e:
+        # Handle any errors that occur during the file write operation
+        print(f"Error writing: {e}")
+        return False, e
+
+
+def get_usb_sound_card():
+    cards = get_sound_cards()
+
+    for card_number, card_name, device_name in cards:
+        if "USB Audio" in device_name:
+            return int(card_number)
+
+    # If no USB Audio device is found, return None
+    return None
+
+def set_default_audio_output():
+    try:
+        card_number = get_usb_sound_card()
+        if card_number is None:
+            print("No USB sound card found") 
+            return
+
+        write_default_sound_config(card_number)
+
+    except Exception as e:
+        # Handle any errors that occur during the file write operation
+        print(f"Error setting default audio output: {e}")

@@ -9,6 +9,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { useRestartStickController } from '../../api/system';
 import Tooltip from '@mui/material/Tooltip';
 import { NetworkIcon } from './NetworkIcon';
+import { BatteryIcon } from './BatteryIcon';
 
 export const TopBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false)
@@ -42,12 +43,12 @@ export const TopBar = () => {
                             size="large"
                             color="inherit"
                             aria-label="restart"
-                            sx={{ mr: 2 }}
                             onClick={() => restartStickController()}
                         >
                             <RestartAltIcon />
                         </IconButton>
                     </Tooltip>
+                    <BatteryIcon />
                 </div>
             </Toolbar>
         </AppBar>

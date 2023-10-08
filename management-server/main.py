@@ -11,6 +11,10 @@ import handlers.system_handlers
 import handlers.versions_handlers
 import handlers.network_handlers
 
+# try to set the default output device on startup
+import utils.system_utils
+utils.system_utils.set_default_audio_output()
+
 port = 8090
 BASE_ROUTE = "/api"
 
@@ -179,6 +183,21 @@ routes2 = [
         "path": "/reset_factory_settings",
         "method": "GET",
         "handler": handlers.system_handlers.resetToFactorySettings,
+    },
+    {
+        "path": "/audio_output",
+        "method": "POST",
+        "handler": handlers.system_handlers.setAudioOutput,
+    },
+    {
+        "path": "/battery",
+        "routes": [
+            {
+                "path": "/percent",
+                "method": "GET",
+                "handler": handlers.system_handlers.getBatteryPercent,
+            },
+        ],
     },
 ]
 
