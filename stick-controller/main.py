@@ -4,37 +4,14 @@ import datetime
 import busio
 import digitalio
 import board
-# import subprocess
+import pygame
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
-
-# from pygame import mixer, _sdl2
-import pygame
-
-# import pygame
-
-# def get_devices(capture_devices=False):
-#     init_by_me = not pygame.mixer.get_init()
-#     if init_by_me:
-#         pygame.mixer.init()
-#     print("raw output:")
-#     print(pygame._sdl2.audio.get_audio_device_names(capture_devices))
-#     devices = tuple(pygame._sdl2.audio.get_audio_device_names(capture_devices))
-#     if init_by_me:
-#         pygame.mixer.quit()
-#     return devices
-
-
-# devices = get_devices()
-# print(devices)
 
 import db_default
 
 from config import configs
 from words import get_word_by_position
-
-print(os.environ.get("SDL_AUDIODRIVER"))
-print(os.environ.get("SDL_AUDIODEV"))
 
 print("configs:")
 print(configs)
@@ -52,7 +29,6 @@ mcp = MCP.MCP3008(spi, cs)
 chan0 = AnalogIn(mcp, MCP.P0)
 chan1 = AnalogIn(mcp, MCP.P1)
 
-# pygame.mixer.init(devicename="UACDemoV10 [UACDemoV1.0]")
 pygame.mixer.init()
 
 # Define grid layout and cell numbers
@@ -87,7 +63,6 @@ def play_audio(file):
     sound = pygame.mixer.Sound(file)
     sound.set_volume(1)
     sound.play()
-    # subprocess.Popen(['aplay', file])
 
 
 def get_cell(position):
