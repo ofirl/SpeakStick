@@ -1,3 +1,4 @@
+import json
 import utils.system_utils
 import utils.battery_utils
 import utils.response_utils
@@ -18,17 +19,19 @@ def resetToFactorySettings(self, query_parameters, match):
     else:
         utils.response_utils.InternalServerError(self)
 
+
 def setAudioOutput(self, post_data, match):
     json_data = json.loads(post_data.decode("utf-8"))
     card_number = json_data.get("card_number")
-    
+
     success, error = utils.system_utils.write_default_sound_config(card_number)
     if success:
         utils.response_utils.okResponse(self)
     else:
         utils.response_utils.InternalServerError(
-            self, "Error updating audio output"
+            self, f"Error updating audio output: {error}"
         )
+
 
 def getBatteryPercent(self, query_parameters, match):
     percent = utils.battery_utils.getBatteryPercent()
