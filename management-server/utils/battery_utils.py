@@ -228,5 +228,5 @@ def getBatteryStatus():
 
 
 def getBatteryPercent():
-    _, _, _, _, p = getBatteryStatus()
-    return p
+    _, _, current, _, p = getBatteryStatus()
+    return p, current > 0

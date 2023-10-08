@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { baseUrl } from "./consts";
 
@@ -29,5 +29,17 @@ export const useResetToFactorySettings = () => {
                 toast.error("Error resetting application to factory settings")
             }
         }
+    )
+};
+
+export type BatteryPercentResult = { percent: number, isCharging: boolean };
+export const useGetBatteryPercent = (options: UseQueryOptions<BatteryPercentResult, unknown, BatteryPercentResult, string[]> = {}) => {
+    return useQuery(
+        ['battery', 'percent'],
+        () => axios.get(baseUrl + "/battery/percent").then(value => value.data as BatteryPercentResult),
+        {
+            refetchInterval: 10000,
+            ...options
+        },
     )
 };

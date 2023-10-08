@@ -34,8 +34,10 @@ def setAudioOutput(self, post_data, match):
 
 
 def getBatteryPercent(self, query_parameters, match):
-    percent = utils.battery_utils.getBatteryPercent()
+    percent, isCharging = utils.battery_utils.getBatteryPercent()
     if percent is not None:
-        utils.response_utils.okWithData(self, percent)
+        utils.response_utils.okWithData(
+            self, {"percent": percent, "isCharging": isCharging}
+        )
     else:
         utils.response_utils.InternalServerError(self)
