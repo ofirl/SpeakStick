@@ -40,7 +40,7 @@ const batteryPercentIconChargingMap: [number, ComponentType][] = [
 export const BatteryIcon = () => {
     const { data: { percent = 0, isCharging = false } = {} as BatteryPercentResult } = useGetBatteryPercent();
     const BatteryPercentIcon = useMemo(() =>
-        (isCharging ? batteryPercentIconMap : batteryPercentIconChargingMap).find(([key]) => percent > key)?.[1] || BatteryUnknownIcon,
+        (isCharging ? batteryPercentIconChargingMap : batteryPercentIconMap).find(([key]) => percent > key)?.[1] || BatteryUnknownIcon,
         [percent, isCharging])
 
     return (

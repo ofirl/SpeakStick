@@ -38,7 +38,7 @@ export const useGetBatteryPercent = (options: UseQueryOptions<BatteryPercentResu
         ['battery', 'percent'],
         () => axios.get(baseUrl + "/battery/percent").then(value => value.data as BatteryPercentResult),
         {
-            refetchInterval: 10000,
+            refetchInterval: 30000,
             ...options
         },
     )
