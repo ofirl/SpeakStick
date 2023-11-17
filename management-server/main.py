@@ -13,6 +13,7 @@ import handlers.network_handlers
 
 # try to set the default output device on startup
 import utils.system_utils
+
 utils.system_utils.set_default_audio_output()
 
 port = 8090
@@ -196,6 +197,16 @@ routes2 = [
                 "path": "/percent",
                 "method": "GET",
                 "handler": handlers.system_handlers.getBatteryPercent,
+            },
+        ],
+    },
+    {
+        "path": "/logs",
+        "routes": [
+            {
+                "path": "/(?P<service>.+?)",
+                "method": "GET",
+                "handler": handlers.system_handlers.getServiceLogs,
             },
         ],
     },

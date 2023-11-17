@@ -161,3 +161,18 @@ def set_default_audio_output():
     except Exception as e:
         # Handle any errors that occur during the file write operation
         print(f"Error setting default audio output: {e}")
+
+
+def get_services_logs(service, lines=200):
+    try:
+        return_code, output = runCommand(
+            f"journalctl -u {service} -e --no-pager -n {lines}"
+        )
+        if return_code != 0:
+            print(f"Error getting logs, return code {return_code}, output: {output}")
+            return None
+
+        return output
+
+    except Exception as e:
+        print(f"Error getting logs: {e}")

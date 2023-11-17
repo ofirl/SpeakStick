@@ -41,3 +41,14 @@ def getBatteryPercent(self, query_parameters, match):
         )
     else:
         utils.response_utils.InternalServerError(self)
+
+
+def getServiceLogs(self, query_parameters, match):
+    service = match.group("service")
+    lines = query_parameters.get("lines")[0]
+
+    serviceLogs = utils.system_utils.get_services_logs(service, lines)
+    if serviceLogs is not None:
+        utils.response_utils.okWithData(self, serviceLogs)
+    else:
+        utils.response_utils.InternalServerError(self)
