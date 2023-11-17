@@ -1,17 +1,23 @@
 #! /bin/bash
 
+# admin password: SpeakStick4U!
+
 # Run this script after cloning the repository:
 # cd /opt
 # git clone https://github.com/ofirl/SpeakStick.git
 # cd SpeakStick
 
+git config --global --add safe.directory /opt/SpeakStick
+
 sudo apt update
-sudo apt upgrade
+sudo apt upgrade -y
 
 # Installations --- Installations --- Installations --- Installations --- Installations --- Installations --- 
 # python libraries
-sudo apt-get -y install python3-pip
+sudo apt-get -y install python3-dev libpython3-all-dev python3-pip sqlite3 libxml2-dev libgirepository1.0-dev libxslt-dev libcairo2-dev libsmbclient-dev libcap-dev
 # sudo apt install -y libsdl2-dev libsdl2-mixer-2.0-0 libsdl2-mixer-dev
+
+sudo pyhton3 -m venv /usr/local/bin
 sudo pip3 install -r /opt/SpeakStick/requirements.txt
 # sudo apt-get -y install python3-pygame
 
@@ -24,6 +30,10 @@ sudo apt install -y yarn
 # node
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt -y install nodejs
+
+# nginx
+sudo apt install nginx -y
+sudo systemctl start nginx
 
 # Automatic Upgrades --- Automatic Upgrades --- Automatic Upgrades --- Automatic Upgrades --- Automatic Upgrades ---
 echo '0 1 * * * speakstickadmin curl localhost:8090/api/upgrade' >> ~/speakstick-upgrade-cron
@@ -106,6 +116,8 @@ driver=nl80211
 # Enable 40MHz channels with 20ns guard interval
 #ht_capab=[HT40][SHORT-GI-20][DSSS_CCK-40]' >> /etc/hostapd/hostapd.conf
 
+echo DAEMON_CONF="/etc/hostapd/hostapd.conf" >> /etc/default/hostapd
+
 # dnsmasq config
 sudo cp /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 echo 'interface=wlan1 # Listening interface
@@ -129,7 +141,7 @@ alias ss-server-logs="sudo journalctl -u speakstick-management-server"
 alias ss-restart="sudo systemctl restart speakstick speakstick-management-server"
 
 alias cdss="cd /opt/SpeakStick"
-alias ss-update="git pull && ss-restart && echo "service restarted"' >> ~/.bashrc
+alias ss-update="git pull && ss-restart && echo \"service restarted\""' >> ~/.bashrc
 
 
 # --- Audio --- Audio --- Audio --- Audio --- Audio --- Audio --- Audio --- Audio --- Audio --- Audio ---
