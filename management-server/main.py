@@ -204,7 +204,7 @@ routes2 = [
         "path": "/logs",
         "routes": [
             {
-                "path": "/(?P<service>.*?)",
+                "path": "/(?P<service>.*)",
                 "method": "GET",
                 "handler": handlers.system_handlers.getServiceLogs,
             },
