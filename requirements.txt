@@ -6,7 +6,6 @@ adafruit-circuitpython-typing==1.9.4
 Adafruit-GPIO==1.0.3
 Adafruit-PlatformDetect==3.49.0
 Adafruit-PureIO==1.1.11
-arandr==0.1.10
 astroid==2.5.1
 asttokens==2.0.4
 automationhat==0.2.0
@@ -21,7 +20,6 @@ click==7.1.2
 colorama==0.4.4
 colorzero==1.1
 cryptography==3.3.2
-cupshelpers==1.0
 dbus-python==1.2.16
 distro==1.5.0
 docutils==0.16
@@ -37,9 +35,8 @@ html5lib==1.1
 idna==2.10
 isort==5.6.4
 itsdangerous==1.1.0
-jedi==0.18.0
+# jedi==0.18.0
 Jinja2==2.11.3
-lazy-object-proxy==0.0.0
 logilab-common==1.8.1
 lxml==4.6.3
 MarkupSafe==1.1.1
@@ -55,7 +52,7 @@ oauthlib==3.1.0
 pantilthat==0.0.7
 parso==0.8.1
 pexpect==4.8.0
-pgzero==1.2
+# pgzero==1.2
 phatbeat==0.1.1
 pi-ina219==1.4.1
 pianohat==0.1.0
@@ -78,11 +75,9 @@ PyJWT==1.7.1
 pylint==2.7.2
 PyOpenGL==3.1.5
 pyOpenSSL==20.0.1
-PyQt5==5.15.2
-PyQt5-sip==12.8.1
 pyserial==3.5b0
 pysmbc==1.0.23
-python-apt==2.2.1
+# python-apt==2.2.1
 python-prctl==1.7
 pyusb==1.2.1
 rainbowhat==0.1.0
@@ -99,7 +94,7 @@ scrollphathd==1.2.1
 semver==3.0.1
 Send2Trash==1.6.0b1
 sense-hat==2.4.0
-simplejpeg==1.6.4
+simplejpeg==1.6.4 
 simplejson==3.17.2
 six==1.16.0
 skywriter==0.0.7
