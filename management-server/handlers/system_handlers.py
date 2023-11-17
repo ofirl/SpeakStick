@@ -45,7 +45,14 @@ def getBatteryPercent(self, query_parameters, match):
 
 def getServiceLogs(self, query_parameters, match):
     service = match.group("service")
-    lines = query_parameters.get("lines")[0]
+    if query_parameters is not None:
+        lines = query_parameters.get("lines")
+        if lines is not None:
+            lines = lines[0]
+        else:
+            lines = 200
+    else:
+        lines = 200
 
     serviceLogs = utils.system_utils.get_services_logs(service, lines)
     if serviceLogs is not None:
