@@ -47,9 +47,7 @@ def getServiceLogs(self, query_parameters, match):
     service = match.group("service")
     if query_parameters is not None:
         lines = query_parameters.get("lines")
-        if lines is not None:
-            lines = lines[0]
-        else:
+        if lines is None:
             lines = 200
     else:
         lines = 200
