@@ -32,12 +32,12 @@ def updateWord(self, post_data, match):
 
 
 def deleteWord(self, query_parameters, match):
-    word = urllib.parse.unquote(query_parameters.get("word"))
+    word = query_parameters.get("word")
     if not word:
         utils.response_utils.BadRequest(self, "Missing required parameter: 'word'")
         return
 
-    error = utils.db_utils.delete_word("".join(word))
+    error = utils.db_utils.delete_word(urllib.parse.unquote("".join(word)))
     if error is None:
         utils.response_utils.okResponse(self)
     else:
