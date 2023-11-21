@@ -309,17 +309,19 @@ async def handler(websocket, path):
 
 
 # Run the webosocket server
-def runWebsocketServer():
-    print("Starting websocket server on port", websocketPort)
-    websockets.serve(handler, "", websocketPort)
+# def runWebsocketServer():
+#     print("Starting websocket server on port", websocketPort)
+#     websockets.serve(handler, "", websocketPort)
 
 
 def run():
     httpServerThread = threading.Thread(target=runHttpServer)
     httpServerThread.start()
 
-    websocketServerThread = threading.Thread(target=runWebsocketServer)
-    websocketServerThread.start()
+    print("Starting websocket server on port", websocketPort)
+    websockets.serve(handler, "", websocketPort)
+    # websocketServerThread = threading.Thread(target=runWebsocketServer)
+    # websocketServerThread.start()
 
     print("Server started")
 
