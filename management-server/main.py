@@ -1,4 +1,5 @@
 import re
+import asyncio
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
@@ -290,11 +291,22 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 # Run the HTTP server
-def run():
+async def runHttpServer():
     server_address = ("", port)
     httpd = HTTPServer(server_address, RequestHandler)
     print("Starting server on port", port)
     httpd.serve_forever()
+
+
+# Run the webosocket server
+async def runWebsocketServer():
+    print("run websocket")
+
+
+def run():
+    asyncio.run(runHttpServer())
+    asyncio.run(runWebsocketServer())
+    print("Server started")
 
 
 if __name__ == "__main__":
