@@ -1,5 +1,6 @@
 import re
 import threading
+import websockets
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
@@ -17,7 +18,8 @@ import utils.system_utils
 
 utils.system_utils.set_default_audio_output()
 
-port = 8090
+httpPort = 8090
+websocketPort = 8091
 BASE_ROUTE = "/api"
 
 routes2 = [
@@ -292,15 +294,24 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 # Run the HTTP server
 def runHttpServer():
-    server_address = ("", port)
+    server_address = ("", httpPort)
     httpd = HTTPServer(server_address, RequestHandler)
-    print("Starting server on port", port)
+    print("Starting server on port", httpPort)
     httpd.serve_forever()
+
+
+# create handler for each connection
+async def handler(websocket, path):
+    print("running websocket handler")
+    data = await websocket.recv()
+    reply = f"Data recieved as:  {data}!"
+    await websocket.send(reply)
 
 
 # Run the webosocket server
 def runWebsocketServer():
-    print("run websocket")
+    print("Starting websocket server on port", websocketPort)
+    websockets.serve(handler, "", websocketPort)
 
 
 def run():
