@@ -315,13 +315,15 @@ async def handler(websocket, path):
 
 
 def run():
-    httpServerThread = threading.Thread(target=runHttpServer)
-    httpServerThread.start()
+    # httpServerThread = threading.Thread(target=runHttpServer)
+    # httpServerThread.start()
 
     print("Starting websocket server on port", websocketPort)
     websockets.serve(handler, "", websocketPort)
     # websocketServerThread = threading.Thread(target=runWebsocketServer)
     # websocketServerThread.start()
+
+    runHttpServer()
 
     print("Server started")
 
