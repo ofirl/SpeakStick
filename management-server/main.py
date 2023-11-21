@@ -1,5 +1,5 @@
 import re
-import asyncio
+import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
@@ -304,8 +304,12 @@ async def runWebsocketServer():
 
 
 def run():
-    asyncio.run(runHttpServer())
-    asyncio.run(runWebsocketServer())
+    httpServerThread = threading.Thread(target=runHttpServer)
+    httpServerThread.start()
+
+    websocketServerThread = threading.Thread(target=runWebsocketServer)
+    websocketServerThread.start()
+
     print("Server started")
 
 
