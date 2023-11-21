@@ -291,7 +291,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 # Run the HTTP server
-async def runHttpServer():
+def runHttpServer():
     server_address = ("", port)
     httpd = HTTPServer(server_address, RequestHandler)
     print("Starting server on port", port)
@@ -299,7 +299,7 @@ async def runHttpServer():
 
 
 # Run the webosocket server
-async def runWebsocketServer():
+def runWebsocketServer():
     print("run websocket")
 
 
