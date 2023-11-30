@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from "react"
 import { websocketBaseUrl } from "./consts"
 
 type StickPosition = {
-  x: number;
-  y: number;
   cell: string;
 }
 export const useGetStickPosistion = () => {
@@ -20,7 +18,7 @@ export const useGetStickPosistion = () => {
     }
 
     websocket.onmessage = (msg) => {
-      setStickPosition({ x: 0, y: 0, cell: msg.data });
+      setStickPosition({ cell: msg.data });
     }
 
     websocket.onclose = () => {

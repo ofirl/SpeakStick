@@ -3,7 +3,7 @@ import { useGetStickPosistion } from "../../api/stick"
 
 const getPositionBackground = (currentPosition: string = "", position: string) => position.toString() === currentPosition ? "#96e996" : "lightgrey"
 
-export const Learning = () => {
+export const StickVisualization = () => {
   const { stickPosition, connected } = useGetStickPosistion();
   return (
     <div style={{ maxWidth: "50rem", gap: "1rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1, alignItems: "center" }}>

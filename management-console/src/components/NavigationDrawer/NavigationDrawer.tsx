@@ -34,7 +34,7 @@ const menuItems = [
   {
     text: "Stick Visualization",
     icon: SchoolIcon,
-    link: "/learning"
+    link: "/stick_visualization"
   }
 ]
 
