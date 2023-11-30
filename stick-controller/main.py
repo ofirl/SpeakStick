@@ -71,7 +71,7 @@ def play_audio(file):
     sound.play()
 
 
-side_length = configs["MIDDLE_CELL_OCTAGON_SIDE_LENGTH"]
+side_length = float(configs["MIDDLE_CELL_OCTAGON_SIDE_LENGTH"])
 
 # Calculate the radius from the center to a vertex
 radius = side_length / math.sqrt(2 - math.sqrt(2))
