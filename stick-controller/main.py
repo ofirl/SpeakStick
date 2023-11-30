@@ -71,8 +71,8 @@ def play_audio(file):
 
 
 def get_cell_number(xAbs, yAbs):
-    print(f"xAbs: {xAbs}")
-    print(f"yAbs: {yAbs}")
+    # print(f"xAbs: {xAbs}")
+    # print(f"yAbs: {yAbs}")
     x = xAbs / VREF
     y = yAbs / VREF
     # Define the center coordinates of the octagon
@@ -153,7 +153,7 @@ def main():
             horizontal_position = chan1.voltage
             vertical_position = chan0.voltage
 
-            new_current_cell = get_cell_number(vertical_position, horizontal_position)
+            new_current_cell = get_cell_number(horizontal_position, vertical_position)
             # new_row = get_cell(vertical_position)
             # new_col = get_cell(horizontal_position)
 
