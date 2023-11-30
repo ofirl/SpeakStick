@@ -44,7 +44,7 @@ export const useGetBatteryPercent = (options: UseQueryOptions<BatteryPercentResu
   )
 };
 
-export const servicesOptions = ["speakstick", "speakstick-management-server"] as const;
+export const servicesOptions = ["speakstick", "speakstick-management-server", "nginx"] as const;
 export type Services = typeof servicesOptions[number];
 export const useGetServiceLogs = (service: Services, options: UseQueryOptions<string, unknown, string, string[]> = {}) => {
   return useQuery(

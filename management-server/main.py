@@ -1,4 +1,5 @@
 import re
+import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
@@ -14,9 +15,12 @@ import handlers.network_handlers
 # try to set the default output device on startup
 import utils.system_utils
 
+import websocket_server
+
 utils.system_utils.set_default_audio_output()
 
-port = 8090
+httpPort = 8090
+websocketPort = 8091
 BASE_ROUTE = "/api"
 
 routes2 = [
@@ -290,11 +294,22 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 # Run the HTTP server
-def run():
-    server_address = ("", port)
+def runHttpServer():
+    server_address = ("", httpPort)
     httpd = HTTPServer(server_address, RequestHandler)
-    print("Starting server on port", port)
+    print("Starting server on port", httpPort)
     httpd.serve_forever()
+
+
+def run():
+    websocketServerThread = threading.Thread(
+        target=websocket_server.startWebSocketServer, args=(websocketPort,)
+    )
+    websocketServerThread.start()
+
+    runHttpServer()
+
+    print("Server started")
 
 
 if __name__ == "__main__":

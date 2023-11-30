@@ -1,6 +1,8 @@
 import os
 import time
+import threading
 import datetime
+import math
 import busio
 import digitalio
 import board
@@ -8,13 +10,17 @@ import pygame
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
+import websocket_server
 import db_default
+import globals
 
 from config import configs
 from words import get_word_by_position
 
 print("configs:")
 print(configs)
+
+websocketPort = 8092
 
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
@@ -65,25 +71,68 @@ def play_audio(file):
     sound.play()
 
 
-def get_cell(position):
-    if position < POSITION_LOW - GRID_DEAD_ZONE:
-        return 0
-    elif (
-        position < POSITION_MEDIUM - GRID_DEAD_ZONE
-        and position > POSITION_LOW + GRID_DEAD_ZONE
-    ):
-        return 1
-    elif position > POSITION_MEDIUM + GRID_DEAD_ZONE:
-        return 2
+side_length = float(configs["MIDDLE_CELL_OCTAGON_SIDE_LENGTH"])
+
+# Calculate the radius from the center to a vertex
+radius = side_length / math.sqrt(2 - math.sqrt(2))
+
+# Calculate the angles corresponding to the octagon vertices
+angles = [i * (2 * math.pi / 8) for i in range(8)]
+
+# Define the center coordinates of the octagon
+center_x, center_y = 0.5, 0.5
+
+
+def is_inside_octagon(x, y):
+    # Check if the point is to the left of all lines formed by consecutive vertices
+    for i in range(8):
+        x1 = radius * math.cos(angles[i])
+        y1 = radius * math.sin(angles[i])
+        x2 = radius * math.cos(angles[(i + 1) % 8])
+        y2 = radius * math.sin(angles[(i + 1) % 8])
+
+        if (x2 - x1) * (y - y1) - (x - x1) * (y2 - y1) <= 0:
+            return False
+
+    return True
+
+
+def get_cell_number(xAbs, yAbs):
+    x = xAbs / VREF
+    y = yAbs / VREF
+
+    # Check if the coordinates are within the octagon
+    if is_inside_octagon(x - center_x, y - center_y):
+        # if abs(x - center_x) + abs(y - center_y) <= 0.33:
+        return "5"  # Center cell
+
+    # Determine the quadrant
+    if x <= center_x - 0.15:
+        if y <= center_y - 0.15:
+            return "1"  # Bottom-left cell
+        elif y >= center_y + 0.15:
+            return "7"  # Top-left cell
+        else:
+            return "4"  # Middle-left cell
+    elif x >= center_x + 0.15:
+        if y <= center_y - 0.15:
+            return "3"  # Bottom-right cell
+        elif y >= center_y + 0.15:
+            return "9"  # Top-right cell
+        else:
+            return "6"  # Middle-right cell
     else:
-        return -1
+        if y <= center_y - 0.15:
+            return "2"  # Bottom-middle cell
+        elif y >= center_y + 0.15:
+            return "8"  # Top-middle cell
+        else:
+            return "5"  # center cell
 
 
 def main():
     global SLEEPING
 
-    current_row = 1
-    current_col = 1
     recorded_cells = []
     wait_for_reset = False
 
@@ -111,25 +160,18 @@ def main():
             horizontal_position = chan1.voltage
             vertical_position = chan0.voltage
 
-            new_row = get_cell(vertical_position)
-            new_col = get_cell(horizontal_position)
+            new_current_cell = get_cell_number(horizontal_position, vertical_position)
 
-            # dead zone check
-            if new_row == -1 or new_col == -1:
-                continue
-
-            if new_row != current_row or new_col != current_col:
-                current_row = new_row
-                current_col = new_col
+            if new_current_cell != globals.current_cell:
                 cell_update_time = datetime.datetime.now()
 
                 if SLEEPING:
                     SLEEPING = False
 
-            current_cell = GRID[current_row][current_col]
+            globals.current_cell = new_current_cell
 
             if wait_for_reset:
-                if current_cell == "5":
+                if globals.current_cell == "5":
                     wait_for_reset = False
 
                 continue
@@ -169,17 +211,20 @@ def main():
                 + datetime.timedelta(
                     seconds=float(configs["MIDDLE_CELL_CHANGE_DELAY_S"])
                 )
-                and current_cell == "5"
+                and globals.current_cell == "5"
             ):
                 # we are in the middle, our starting position
-                if len(recorded_cells) == 0 and current_cell == "5":
+                if len(recorded_cells) == 0 and globals.current_cell == "5":
                     continue
                 # if nothing changed, don't do anything
-                if len(recorded_cells) > 0 and current_cell == recorded_cells[-1]:
+                if (
+                    len(recorded_cells) > 0
+                    and globals.current_cell == recorded_cells[-1]
+                ):
                     continue
 
                 # cell changed
-                recorded_cells.append(current_cell)
+                recorded_cells.append(globals.current_cell)
                 cell_update_time = datetime.datetime.now()
                 print("record new position:")
                 print(recorded_cells)
@@ -193,4 +238,9 @@ def main():
 
 
 if __name__ == "__main__":
+    websocketServerThread = threading.Thread(
+        target=websocket_server.startWebSocketServer, args=(websocketPort,)
+    )
+    websocketServerThread.start()
+
     main()

@@ -38,6 +38,11 @@ defaultConfigs = [
         "value": "5",
         "description": "How long without an input should the controller wait untill it enters sleep mode (in minutes)",
     },
+    {
+        "key": "MIDDLE_CELL_OCTAGON_SIDE_LENGTH",
+        "value": "0.25",
+        "description": "Side length of the center cell octagon (recommended values are 0.15-0.3)",
+    },
 ]
 
 advancedConfigs = [

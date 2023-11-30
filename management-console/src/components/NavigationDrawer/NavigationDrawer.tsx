@@ -10,6 +10,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import UpgradeIcon from '@mui/icons-material/Upgrade';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import SchoolIcon from '@mui/icons-material/School';
 import { Link } from 'react-router-dom';
 import { AdvancedSettingsNavItem } from './AdvancedSettingsNavItem';
 import { Divider } from '@mui/material';
@@ -29,6 +30,11 @@ const menuItems = [
     text: "Word Files",
     icon: CloudUploadIcon,
     link: "/words"
+  },
+  {
+    text: "Stick Visualization",
+    icon: SchoolIcon,
+    link: "/stick_visualization"
   }
 ]
 
