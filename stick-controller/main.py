@@ -71,7 +71,7 @@ def play_audio(file):
     sound.play()
 
 
-side_length = 0.3
+side_length = 0.2
 
 # Calculate the radius from the center to a vertex
 radius = side_length / math.sqrt(2 - math.sqrt(2))
