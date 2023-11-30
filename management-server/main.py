@@ -302,29 +302,7 @@ def runHttpServer():
     httpd.serve_forever()
 
 
-# create handler for each connection
-# async def handler(websocket, path):
-#     print("running websocket handler")
-#     data = await websocket.recv()
-#     reply = f"Data recieved as:  {data}!"
-#     await websocket.send(reply)
-
-
-# Run the webosocket server
-# def runWebsocketServer():
-#     print("Starting websocket server on port", websocketPort)
-#     websockets.serve(handler, "", websocketPort)
-
-
 def run():
-    # httpServerThread = threading.Thread(target=runHttpServer)
-    # httpServerThread.start()
-
-    # print("Starting websocket server on port", websocketPort)
-    # websockets.serve(handler, "", websocketPort)
-    # websocketServerThread = threading.Thread(target=runWebsocketServer)
-    # websocketServerThread.start()
-
     websocketServerThread = threading.Thread(
         target=websocket_server.startWebSocketServer, args=(websocketPort,)
     )

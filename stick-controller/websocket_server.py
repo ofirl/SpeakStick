@@ -24,9 +24,10 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
                     time.sleep(0.1)
             except tornado.websocket.WebSocketClosedError as e:
                 print(f"connection is already closed")
+                self.running = False
                 return
 
-            time.sleep(0.5)
+            time.sleep(0.2)
 
     def on_message(self, message):
         self.write_message(message=message)
