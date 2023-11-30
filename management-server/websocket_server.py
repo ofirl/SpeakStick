@@ -17,7 +17,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
 
 
 def make_app():
-    return tornado.web.Application([(r"/", SimpleWebSocket)])
+    return tornado.web.Application([(r"/ws", SimpleWebSocket)])
 
 
 def startWebSocketServer(port):
