@@ -9,11 +9,6 @@ from urllib.parse import urlparse
 
 import globals
 
-# def sendPositions(websocket):
-#     while websocket.running:
-#         websocket.write_message(str(current_cell))
-#         time.sleep(0.1)
-
 
 class SimpleWebSocket(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):
@@ -23,12 +18,14 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
         self.running = True
         time.sleep(1)
         while self.running:
-            # current_cell = str(main.current_cell)
-            print(f"current_cell: {globals.current_cell}")
-            self.write_message(str(globals.current_cell))
+            messageFuture = self.write_message(str(globals.current_cell))
+            while not messageFuture.done:
+                time.sleep(0.1)
+            if messageFuture.exception is not None:
+                print(messageFuture.exception)
+                self.running = False
+                self.close()
             time.sleep(0.5)
-        # websocketServerThread = threading.Thread(target=sendPositions, args=(self,))
-        # websocketServerThread.start()
 
     def on_message(self, message):
         self.write_message(message=message)
