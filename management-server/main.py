@@ -16,6 +16,8 @@ import handlers.network_handlers
 # try to set the default output device on startup
 import utils.system_utils
 
+import websocket_server
+
 utils.system_utils.set_default_audio_output()
 
 httpPort = 8090
@@ -301,11 +303,11 @@ def runHttpServer():
 
 
 # create handler for each connection
-async def handler(websocket, path):
-    print("running websocket handler")
-    data = await websocket.recv()
-    reply = f"Data recieved as:  {data}!"
-    await websocket.send(reply)
+# async def handler(websocket, path):
+#     print("running websocket handler")
+#     data = await websocket.recv()
+#     reply = f"Data recieved as:  {data}!"
+#     await websocket.send(reply)
 
 
 # Run the webosocket server
@@ -318,10 +320,15 @@ def run():
     # httpServerThread = threading.Thread(target=runHttpServer)
     # httpServerThread.start()
 
-    print("Starting websocket server on port", websocketPort)
-    websockets.serve(handler, "", websocketPort)
+    # print("Starting websocket server on port", websocketPort)
+    # websockets.serve(handler, "", websocketPort)
     # websocketServerThread = threading.Thread(target=runWebsocketServer)
     # websocketServerThread.start()
+
+    websocketServerThread = threading.Thread(
+        target=websocket_server.startWebSocketServer, args=(websocketPort,)
+    )
+    websocketServerThread.start()
 
     runHttpServer()
 
