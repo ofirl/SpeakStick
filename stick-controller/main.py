@@ -1,5 +1,6 @@
 import os
 import time
+import threading
 import datetime
 import busio
 import digitalio
@@ -8,6 +9,7 @@ import pygame
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
+import websocket_server
 import db_default
 
 from config import configs
@@ -15,6 +17,8 @@ from words import get_word_by_position
 
 print("configs:")
 print(configs)
+
+websocketPort = 8092
 
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
@@ -193,4 +197,9 @@ def main():
 
 
 if __name__ == "__main__":
+    websocketServerThread = threading.Thread(
+        target=websocket_server.startWebSocketServer, args=(websocketPort,)
+    )
+    websocketServerThread.start()
+
     main()

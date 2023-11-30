@@ -15,7 +15,6 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
         self.connections.add(self)
 
     def on_message(self, message):
-        print(f"got a message={message}")
         self.write_message(message=message)
 
     def on_close(self):
@@ -23,7 +22,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
 
 
 def make_app():
-    return tornado.web.Application([(r"/ws/logs", SimpleWebSocket)])
+    return tornado.web.Application([(r"/ws/stick-position", SimpleWebSocket)])
 
 
 def startWebSocketServer(port):
