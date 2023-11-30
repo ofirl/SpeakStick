@@ -11,7 +11,7 @@ from main import current_cell
 
 def sendPositions(websocket):
     while websocket.running:
-        websocket.write_message(current_cell)
+        websocket.write_message(str(current_cell))
         time.sleep(0.1)
 
 
