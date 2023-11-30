@@ -2,9 +2,14 @@ import tornado.ioloop
 import tornado.web
 import tornado.websocket
 
+from urllib.parse import urlparse
+
 
 class SimpleWebSocket(tornado.websocket.WebSocketHandler):
     connections = set()
+
+    def check_origin(self, origin):
+        return True
 
     def open(self):
         self.connections.add(self)
