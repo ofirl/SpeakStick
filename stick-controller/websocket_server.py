@@ -7,6 +7,8 @@ import tornado.websocket
 
 from urllib.parse import urlparse
 
+import globals
+
 # def sendPositions(websocket):
 #     while websocket.running:
 #         websocket.write_message(str(current_cell))
@@ -21,11 +23,9 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
         self.running = True
         time.sleep(1)
         while self.running:
-            from main import current_cell
-
             # current_cell = str(main.current_cell)
-            print(f"current_cell: {current_cell}")
-            self.write_message(str(current_cell))
+            print(f"current_cell: {globals.current_cell}")
+            self.write_message(str(globals.current_cell))
             time.sleep(0.5)
         # websocketServerThread = threading.Thread(target=sendPositions, args=(self,))
         # websocketServerThread.start()

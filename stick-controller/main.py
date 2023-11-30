@@ -11,6 +11,7 @@ from adafruit_mcp3xxx.analog_in import AnalogIn
 
 import websocket_server
 import db_default
+import globals
 
 from config import configs
 from words import get_word_by_position
@@ -83,12 +84,8 @@ def get_cell(position):
         return -1
 
 
-current_cell = 5
-
-
 def main():
     global SLEEPING
-    global current_cell
 
     current_row = 1
     current_col = 1
@@ -135,10 +132,10 @@ def main():
                 if SLEEPING:
                     SLEEPING = False
 
-            current_cell = GRID[current_row][current_col]
+            globals.current_cell = GRID[current_row][current_col]
 
             if wait_for_reset:
-                if current_cell == "5":
+                if globals.current_cell == "5":
                     wait_for_reset = False
 
                 continue
@@ -178,17 +175,20 @@ def main():
                 + datetime.timedelta(
                     seconds=float(configs["MIDDLE_CELL_CHANGE_DELAY_S"])
                 )
-                and current_cell == "5"
+                and globals.current_cell == "5"
             ):
                 # we are in the middle, our starting position
-                if len(recorded_cells) == 0 and current_cell == "5":
+                if len(recorded_cells) == 0 and globals.current_cell == "5":
                     continue
                 # if nothing changed, don't do anything
-                if len(recorded_cells) > 0 and current_cell == recorded_cells[-1]:
+                if (
+                    len(recorded_cells) > 0
+                    and globals.current_cell == recorded_cells[-1]
+                ):
                     continue
 
                 # cell changed
-                recorded_cells.append(current_cell)
+                recorded_cells.append(globals.current_cell)
                 cell_update_time = datetime.datetime.now()
                 print("record new position:")
                 print(recorded_cells)
