@@ -325,10 +325,12 @@ def run():
     # websocketServerThread = threading.Thread(target=runWebsocketServer)
     # websocketServerThread.start()
 
-    websocketServerThread = threading.Thread(
-        target=websocket_server.startWebSocketServer, args=(websocketPort,)
-    )
-    websocketServerThread.start()
+    # websocketServerThread = threading.Thread(
+    #     target=websocket_server.startWebSocketServer, args=(websocketPort,)
+    # )
+    # websocketServerThread.start()
+
+    websocket_server.startWebSocketServer(websocketPort)
 
     runHttpServer()
 
