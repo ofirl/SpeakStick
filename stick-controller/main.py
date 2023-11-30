@@ -81,7 +81,7 @@ def get_cell_number(xAbs, yAbs):
     center_x, center_y = 0.5, 0.5
 
     # Check if the coordinates are within the octagon
-    if abs(x - center_x) + abs(y - center_y) <= 0.15:
+    if abs(x - center_x) + abs(y - center_y) <= 0.33:
         return "5"  # Center cell
 
     # Determine the quadrant
