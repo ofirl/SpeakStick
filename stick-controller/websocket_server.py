@@ -22,7 +22,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
             while not messageFuture.done:
                 time.sleep(0.1)
             if messageFuture.exception is not None:
-                print(messageFuture.exception)
+                print(f"closing connection {messageFuture.exception}")
                 self.running = False
                 self.close()
             time.sleep(0.5)
