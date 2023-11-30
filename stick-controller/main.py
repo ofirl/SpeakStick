@@ -71,7 +71,7 @@ def play_audio(file):
     sound.play()
 
 
-side_length = 0.2
+side_length = configs["MIDDLE_CELL_OCTAGON_SIDE_LENGTH"]
 
 # Calculate the radius from the center to a vertex
 radius = side_length / math.sqrt(2 - math.sqrt(2))
@@ -133,25 +133,8 @@ def get_cell_number(xAbs, yAbs):
             return "5"  # center cell
 
 
-# def get_cell(position):
-#     if position < POSITION_LOW - GRID_DEAD_ZONE:
-#         return 0
-#     elif (
-#         position < POSITION_MEDIUM - GRID_DEAD_ZONE
-#         and position > POSITION_LOW + GRID_DEAD_ZONE
-#     ):
-#         return 1
-#     elif position > POSITION_MEDIUM + GRID_DEAD_ZONE:
-#         return 2
-#     else:
-#         return -1
-
-
 def main():
     global SLEEPING
-
-    current_row = 1
-    current_col = 1
 
     recorded_cells = []
     wait_for_reset = False
@@ -181,23 +164,14 @@ def main():
             vertical_position = chan0.voltage
 
             new_current_cell = get_cell_number(horizontal_position, vertical_position)
-            # new_row = get_cell(vertical_position)
-            # new_col = get_cell(horizontal_position)
-
-            # dead zone check
-            # if new_row == -1 or new_col == -1:
-            #     continue
 
             if new_current_cell != globals.current_cell:
-                # current_row = new_row
-                # current_col = new_col
                 cell_update_time = datetime.datetime.now()
 
                 if SLEEPING:
                     SLEEPING = False
 
             globals.current_cell = new_current_cell
-            # globals.current_cell = GRID[current_row][current_col]
 
             if wait_for_reset:
                 if globals.current_cell == "5":
