@@ -86,6 +86,10 @@ def get_cell(position):
 current_cell = 5
 
 
+def getCurrentCell():
+    return current_cell
+
+
 def main():
     global SLEEPING
     global current_cell
