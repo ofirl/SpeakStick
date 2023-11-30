@@ -25,7 +25,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
 
             # current_cell = str(main.current_cell)
             print(f"current_cell: {current_cell}")
-            self.write_message(current_cell)
+            self.write_message(str(current_cell))
             time.sleep(0.5)
         # websocketServerThread = threading.Thread(target=sendPositions, args=(self,))
         # websocketServerThread.start()
