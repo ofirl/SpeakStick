@@ -18,13 +18,14 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
         self.running = True
         time.sleep(2)
         while self.running:
-            messageFuture = self.write_message(str(globals.current_cell))
-            while not messageFuture.done:
-                time.sleep(0.1)
-            if messageFuture.exception is not None:
-                print(f"closing connection {messageFuture.exception}")
-                self.running = False
-                self.close()
+            try:
+                messageFuture = self.write_message(str(globals.current_cell))
+                while not messageFuture.done:
+                    time.sleep(0.1)
+            except tornado.websocket.WebSocketClosedError as e:
+                print(f"connection is already closed")
+                return
+
             time.sleep(0.5)
 
     def on_message(self, message):
