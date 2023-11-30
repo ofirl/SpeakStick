@@ -22,5 +22,7 @@ def make_app():
 
 def startWebSocketServer(port):
     app = make_app()
+    print("Starting websocket server on port", port)
+
     app.listen(port)
     tornado.ioloop.IOLoop.current().start()
