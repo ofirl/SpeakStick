@@ -71,7 +71,7 @@ def play_audio(file):
     sound.play()
 
 
-side_length = 0.15
+side_length = 0.3
 
 # Calculate the radius from the center to a vertex
 radius = side_length / math.sqrt(2 - math.sqrt(2))
@@ -105,7 +105,7 @@ def get_cell_number(xAbs, yAbs):
     center_x, center_y = 0.5, 0.5
 
     # Check if the coordinates are within the octagon
-    if is_inside_octagon(abs(x - center_x), abs(y - center_y)):
+    if is_inside_octagon(x - center_x, y - center_y):
         # if abs(x - center_x) + abs(y - center_y) <= 0.33:
         return "5"  # Center cell
 
