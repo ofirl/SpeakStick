@@ -16,7 +16,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
 
     def open(self):
         self.running = True
-        time.sleep(1)
+        time.sleep(2)
         while self.running:
             messageFuture = self.write_message(str(globals.current_cell))
             while not messageFuture.done:
