@@ -81,28 +81,28 @@ def get_cell_number(xAbs, yAbs):
     center_x, center_y = 0.5, 0.5
 
     # Check if the coordinates are within the octagon
-    if abs(x - center_x) + abs(y - center_y) <= 0.33:
+    if abs(x - center_x) + abs(y - center_y) <= 0.15:
         return "5"  # Center cell
 
     # Determine the quadrant
-    if x <= center_x - 0.33:
-        if y <= center_y - 0.33:
+    if x <= center_x - 0.15:
+        if y <= center_y - 0.15:
             return "1"  # Bottom-left cell
-        elif y >= center_y + 0.33:
+        elif y >= center_y + 0.15:
             return "7"  # Top-left cell
         else:
             return "4"  # Middle-left cell
-    elif x >= center_x + 0.33:
-        if y <= center_y - 0.33:
+    elif x >= center_x + 0.15:
+        if y <= center_y - 0.15:
             return "3"  # Bottom-right cell
-        elif y >= center_y + 0.33:
+        elif y >= center_y + 0.15:
             return "9"  # Top-right cell
         else:
             return "6"  # Middle-right cell
     else:
-        if y <= center_y - 0.33:
+        if y <= center_y - 0.15:
             return "2"  # Bottom-middle cell
-        elif y >= center_y + 0.33:
+        elif y >= center_y + 0.15:
             return "8"  # Top-middle cell
         else:
             return "5"  # center cell
