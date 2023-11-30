@@ -18,6 +18,7 @@ import { AdvancedSettings } from './screens/AdvancedSettings/AdvancedSettings';
 import { ChangeLog } from './screens/ChangeLog/ChangeLog';
 import { CheckUpdates } from './screens/CheckUpdates/CheckUpdates';
 import { Logs } from './screens/Logs/Logs';
+import { Learning } from './screens/Learning/Learning';
 
 const queryClient = new QueryClient()
 
@@ -34,6 +35,7 @@ function App() {
               <Route path="/settings" Component={Settings} />
               <Route path="/library" Component={Library} />
               <Route path="/words" Component={Words} />
+              <Route path="/learning" Component={Learning} />
               <Route path="/advanced_settings" Component={AdvancedSettings} />
               <Route path="/logs" Component={Logs} />
               <Route path="/change_log" Component={ChangeLog} />

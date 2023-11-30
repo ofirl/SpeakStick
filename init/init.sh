@@ -165,9 +165,21 @@ alias ss-update="git pull && ss-restart && echo \"service restarted\""' >> ~/.ba
 #   try_files $uri $uri/ /index.html =404;
 # }
 
-# add a new location to nginx config:
+# add a new locations to nginx config:
 # location /api {
-#   proxy_pass http://localhost:8080;
+#   proxy_pass http://localhost:8090;
+# }
+# location /ws {
+#   proxy_http_version 1.1;
+#   proxy_set_header Upgrade $http_upgrade;
+#   proxy_set_header Connection "Upgrade";
+#   proxy_set_header Host $host;
+    # location /ws/logs {
+    #   proxy_pass http://localhost:8091;
+    # }
+    # location /ws/stick-position {
+    # proxy_pass http://localhost:8092;
+    # }    
 # }
 
 # sudo nano /etc/default/hostapd

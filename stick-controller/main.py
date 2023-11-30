@@ -79,6 +79,9 @@ radius = side_length / math.sqrt(2 - math.sqrt(2))
 # Calculate the angles corresponding to the octagon vertices
 angles = [i * (2 * math.pi / 8) for i in range(8)]
 
+# Define the center coordinates of the octagon
+center_x, center_y = 0.5, 0.5
+
 
 def is_inside_octagon(x, y):
     # Check if the point is to the left of all lines formed by consecutive vertices
@@ -95,14 +98,8 @@ def is_inside_octagon(x, y):
 
 
 def get_cell_number(xAbs, yAbs):
-    print(f"xAbs: {xAbs}")
-    print(f"yAbs: {yAbs}")
     x = xAbs / VREF
     y = yAbs / VREF
-    print(f"x: {x}")
-    print(f"y: {y}")
-    # Define the center coordinates of the octagon
-    center_x, center_y = 0.5, 0.5
 
     # Check if the coordinates are within the octagon
     if is_inside_octagon(x - center_x, y - center_y):

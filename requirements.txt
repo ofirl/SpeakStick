@@ -106,6 +106,7 @@ ssh-import-id==5.10
 sysv-ipc==1.1.0
 thonny==4.0.1
 toml==0.10.1
+tornado==6.4
 touchphat==0.0.1
 twython==3.8.2
 typed-ast==1.4.2
@@ -114,5 +115,6 @@ unicornhathd==0.0.4
 urllib3==1.26.5
 v4l2-python3==0.3.2
 webencodings==0.5.1
+websockets==12.0
 Werkzeug==1.0.1
 wrapt==1.12.1
