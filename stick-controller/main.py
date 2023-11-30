@@ -83,11 +83,16 @@ def get_cell(position):
         return -1
 
 
+current_cell = 5
+
+
 def main():
     global SLEEPING
+    global current_cell
 
     current_row = 1
     current_col = 1
+
     recorded_cells = []
     wait_for_reset = False
 
