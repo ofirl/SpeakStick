@@ -2,6 +2,7 @@ import os
 import time
 import threading
 import datetime
+import math
 import busio
 import digitalio
 import board
@@ -70,6 +71,29 @@ def play_audio(file):
     sound.play()
 
 
+side_length = 0.15
+
+# Calculate the radius from the center to a vertex
+radius = side_length / math.sqrt(2 - math.sqrt(2))
+
+# Calculate the angles corresponding to the octagon vertices
+angles = [i * (2 * math.pi / 8) for i in range(8)]
+
+
+def is_inside_octagon(x, y):
+    # Check if the point is to the left of all lines formed by consecutive vertices
+    for i in range(8):
+        x1 = radius * math.cos(angles[i])
+        y1 = radius * math.sin(angles[i])
+        x2 = radius * math.cos(angles[(i + 1) % 8])
+        y2 = radius * math.sin(angles[(i + 1) % 8])
+
+        if (x2 - x1) * (y - y1) - (x - x1) * (y2 - y1) <= 0:
+            return False
+
+    return True
+
+
 def get_cell_number(xAbs, yAbs):
     print(f"xAbs: {xAbs}")
     print(f"yAbs: {yAbs}")
@@ -81,7 +105,8 @@ def get_cell_number(xAbs, yAbs):
     center_x, center_y = 0.5, 0.5
 
     # Check if the coordinates are within the octagon
-    if abs(x - center_x) + abs(y - center_y) <= 0.33:
+    if is_inside_octagon(abs(x - center_x), abs(y - center_y)):
+        # if abs(x - center_x) + abs(y - center_y) <= 0.33:
         return "5"  # Center cell
 
     # Determine the quadrant
