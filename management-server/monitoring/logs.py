@@ -30,7 +30,7 @@ def format_logs(logs):
     for line in logs.splitlines()[1:]:
         # Extract timestamp and message from the log line
         timestamp_str, message = line.split(" ", 5)[0:2], " ".join(
-            line.split(" ", 5)[5:]
+            line.split(" ", 5)[13:]
         )
 
         # Convert the timestamp string to a datetime object
