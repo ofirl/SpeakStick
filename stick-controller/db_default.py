@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 from consts import db_file
 
@@ -55,6 +56,21 @@ advancedConfigs = [
         "key": "ENABLE_DEVELOPMENT_BUILDS",
         "value": "0",
         "description": "When updating automatically consider updating to development builds as well",
+    },
+    {
+        "key": "LOGS_API_KEY",
+        "value": "",
+        "description": "API key for sending logs",
+    },
+    {
+        "key": "DEVICE_NAME",
+        "value": "InitialName",
+        "description": "Device name for the logs",
+    },
+    {
+        "key": "LAST_LOG_SAMPLE",
+        "value": time.time(),
+        "description": "last time logs were extracted",
     },
 ]
 

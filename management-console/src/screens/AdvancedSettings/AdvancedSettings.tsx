@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useApplicationCurrentVersion, useApplicationVersions, useUpdateApplicationVersions, useUpgradeApplication } from "../../api/versions";
 
 import Autocomplete from "@mui/material/Autocomplete";
@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Button, Divider, Tooltip } from "@mui/material";
 import { useResetToFactorySettings } from "../../api/system";
-import { AUTOMATIC_UPDATES_CONFIG, DEVELOPMENT_BUILDS_CONFIG, useGetConfigs, useUpdateConfig } from "../../api/configs";
+import { AUTOMATIC_UPDATES_CONFIG, DEVELOPMENT_BUILDS_CONFIG, DEVICE_NAME_CONFIG, LOGS_API_KEY_CONFIG, useGetConfigs, useUpdateConfig } from "../../api/configs";
 
 export const AdvancedSettings = () => {
   const { data: versions = [] } = useApplicationVersions();
@@ -22,6 +22,9 @@ export const AdvancedSettings = () => {
   const { data: configs, isLoading: isLoadingConfigs } = useGetConfigs(true)
   const { mutateAsync: updateConfig, isLoading: isUpdatingConfig } = useUpdateConfig()
 
+  const logsApiKeyTextFieldRef = useRef<HTMLInputElement>();
+  const deviceNameTextFieldRef = useRef<HTMLInputElement>();
+
   const developmentBuilds = useMemo(() =>
     configs?.find(c => c.key === DEVELOPMENT_BUILDS_CONFIG)?.value === "1",
     [configs]
@@ -29,6 +32,11 @@ export const AdvancedSettings = () => {
 
   const automaticUpdates = useMemo(() =>
     configs?.find(c => c.key === AUTOMATIC_UPDATES_CONFIG)?.value === "1",
+    [configs]
+  )
+
+  const deviceName = useMemo(() =>
+    configs?.find(c => c.key === DEVICE_NAME_CONFIG)?.value || "",
     [configs]
   )
 
@@ -71,6 +79,20 @@ export const AdvancedSettings = () => {
             {isUpdatingApplicationVersions ? <CircularProgress /> : <RefreshIcon />}
           </IconButton>
         </Tooltip>
+      </div>
+      <Divider />
+      <div style={{ display: "flex" }}>
+        <TextField inputRef={logsApiKeyTextFieldRef} style={{ flexGrow: 1 }} label="Logs API key" />
+        <Button style={{ flexShrink: 1 }} variant="text" onClick={() => logsApiKeyTextFieldRef.current?.value && updateConfig({ key: LOGS_API_KEY_CONFIG, value: logsApiKeyTextFieldRef.current.value })}>
+          Update
+        </Button>
+      </div>
+      <Divider />
+      <div style={{ display: "flex" }}>
+        <TextField defaultValue={deviceName} inputRef={deviceNameTextFieldRef} style={{ flexGrow: 1 }} label="Device name" />
+        <Button style={{ flexShrink: 1 }} variant="text" onClick={() => deviceNameTextFieldRef.current?.value && updateConfig({ key: DEVICE_NAME_CONFIG, value: deviceNameTextFieldRef.current.value })}>
+          Update
+        </Button>
       </div>
       <Divider />
       <Button color="error" variant="contained" onClick={() => resetToFactorySettings()}>

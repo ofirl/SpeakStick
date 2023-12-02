@@ -52,6 +52,14 @@ def get_configs(key=None, advanced=0):
     return configs
 
 
+def get_config_value(key=None):
+    configs = get_configs(key, 1)
+    if configs is not None and len(configs) == 1:
+        return configs[0]["value"]
+
+    return None
+
+
 def get_library_items(libraryId):
     library_items = []
     connection = None
@@ -175,7 +183,7 @@ def get_library_by_id(libraryId):
     return library
 
 
-def update_config(key, value):
+def update_config(key, value, restart=True):
     output = True
     connection = None
 
@@ -200,7 +208,8 @@ def update_config(key, value):
         if affected_rows != 1:
             raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
 
-        restartStickController()
+        if restart:
+            restartStickController()
 
     except sqlite3.Error as e:
         output = False

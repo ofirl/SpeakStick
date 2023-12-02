@@ -15,6 +15,8 @@ import handlers.network_handlers
 # try to set the default output device on startup
 import utils.system_utils
 
+import monitoring.logs
+
 import websocket_server
 
 utils.system_utils.set_default_audio_output()
@@ -302,6 +304,9 @@ def runHttpServer():
 
 
 def run():
+    logThread = threading.Thread(target=monitoring.logs.logLoop)
+    logThread.start()
+
     websocketServerThread = threading.Thread(
         target=websocket_server.startWebSocketServer, args=(websocketPort,)
     )

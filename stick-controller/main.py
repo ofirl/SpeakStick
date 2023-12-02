@@ -17,8 +17,7 @@ import globals
 from config import configs
 from words import get_word_by_position
 
-print("configs:")
-print(configs)
+print(f"configs: {configs}")
 
 websocketPort = 8092
 
@@ -182,8 +181,7 @@ def main():
             ) > 0 and datetime.datetime.now() > cell_update_time + datetime.timedelta(
                 seconds=float(configs["END_WORD_TIMEOUT_S"])
             ):
-                print("word positions:")
-                print("".join(recorded_cells))
+                print(f"word positions: {''.join(recorded_cells)}")
 
                 # ignore the last position if it's 5
                 if recorded_cells[-1] == "5":
@@ -226,8 +224,7 @@ def main():
                 # cell changed
                 recorded_cells.append(globals.current_cell)
                 cell_update_time = datetime.datetime.now()
-                print("record new position:")
-                print(recorded_cells)
+                print(f"record new position: {recorded_cells}")
 
     except KeyboardInterrupt:
         print("Exiting on keyboard interrupt")
