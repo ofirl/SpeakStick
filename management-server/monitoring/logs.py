@@ -7,7 +7,7 @@ import utils.system_utils
 
 servicesNames = ["speakstick", "speakstick-management-server", "nginx"]
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
-dummyApiKey = "eu01xxf47e6ba1424af8129e30afbd4fFFFFNRAL"
+dummyApiKey = "eu01xx7972418d9f4ca7b4907ff16931FFFFNRAL"
 
 
 def get_logs():
