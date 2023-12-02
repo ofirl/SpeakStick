@@ -39,16 +39,18 @@ def format_logs(logs):
 def send_logs(logs):
     try:
         # Format logs to the desired structure
-        formatted_logs = {
-            "common": {
-                "attributes": {
-                    "logtype": "accesslogs",
-                    "service": "login-service",
-                    "hostname": "login.example.com",
-                }
-            },
-            "logs": format_logs(logs),
-        }
+        formatted_logs = [
+            {
+                "common": {
+                    "attributes": {
+                        "logtype": "accesslogs",
+                        "service": "login-service",
+                        "hostname": "login.example.com",
+                    }
+                },
+                "logs": format_logs(logs),
+            }
+        ]
 
         print(f"formatted_logs: {formatted_logs}")
 
