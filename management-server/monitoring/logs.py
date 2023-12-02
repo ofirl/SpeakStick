@@ -16,9 +16,6 @@ deviceName = utils.db_utils.get_config_value("DEVICE_NAME")
 #  "eu01xx7972418d9f4ca7b4907ff16931FFFFNRAL"
 lastLogSampleTimeConfigKey = "LAST_LOG_SAMPLE"
 
-print(f"dummyApiKey: {dummyApiKey}")
-print(f"deviceName: {deviceName}")
-
 
 def get_logs(service):
     timestamp = utils.db_utils.get_config_value(lastLogSampleTimeConfigKey)
