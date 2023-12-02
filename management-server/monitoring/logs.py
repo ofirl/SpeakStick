@@ -6,17 +6,28 @@ import json
 from datetime import datetime
 
 import utils.system_utils
+import utils.db_utils
 
 servicesNames = ["speakstick", "speakstick-management-server", "nginx"]
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
-dummyApiKey = "eu01xx7972418d9f4ca7b4907ff16931FFFFNRAL"
+dummyApiKey = utils.db_utils.get_config_value("LOGS_API_KEY")
+deviceName = utils.db_utils.get_config_value("DEVICE_NAME")
+#  "eu01xx7972418d9f4ca7b4907ff16931FFFFNRAL"
 
 
-def get_logs():
+def get_logs(service):
+    timestamp = utils.db_utils.get_config_value("LAST_LOG_SAMPLE")
+    if timestamp is None:
+        print("Error getting log last sample time")
+        return
+
+    timestamp = float(timestamp)
+    formatted_time = datetime.fromtimestamp(timestamp).strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )  # "2015-06-26 23:15:00"
     returnCode, output = utils.system_utils.runCommand(
         [
-            'journalctl --no-pager -u speakstick --since "5 minutes ago"',
-            # '"2015-06-26 23:15:00"'
+            f'journalctl --no-pager -u {service} --since "{formatted_time}"',
         ]
     )
     return output
@@ -48,23 +59,21 @@ def format_logs(logs):
     return formatted_logs
 
 
-def send_logs(logs):
+def send_logs(logs, service):
     try:
         # Format logs to the desired structure
         formatted_logs = [
             {
                 "common": {
                     "attributes": {
-                        "logtype": "accesslogs",
-                        "service": "login-service",
-                        "hostname": "login.example.com",
+                        # "logtype": "accesslogs",
+                        "service": service,
+                        "hostname": deviceName,
                     }
                 },
                 "logs": format_logs(logs),
             }
         ]
-
-        # print(f"formatted_logs: {formatted_logs}")
 
         # Send formatted logs over HTTP with API key header
         headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
@@ -82,9 +91,10 @@ def send_logs(logs):
 
 def logLoop():
     while True:
-        logs = get_logs()
-        if logs:
-            send_logs(logs)
+        for service in servicesNames:
+            logs = get_logs(service)
+            if logs:
+                send_logs(logs, service)
 
         # Wait for 1 minute before fetching and sending logs again
         time.sleep(60)
