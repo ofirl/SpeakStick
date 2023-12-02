@@ -183,7 +183,7 @@ def get_library_by_id(libraryId):
     return library
 
 
-def update_config(key, value):
+def update_config(key, value, restart=True):
     output = True
     connection = None
 
@@ -208,7 +208,8 @@ def update_config(key, value):
         if affected_rows != 1:
             raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
 
-        restartStickController()
+        if restart:
+            restartStickController()
 
     except sqlite3.Error as e:
         output = False
