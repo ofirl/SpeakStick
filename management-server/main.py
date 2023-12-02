@@ -1,7 +1,10 @@
 import re
 import threading
+import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
+
+import monitoring.log_configs
 
 import utils.response_utils
 import handlers.configs_handlers
@@ -314,6 +317,7 @@ def run():
 
     runHttpServer()
 
+    logging.info("test")
     print("Server started")
 
 

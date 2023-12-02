@@ -8,12 +8,14 @@ from datetime import datetime
 
 import utils.system_utils
 import utils.db_utils
+import utils.versions_utils
 
 servicesNames = ["speakstick", "speakstick-management-server", "nginx"]
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
 dummyApiKey = utils.db_utils.get_config_value("LOGS_API_KEY")
 deviceName = utils.db_utils.get_config_value("DEVICE_NAME")
 lastLogSampleTimeConfigKey = "LAST_LOG_SAMPLE"
+currentVersion = utils.versions_utils.get_current_version()
 
 
 def get_logs(service):
@@ -67,36 +69,43 @@ def format_logs(logs):
 
 
 def send_logs(logs, service, sampleTime):
-    try:
-        # Format logs to the desired structure
-        formatted_logs = [
-            {
-                "common": {
-                    "attributes": {
-                        # "logtype": "accesslogs",
-                        "service": service,
-                        "hostname": deviceName,
-                    }
-                },
-                "logs": format_logs(logs),
-            }
-        ]
+    # send logs in chunks in case there are a lot of unsent logs
+    logChunkSize = 10
+    for i in range(0, len(logs), logChunkSize):
+        chunk = logs[i : i + logChunkSize]
+        try:
+            # Format logs to the desired structure
+            formatted_logs = [
+                {
+                    "common": {
+                        "attributes": {
+                            # "logtype": "accesslogs",
+                            "service": service,
+                            "hostname": deviceName,
+                            "version": currentVersion,
+                        }
+                    },
+                    "logs": format_logs(chunk),
+                }
+            ]
 
-        if len(formatted_logs[0]["logs"]) == 0:
-            return
+            if len(formatted_logs[0]["logs"]) == 0:
+                return
 
-        # Send formatted logs over HTTP with API key header
-        headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
-        response = requests.post(
-            logsEndpoint, data=json.dumps(formatted_logs), headers=headers
-        )
+            # Send formatted logs over HTTP with API key header
+            headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
+            response = requests.post(
+                logsEndpoint, data=json.dumps(formatted_logs), headers=headers
+            )
 
-        if response.status_code % 100 == 2:
-            utils.db_utils.update_config(lastLogSampleTimeConfigKey, sampleTime, False)
-        else:
-            print(f"Failed to send logs. HTTP Status Code: {response.status_code}")
-    except Exception as e:
-        print(f"Error sending logs: {e}")
+            if response.status_code % 100 == 2:
+                utils.db_utils.update_config(
+                    lastLogSampleTimeConfigKey, sampleTime, False
+                )
+            else:
+                print(f"Failed to send logs. HTTP Status Code: {response.status_code}")
+        except Exception as e:
+            print(f"Error sending logs: {e}")
 
 
 def logLoop():

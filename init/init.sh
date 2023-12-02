@@ -1,6 +1,7 @@
 #! /bin/bash
 
-# admin password: SpeakStick4U!
+# default admin password: SpeakStick4U!
+# logs can be viewed here: https://one.eu.newrelic.com/logger
 
 # Run this script after cloning the repository:
 # cd /opt
