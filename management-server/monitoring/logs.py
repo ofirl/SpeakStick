@@ -52,9 +52,6 @@ def format_logs(logs):
     # Replace this with your logic to parse and format the raw logs
     # The following is just a placeholder, modify it according to your log structure
     for line in logs:
-        # if line == "-- No entries --":
-        #     return []
-
         logParts = line.split(" - ", 3)
         # Extract timestamp and message from the log line
         timestamp_str, level, filePath, message = (
@@ -82,7 +79,7 @@ def format_logs(logs):
 
 
 def send_logs(logs, service, sampleTime):
-    # send logs in chunks in case there are a lot of unsent logs
+    # TODO: send logs in chunks in case there are a lot of unsent logs?
     # logChunkSize = 10
     # for i in range(0, len(logs), logChunkSize):
     # chunk = logs[i : i + logChunkSize]
@@ -113,7 +110,6 @@ def send_logs(logs, service, sampleTime):
         )
 
         if response.status_code % 100 == 2:
-            # utils.db_utils.update_config(lastLogSampleTimeConfigKey, sampleTime, False)
             os.remove(f"{logFilesFolder}/{service}.log.old")
             logging.debug(f"status code: {response.status_code}")
         else:
@@ -133,4 +129,4 @@ def logLoop():
                 send_logs(logs, service, sampleTime)
 
         # Wait for 1 minute before fetching and sending logs again
-        time.sleep(20)
+        time.sleep(60)

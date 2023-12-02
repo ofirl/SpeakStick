@@ -67,11 +67,6 @@ advancedConfigs = [
         "value": "InitialName",
         "description": "Device name for the logs",
     },
-    {
-        "key": "LAST_LOG_SAMPLE",
-        "value": time.time(),
-        "description": "last time logs were extracted",
-    },
 ]
 
 libraries = {
