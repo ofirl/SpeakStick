@@ -79,7 +79,6 @@ def format_logs(logs):
         }
         formatted_logs.append(log_entry)
 
-    print(formatted_logs)
     return formatted_logs
 
 
