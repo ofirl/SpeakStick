@@ -3,6 +3,8 @@ import requests
 import time
 import json
 
+from datetime import datetime
+
 import utils.system_utils
 
 servicesNames = ["speakstick", "speakstick-management-server", "nginx"]
@@ -26,9 +28,20 @@ def format_logs(logs):
     # Replace this with your logic to parse and format the raw logs
     # The following is just a placeholder, modify it according to your log structure
     for line in logs.splitlines():
-        timestamp = int(
-            time.time()
-        )  # Placeholder, replace with actual timestamp from logs
+        # Extract timestamp and message from the log line
+        timestamp_str, message = line.split(" ", 5)[0:2], " ".join(
+            line.split(" ", 5)[5:]
+        )
+
+        # Convert the timestamp string to a datetime object
+        timestamp = datetime.strptime(
+            f"{datetime.now().year} {' '.join(timestamp_str)}", "%Y %b %d %H:%M:%S"
+        )
+
+        # Convert the datetime object to Unix timestamp
+        timestamp_unix = int(timestamp.timestamp())
+
+        timestamp = int(timestamp_unix)
         message = line.strip()
         log_entry = {"timestamp": timestamp, "message": message}
         formatted_logs.append(log_entry)
