@@ -1,25 +1,20 @@
-import logging
 import sys
+import time
+import logging
+import logging.handlers
 
-# create logger
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-
-# create console handler and set level to debug
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-
+log_handler = logging.handlers.WatchedFileHandler("/logs/management-server.log")
 # create formatter
 formatter = logging.Formatter(
-    "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s",
+    "%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
     "%Y-%m-%d %H:%M:%S",
 )
+formatter.converter = time.gmtime  # if you want UTC time
+log_handler.setFormatter(formatter)
 
-# add formatter to ch
-ch.setFormatter(formatter)
-
-# add ch to logger
-logger.addHandler(ch)
+logger = logging.getLogger()
+logger.addHandler(log_handler)
+logger.setLevel(logging.DEBUG)
 
 # 'application' code
 logger.debug("debug message")
