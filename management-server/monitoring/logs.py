@@ -13,7 +13,6 @@ servicesNames = ["speakstick", "speakstick-management-server", "nginx"]
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
 dummyApiKey = utils.db_utils.get_config_value("LOGS_API_KEY")
 deviceName = utils.db_utils.get_config_value("DEVICE_NAME")
-#  "eu01xx7972418d9f4ca7b4907ff16931FFFFNRAL"
 lastLogSampleTimeConfigKey = "LAST_LOG_SAMPLE"
 
 
