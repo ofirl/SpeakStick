@@ -42,7 +42,6 @@ def format_logs(logs):
         timestamp_unix = int(timestamp.timestamp())
 
         timestamp = int(timestamp_unix)
-        message = line.strip()
         log_entry = {"timestamp": timestamp, "message": message}
         formatted_logs.append(log_entry)
 
