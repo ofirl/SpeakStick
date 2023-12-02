@@ -2,6 +2,7 @@ import subprocess
 import requests
 import time
 import json
+import math
 
 from datetime import datetime
 
@@ -21,7 +22,7 @@ def get_logs(service):
         print("Error getting log last sample time")
         return
 
-    timestamp = float(timestamp)
+    timestamp = float(math.floor(float(timestamp)))
     formatted_time = datetime.fromtimestamp(timestamp).strftime(
         "%Y-%m-%d %H:%M:%S"
     )  # "2015-06-26 23:15:00"
