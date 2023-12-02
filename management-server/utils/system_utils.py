@@ -17,12 +17,12 @@ def runCommand(command):
 
     # Print the captured output
     output = completed_process.stdout
-    # print("Command output:")
-    # print(output)
+    print("Command output:")
+    print(output)
 
     # Print the return code
     return_code = completed_process.returncode
-    # print("Return code:", return_code)
+    print("Return code:", return_code)
 
     return return_code, output
 
