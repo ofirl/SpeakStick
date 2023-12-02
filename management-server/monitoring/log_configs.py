@@ -9,7 +9,7 @@ formatter = logging.Formatter(
     "%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
     "%Y-%m-%d %H:%M:%S",
 )
-formatter.converter = time.gmtime  # if you want UTC time
+# formatter.converter = time.gmtime  # if you want UTC time
 log_handler.setFormatter(formatter)
 
 logger = logging.getLogger()
