@@ -7,8 +7,6 @@ from git.repo import Repo
 
 from consts import words_directory
 
-from utils.versions_utils import update_available_versions
-
 
 def runCommand(command):
     # Run the command and capture its output
@@ -79,7 +77,6 @@ def resetToFactorySettings():
 
         runCommand("cd /opt/SpeakStick && git tag -l | xargs git tag -d")
         runCommand("cd /opt/SpeakStick && git branch -l | xargs git branch -D")
-        update_available_versions()
 
         code, output = restartStickController()
         if code != 0:
