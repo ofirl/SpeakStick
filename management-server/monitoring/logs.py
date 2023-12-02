@@ -6,9 +6,9 @@ import logging
 
 from datetime import datetime
 
+import utils.versions_utils
 import utils.system_utils
 import utils.db_utils
-import utils.versions_utils
 
 logFilesFolder = "/opt/logs"
 # nginx?
