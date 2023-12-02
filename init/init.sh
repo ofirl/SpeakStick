@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# NEW_RELIC_API_KEY=NRAK-7L1RWP00BHYDQJZ7BHMLE08MV1C NEW_RELIC_ACCOUNT_ID=4264684 NEW_RELIC_REGION=EU
+
 # admin password: SpeakStick4U!
 
 # Run this script after cloning the repository:

@@ -3,6 +3,8 @@ import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
+import monitoring.logs
+
 import utils.response_utils
 import handlers.configs_handlers
 import handlers.library_items_handlers
@@ -302,6 +304,9 @@ def runHttpServer():
 
 
 def run():
+    logThread = threading.Thread(target=monitoring.logs.logLoop)
+    logThread.start()
+
     websocketServerThread = threading.Thread(
         target=websocket_server.startWebSocketServer, args=(websocketPort,)
     )
