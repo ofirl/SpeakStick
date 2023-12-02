@@ -52,13 +52,17 @@ def format_logs(logs):
 
     # Replace this with your logic to parse and format the raw logs
     # The following is just a placeholder, modify it according to your log structure
-    for line in logs.splitlines()[1:]:
-        if line == "-- No entries --":
-            return []
+    for line in logs:
+        # if line == "-- No entries --":
+        #     return []
 
+        logParts = line.split(" - ", 3)
         # Extract timestamp and message from the log line
-        timestamp_str, message = line.split(" ", 5)[0:3], " ".join(
-            line.split(" ", 5)[5:]
+        timestamp_str, level, filePath, message = (
+            logParts[0],
+            logParts[1],
+            logParts[2],
+            logParts[3],
         )
 
         # Convert the timestamp string to a datetime object
@@ -70,9 +74,14 @@ def format_logs(logs):
         timestamp_unix = int(timestamp.timestamp())
 
         timestamp = int(timestamp_unix)
-        log_entry = {"timestamp": timestamp, "message": message}
+        log_entry = {
+            "timestamp": timestamp,
+            "message": message,
+            "attributes": {"level": level, "file": filePath},
+        }
         formatted_logs.append(log_entry)
 
+    print(formatted_logs)
     return formatted_logs
 
 
@@ -88,7 +97,6 @@ def send_logs(logs, service, sampleTime):
             {
                 "common": {
                     "attributes": {
-                        # "logtype": "accesslogs",
                         "application": "SpeakStick",
                         "service": service,
                         "hostname": deviceName,
