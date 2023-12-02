@@ -3,8 +3,6 @@ import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
-import monitoring.logs
-
 import utils.response_utils
 import handlers.configs_handlers
 import handlers.library_items_handlers
@@ -16,6 +14,8 @@ import handlers.network_handlers
 
 # try to set the default output device on startup
 import utils.system_utils
+
+import monitoring.logs
 
 import websocket_server
 
