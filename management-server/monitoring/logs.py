@@ -14,16 +14,19 @@ logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
 dummyApiKey = utils.db_utils.get_config_value("LOGS_API_KEY")
 deviceName = utils.db_utils.get_config_value("DEVICE_NAME")
 #  "eu01xx7972418d9f4ca7b4907ff16931FFFFNRAL"
+lastLogSampleTimeConfigKey = "LAST_LOG_SAMPLE"
 
 print(f"dummyApiKey: {dummyApiKey}")
 print(f"deviceName: {deviceName}")
 
 
 def get_logs(service):
-    timestamp = utils.db_utils.get_config_value("LAST_LOG_SAMPLE")
+    timestamp = utils.db_utils.get_config_value(lastLogSampleTimeConfigKey)
     if timestamp is None:
         print("Error getting log last sample time")
         return
+    if timestamp == "":
+        timestamp = time.time()
 
     timestamp = float(math.floor(float(timestamp)))
     formatted_time = datetime.fromtimestamp(timestamp).strftime(
@@ -34,6 +37,7 @@ def get_logs(service):
             f'journalctl --no-pager -u {service} --since "{formatted_time}"',
         ]
     )
+
     return output
 
 
@@ -66,7 +70,7 @@ def format_logs(logs):
     return formatted_logs
 
 
-def send_logs(logs, service):
+def send_logs(logs, service, sampleTime):
     try:
         # Format logs to the desired structure
         formatted_logs = [
@@ -91,8 +95,8 @@ def send_logs(logs, service):
             logsEndpoint, data=json.dumps(formatted_logs), headers=headers
         )
 
-        if response.status_code == 200:
-            print("Logs sent successfully")
+        if response.status_code % 100 == 2:
+            utils.db_utils.update_config(lastLogSampleTimeConfigKey, sampleTime)
         else:
             print(f"Failed to send logs. HTTP Status Code: {response.status_code}")
     except Exception as e:
@@ -102,9 +106,10 @@ def send_logs(logs, service):
 def logLoop():
     while True:
         for service in servicesNames:
+            sampleTime = time.time()
             logs = get_logs(service)
             if logs:
-                send_logs(logs, service)
+                send_logs(logs, service, sampleTime)
 
         # Wait for 1 minute before fetching and sending logs again
         time.sleep(60)
