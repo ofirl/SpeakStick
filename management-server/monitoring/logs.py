@@ -15,6 +15,9 @@ dummyApiKey = utils.db_utils.get_config_value("LOGS_API_KEY")
 deviceName = utils.db_utils.get_config_value("DEVICE_NAME")
 #  "eu01xx7972418d9f4ca7b4907ff16931FFFFNRAL"
 
+print(f"dummyApiKey: {dummyApiKey}")
+print(f"deviceName: {deviceName}")
+
 
 def get_logs(service):
     timestamp = utils.db_utils.get_config_value("LAST_LOG_SAMPLE")
@@ -40,6 +43,9 @@ def format_logs(logs):
     # Replace this with your logic to parse and format the raw logs
     # The following is just a placeholder, modify it according to your log structure
     for line in logs.splitlines()[1:]:
+        if line == "-- No entries --":
+            return []
+
         # Extract timestamp and message from the log line
         timestamp_str, message = line.split(" ", 5)[0:3], " ".join(
             line.split(" ", 5)[5:]
@@ -75,6 +81,9 @@ def send_logs(logs, service):
                 "logs": format_logs(logs),
             }
         ]
+
+        if len(formatted_logs[0]["logs"]) == 0:
+            return
 
         # Send formatted logs over HTTP with API key header
         headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
