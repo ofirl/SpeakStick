@@ -27,7 +27,7 @@ def format_logs(logs):
 
     # Replace this with your logic to parse and format the raw logs
     # The following is just a placeholder, modify it according to your log structure
-    for line in logs.splitlines():
+    for line in logs.splitlines()[1:]:
         # Extract timestamp and message from the log line
         timestamp_str, message = line.split(" ", 5)[0:2], " ".join(
             line.split(" ", 5)[5:]
