@@ -315,9 +315,9 @@ def run():
     )
     websocketServerThread.start()
 
+    logging.info("test")
     runHttpServer()
 
-    logging.info("test")
     print("Server started")
 
 
