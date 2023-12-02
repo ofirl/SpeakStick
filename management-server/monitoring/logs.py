@@ -66,9 +66,7 @@ def format_logs(logs):
         )
 
         # Convert the timestamp string to a datetime object
-        timestamp = datetime.strptime(
-            f"{datetime.now().year} {' '.join(timestamp_str)}", "%Y-%m-%d %H:%M:%S"
-        )
+        timestamp = datetime.strptime(f"{''.join(timestamp_str)}", "%Y-%m-%d %H:%M:%S")
 
         # Convert the datetime object to Unix timestamp
         timestamp_unix = int(timestamp.timestamp())
