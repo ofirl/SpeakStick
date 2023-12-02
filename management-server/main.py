@@ -247,11 +247,8 @@ def getRouteHandler(self, method, baseRoute=BASE_ROUTE, routes=routes2):
             if foundHandler is not None:
                 return foundHandler, foundMatch
 
-        print(
-            "Running handler for ",
-            pattern,
-            "with the match groups ",
-            match.groups(),
+        logging.info(
+            f"Running handler for {pattern} with the match groups {match.groups()}"
         )
 
         return routeHandler, match
@@ -315,10 +312,8 @@ def run():
     )
     websocketServerThread.start()
 
-    logging.info("test")
+    logging.info("Starting server")
     runHttpServer()
-
-    print("Server started")
 
 
 if __name__ == "__main__":

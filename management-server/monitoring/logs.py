@@ -3,6 +3,7 @@ import requests
 import time
 import json
 import math
+import os
 
 from datetime import datetime
 
@@ -10,7 +11,9 @@ import utils.system_utils
 import utils.db_utils
 import utils.versions_utils
 
-servicesNames = ["speakstick", "speakstick-management-server", "nginx"]
+logFilesFolder = "/opt/logs"
+# nginx?
+servicesNames = ["stick-controller", "management-server"]
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
 dummyApiKey = utils.db_utils.get_config_value("LOGS_API_KEY")
 deviceName = utils.db_utils.get_config_value("DEVICE_NAME")
@@ -19,24 +22,29 @@ currentVersion = utils.versions_utils.get_current_version()
 
 
 def get_logs(service):
-    timestamp = utils.db_utils.get_config_value(lastLogSampleTimeConfigKey)
-    if timestamp is None:
-        print("Error getting log last sample time")
-        return
-    if timestamp == "":
-        timestamp = time.time()
+    logFilePath = f"{logFilesFolder}/{service}.log"
+    if not os.path.exists(logFilePath):
+        return None
 
-    timestamp = float(math.floor(float(timestamp)))
-    formatted_time = datetime.fromtimestamp(timestamp).strftime(
-        "%Y-%m-%d %H:%M:%S"
-    )  # "2015-06-26 23:15:00"
-    returnCode, output = utils.system_utils.runCommand(
-        [
-            f'journalctl --no-pager -u {service} --since "{formatted_time}"',
-        ]
-    )
+    renamedLogFilePath = f"{logFilePath}.old"
+    if os.path.exists(renamedLogFilePath):
+        tempLogFilePath = f"{renamedLogFilePath}2"
+        os.rename(logFilePath, tempLogFilePath)
 
-    return output
+        with open(tempLogFilePath, "r") as old_log_file:
+            lines = old_log_file.readlines()
+            with open(renamedLogFilePath, "w") as log_file:
+                for line in lines:
+                    log_file.write(line)
+
+        os.remove(tempLogFilePath)
+    else:
+        os.rename(logFilePath, renamedLogFilePath)
+
+    with open(renamedLogFilePath, "r") as log_file:
+        lines = log_file.readlines()
+
+    return lines
 
 
 def format_logs(logs):
@@ -55,7 +63,7 @@ def format_logs(logs):
 
         # Convert the timestamp string to a datetime object
         timestamp = datetime.strptime(
-            f"{datetime.now().year} {' '.join(timestamp_str)}", "%Y %b %d %H:%M:%S"
+            f"{datetime.now().year} {' '.join(timestamp_str)}", "%Y-%m-%d %H:%M:%S"
         )
 
         # Convert the datetime object to Unix timestamp
@@ -70,42 +78,42 @@ def format_logs(logs):
 
 def send_logs(logs, service, sampleTime):
     # send logs in chunks in case there are a lot of unsent logs
-    logChunkSize = 10
-    for i in range(0, len(logs), logChunkSize):
-        chunk = logs[i : i + logChunkSize]
-        try:
-            # Format logs to the desired structure
-            formatted_logs = [
-                {
-                    "common": {
-                        "attributes": {
-                            # "logtype": "accesslogs",
-                            "service": service,
-                            "hostname": deviceName,
-                            "version": currentVersion,
-                        }
-                    },
-                    "logs": format_logs(chunk),
-                }
-            ]
+    # logChunkSize = 10
+    # for i in range(0, len(logs), logChunkSize):
+    # chunk = logs[i : i + logChunkSize]
+    chunk = logs
+    try:
+        # Format logs to the desired structure
+        formatted_logs = [
+            {
+                "common": {
+                    "attributes": {
+                        # "logtype": "accesslogs",
+                        "application": "SpeakStick",
+                        "service": service,
+                        "hostname": deviceName,
+                        "version": currentVersion,
+                    }
+                },
+                "logs": format_logs(chunk),
+            }
+        ]
 
-            if len(formatted_logs[0]["logs"]) == 0:
-                return
+        if len(formatted_logs[0]["logs"]) == 0:
+            return
 
-            # Send formatted logs over HTTP with API key header
-            headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
-            response = requests.post(
-                logsEndpoint, data=json.dumps(formatted_logs), headers=headers
-            )
+        # Send formatted logs over HTTP with API key header
+        headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
+        response = requests.post(
+            logsEndpoint, data=json.dumps(formatted_logs), headers=headers
+        )
 
-            if response.status_code % 100 == 2:
-                utils.db_utils.update_config(
-                    lastLogSampleTimeConfigKey, sampleTime, False
-                )
-            else:
-                print(f"Failed to send logs. HTTP Status Code: {response.status_code}")
-        except Exception as e:
-            print(f"Error sending logs: {e}")
+        if response.status_code % 100 == 2:
+            utils.db_utils.update_config(lastLogSampleTimeConfigKey, sampleTime, False)
+        else:
+            print(f"Failed to send logs. HTTP Status Code: {response.status_code}")
+    except Exception as e:
+        print(f"Error sending logs: {e}")
 
 
 def logLoop():
@@ -117,4 +125,4 @@ def logLoop():
                 send_logs(logs, service, sampleTime)
 
         # Wait for 1 minute before fetching and sending logs again
-        time.sleep(60)
+        time.sleep(20)
