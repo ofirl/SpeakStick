@@ -299,7 +299,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 def runHttpServer():
     server_address = ("", httpPort)
     httpd = HTTPServer(server_address, RequestHandler)
-    logging.info("Starting server on port", httpPort)
+    logging.info(f"Starting server on port {httpPort}")
     httpd.serve_forever()
 
 

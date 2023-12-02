@@ -5,7 +5,7 @@ import logging
 from consts import db_file, words_directory
 from utils.system_utils import restartStickController
 
-logging.debug("db file:", db_file)
+logging.debug("db file: ${db_file}")
 
 
 def get_configs(key=None, advanced=0):
