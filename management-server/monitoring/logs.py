@@ -13,7 +13,7 @@ dummyApiKey = "eu01xx7972418d9f4ca7b4907ff16931FFFFNRAL"
 def get_logs():
     returnCode, output = utils.system_utils.runCommand(
         [
-            'journalctl --no-pager -u speakstick-management-server --since 5 minutes ago"',
+            'journalctl --no-pager -u speakstick-management-server --since "5 minutes ago"',
             # '"2015-06-26 23:15:00"'
         ]
     )
