@@ -43,4 +43,4 @@ def logLoop():
             send_logs(logs)
 
         # Wait for 1 minute before fetching and sending logs again
-        time.sleep(60)
+        time.sleep(10)
