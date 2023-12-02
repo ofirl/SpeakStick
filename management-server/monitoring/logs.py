@@ -115,7 +115,8 @@ def send_logs(logs, service, sampleTime):
         )
 
         if response.status_code % 100 == 2:
-            utils.db_utils.update_config(lastLogSampleTimeConfigKey, sampleTime, False)
+            # utils.db_utils.update_config(lastLogSampleTimeConfigKey, sampleTime, False)
+            print(f"status code: {response.status_code}")
         else:
             print(f"Failed to send logs. HTTP Status Code: {response.status_code}")
     except Exception as e:
