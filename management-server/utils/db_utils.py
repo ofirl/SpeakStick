@@ -55,7 +55,7 @@ def get_configs(key=None, advanced=0):
 def get_config_value(key=None):
     configs = get_configs(key, 1)
     if configs is not None and len(configs) == 1:
-        return configs[0].value
+        return configs[0]["value"]
 
     return None
 
