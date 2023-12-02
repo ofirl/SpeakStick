@@ -3,6 +3,8 @@ import time
 import logging
 import logging.handlers
 
+from monitoring.logs import logFilesFolder
+
 # create formatter
 formatter = logging.Formatter(
     "%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
@@ -15,7 +17,9 @@ console_handler.setLevel(logging.DEBUG)
 console_handler.setFormatter(formatter)
 
 # file handler
-file_handler = logging.handlers.WatchedFileHandler("/opt/logs/management-server.log")
+file_handler = logging.handlers.WatchedFileHandler(
+    f"{logFilesFolder}/management-server.log"
+)
 # formatter.converter = time.gmtime  # if you want UTC time
 file_handler.setFormatter(formatter)
 

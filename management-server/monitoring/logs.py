@@ -25,6 +25,8 @@ def get_logs(service):
     if not os.path.exists(logFilePath):
         return None
 
+    # this is here because we might have failed sending the logs previously
+    # what this is doing is appending the new logs to the old logs
     renamedLogFilePath = f"{logFilePath}.old"
     if os.path.exists(renamedLogFilePath):
         tempLogFilePath = f"{renamedLogFilePath}2"
