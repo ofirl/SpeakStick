@@ -13,11 +13,8 @@ dummyApiKey = "eu01xx7972418d9f4ca7b4907ff16931FFFFNRAL"
 def get_logs():
     returnCode, output = utils.system_utils.runCommand(
         [
-            "journalctl",
-            "-u speakstick-management-server",
-            '--since 1 hour ago"',
+            'journalctl --no-pager -u speakstick-management-server --since 5 minutes ago"',
             # '"2015-06-26 23:15:00"'
-            "--no-pager",
         ]
     )
     return output
@@ -52,6 +49,8 @@ def send_logs(logs):
             },
             "logs": format_logs(logs),
         }
+
+        print(f"formatted_logs: {formatted_logs}")
 
         # Send formatted logs over HTTP with API key header
         headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
