@@ -14,9 +14,10 @@ def get_logs():
         [
             "journalctl",
             "-u",
-            "speakstick",
+            "speakstick-management-server",
             "--since",
-            '"2015-06-26 23:15:00"',
+            # '"2015-06-26 23:15:00"',
+            "1 hour ago",
             "--no-pager",
         ]
     )
