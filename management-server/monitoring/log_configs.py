@@ -3,7 +3,7 @@ import time
 import logging
 import logging.handlers
 
-log_handler = logging.handlers.WatchedFileHandler("/logs/management-server.log")
+log_handler = logging.handlers.WatchedFileHandler("/opt/logs/management-server.log")
 # create formatter
 formatter = logging.Formatter(
     "%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
