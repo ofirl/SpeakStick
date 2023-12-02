@@ -16,12 +16,10 @@ console_handler.setFormatter(formatter)
 
 # file handler
 file_handler = logging.handlers.WatchedFileHandler("/opt/logs/management-server.log")
-formatter.converter = time.gmtime  # if you want UTC time
+# formatter.converter = time.gmtime  # if you want UTC time
 file_handler.setFormatter(formatter)
 
 logger = logging.getLogger()
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 logger.setLevel(logging.DEBUG)
-
-logger.critical("testing")
