@@ -64,7 +64,7 @@ def send_logs(logs):
             }
         ]
 
-        print(f"formatted_logs: {formatted_logs}")
+        # print(f"formatted_logs: {formatted_logs}")
 
         # Send formatted logs over HTTP with API key header
         headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
