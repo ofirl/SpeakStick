@@ -74,7 +74,7 @@ def format_logs(logs):
         timestamp = int(timestamp_unix)
         log_entry = {
             "timestamp": timestamp,
-            "message": message,
+            "message": message.strip(" \n"),
             "attributes": {"level": level, "file": filePath},
         }
         formatted_logs.append(log_entry)
