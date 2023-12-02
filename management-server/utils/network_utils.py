@@ -1,5 +1,6 @@
 import subprocess
 import re
+import logging
 
 import utils.system_utils
 
@@ -68,7 +69,7 @@ def scan_wifi_networks():
         return networks
 
     except subprocess.CalledProcessError as e:
-        print(f"Error: {e}")
+        logging.error(f"Error: {e}")
         return None
 
 
@@ -135,7 +136,7 @@ def update_network_config(ssid, psk, key_mgmt=None):
         return True
 
     except Exception as e:
-        print(f"Error: {e}")
+        logging.error(f"Error: {e}")
         return False
 
 
@@ -175,5 +176,5 @@ def get_wifi_connection_status(interface="wlan0"):
         return connection_status, None
 
     except subprocess.CalledProcessError as e:
-        print(f"Error: {e}")
+        logging.error(f"Error: {e}")
         return None, e

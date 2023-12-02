@@ -1,4 +1,5 @@
 import os
+import logging
 import urllib.parse
 
 import utils.system_utils
@@ -41,5 +42,5 @@ def deleteWord(self, query_parameters, match):
     if error is None:
         utils.response_utils.okResponse(self)
     else:
-        print(error.__str__().encode())
+        logging.error(error.__str__().encode())
         utils.response_utils.InternalServerError(self, "Error deleting word")

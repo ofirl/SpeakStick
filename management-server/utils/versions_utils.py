@@ -1,6 +1,7 @@
 from git.repo import Repo
 import requests
 import datetime
+import logging
 
 import utils.system_utils
 import utils.db_utils
@@ -34,7 +35,7 @@ def get_versions():
         return sorted(tags, reverse=True)
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return None
 
 
@@ -44,7 +45,7 @@ def get_current_version():
         return repo.git.describe(tags=True)
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return None
 
 
@@ -55,7 +56,7 @@ def update_available_versions():
         return True
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return None
 
 
@@ -89,7 +90,9 @@ def get_github_releases():
             return release_info, None
         else:
             error = None
-            print(f"Failed to retrieve releases. Status code: {response.status_code}")
+            logging.error(
+                f"Failed to retrieve releases. Status code: {response.status_code}"
+            )
             if response.status_code == 403:
                 timestamp = response.headers.get("x-ratelimit-reset")
                 if timestamp is not None:
@@ -102,5 +105,5 @@ def get_github_releases():
             return None, error
 
     except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return None, e.strerror

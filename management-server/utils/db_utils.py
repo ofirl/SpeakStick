@@ -1,10 +1,11 @@
 import os
 import sqlite3
+import logging
 
 from consts import db_file, words_directory
 from utils.system_utils import restartStickController
 
-print("db file:", db_file)
+logging.debug("db file:", db_file)
 
 
 def get_configs(key=None, advanced=0):
@@ -42,7 +43,7 @@ def get_configs(key=None, advanced=0):
             )
 
     except sqlite3.Error as e:
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -92,7 +93,7 @@ def get_library_items(libraryId):
             )
 
     except sqlite3.Error as e:
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -132,7 +133,7 @@ def get_libraries():
             )
 
     except sqlite3.Error as e:
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -173,7 +174,7 @@ def get_library_by_id(libraryId):
         }
 
     except sqlite3.Error as e:
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -213,7 +214,7 @@ def update_config(key, value, restart=True):
 
     except sqlite3.Error as e:
         output = False
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -264,7 +265,7 @@ def update_library_item(libraryId, positions, new_word):
 
     except sqlite3.Error as e:
         output = False
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -309,7 +310,7 @@ def add_library(name, description):
 
     except sqlite3.Error as e:
         output = False
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -354,7 +355,7 @@ def update_library(libraryId, name, description):
 
     except sqlite3.Error as e:
         output = False
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -419,7 +420,7 @@ def duplicate_library(name, description, baseLibraryId):
 
     except sqlite3.Error as e:
         output = False
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -456,7 +457,7 @@ def delete_library_item(libraryId, position):
 
     except sqlite3.Error as e:
         output = False
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -499,7 +500,7 @@ def delete_library(libraryId):
 
     except sqlite3.Error as e:
         output = False
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -527,7 +528,7 @@ def delete_library_items_for_word(word):
 
     except sqlite3.Error as e:
         output = False
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
@@ -578,7 +579,7 @@ def activate_library(
 
     except sqlite3.Error as e:
         output = False
-        print("An error occurred:", e)
+        logging.error(f"An error occurred: {e}")
 
     finally:
         # Close the database connection
