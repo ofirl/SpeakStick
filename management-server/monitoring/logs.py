@@ -13,11 +13,9 @@ def get_logs():
     returnCode, output = utils.system_utils.runCommand(
         [
             "journalctl",
-            "-u",
-            "speakstick-management-server",
-            "--since",
-            # '"2015-06-26 23:15:00"',
-            "1 hour ago",
+            "-u speakstick-management-server",
+            '--since 1 hour ago"',
+            # '"2015-06-26 23:15:00"'
             "--no-pager",
         ]
     )
