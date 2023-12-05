@@ -3,8 +3,10 @@ import time
 import json
 import os
 import logging
+import gzip
 
 from datetime import datetime
+from io import BytesIO
 
 import utils.versions_utils
 import utils.system_utils
@@ -18,12 +20,13 @@ dummyApiKey = utils.db_utils.get_config_value("LOGS_API_KEY")
 deviceName = utils.db_utils.get_config_value("DEVICE_NAME")
 lastLogSampleTimeConfigKey = "LAST_LOG_SAMPLE"
 currentVersion = utils.versions_utils.get_current_version()
+MAX_PAYLOAD_SIZE_BYTES = 1024
 
 
 def get_logs(service):
     logFilePath = f"{logFilesFolder}/{service}.log"
     if not os.path.exists(logFilePath):
-        return None
+        return None, None
 
     # this is here because we might have failed sending the logs previously
     # what this is doing is appending the new logs to the old logs
@@ -45,7 +48,103 @@ def get_logs(service):
     with open(renamedLogFilePath, "r") as log_file:
         lines = log_file.readlines()
 
-    return lines
+    return lines, renamedLogFilePath
+
+
+def split_file(file_path, target_compressed_size, service):
+    created_files = []
+    with open(file_path, "r", encoding="utf-8") as file:
+        chunk_number = 1
+        logs_chunk = {
+            "common": {
+                "attributes": {
+                    "application": "SpeakStick",
+                    "service": service,
+                    "hostname": deviceName,
+                    "version": currentVersion,
+                }
+            },
+            "logs": [],
+        }
+
+        while True:
+            # Read lines until the target compressed size is reached
+            while (
+                len(gzip.compress(json.dumps([logs_chunk]).encode()))
+                < target_compressed_size
+            ):
+                line = file.readline()
+                if not line:
+                    break
+
+                logs_chunk["logs"].append(format_log(line))
+
+            # Break if no more lines
+            if not logs_chunk["logs"] or len(logs_chunk["logs"]) == 0:
+                break
+
+            # limit reached - output to a file
+            lastLine = None
+            # If we surpassed the limit we need to remove the last element
+            if (
+                len(gzip.compress(json.dumps([logs_chunk]).encode()))
+                >= target_compressed_size
+            ):
+                lastLine = logs_chunk["logs"][-1]
+                logs_chunk["logs"] = logs_chunk["logs"][:-1]
+
+            output_file_path = f"{file_path}_chunk{chunk_number}.gz"
+            with gzip.open(output_file_path, "wt", encoding="utf-8") as chunk_file:
+                chunk_file.write(json.dumps([logs_chunk]))
+            created_files.append(output_file_path)
+
+            # If we surpassed the limit we need to add the last element to a new chunk
+            if lastLine is not None:
+                logs_chunk["logs"] = [lastLine]
+
+            # new chunk
+            chunk_number += 1
+
+        # last iteration file output
+        # Compress the lines and write to a gzip file
+        if logs_chunk["logs"] and len(logs_chunk["logs"]) > 0:
+            output_file_path = f"{file_path}_chunk{chunk_number}.gz"
+            with gzip.open(output_file_path, "wt", encoding="utf-8") as chunk_file:
+                chunk_file.write(json.dumps([logs_chunk]))
+            created_files.append(output_file_path)
+
+    return created_files
+
+
+def write_file(file, data):
+    with gzip.open(file, "wt", encoding="utf-8") as chunk_file:
+        chunk_file.write(data)
+
+
+def format_log(log):
+    logParts = log.split(" - ", 3)
+    # Extract timestamp and message from the log line
+    timestamp_str, level, filePath, message = (
+        logParts[0],
+        logParts[1],
+        logParts[2],
+        logParts[3],
+    )
+
+    # Convert the timestamp string to a datetime object
+    timestamp = datetime.strptime(f"{''.join(timestamp_str)}", "%Y-%m-%d %H:%M:%S")
+
+    # Convert the datetime object to Unix timestamp
+    timestamp_unix = int(timestamp.timestamp())
+
+    timestamp = int(timestamp_unix)
+    log_entry = {
+        "timestamp": timestamp,
+        "message": message.strip(" \n"),
+        "attributes": {"level": level, "file": filePath},
+    }
+
+    return log_entry
 
 
 def format_logs(logs):
@@ -54,70 +153,29 @@ def format_logs(logs):
     # Replace this with your logic to parse and format the raw logs
     # The following is just a placeholder, modify it according to your log structure
     for line in logs:
-        logParts = line.split(" - ", 3)
-        # Extract timestamp and message from the log line
-        timestamp_str, level, filePath, message = (
-            logParts[0],
-            logParts[1],
-            logParts[2],
-            logParts[3],
-        )
-
-        # Convert the timestamp string to a datetime object
-        timestamp = datetime.strptime(f"{''.join(timestamp_str)}", "%Y-%m-%d %H:%M:%S")
-
-        # Convert the datetime object to Unix timestamp
-        timestamp_unix = int(timestamp.timestamp())
-
-        timestamp = int(timestamp_unix)
-        log_entry = {
-            "timestamp": timestamp,
-            "message": message.strip(" \n"),
-            "attributes": {"level": level, "file": filePath},
-        }
-        formatted_logs.append(log_entry)
+        formatted_logs.append(format_log(line))
 
     return formatted_logs
 
 
-def send_logs(logs, service, sampleTime):
-    # TODO: send logs in chunks in case there are a lot of unsent logs?
-    # logChunkSize = 10
-    # for i in range(0, len(logs), logChunkSize):
-    # chunk = logs[i : i + logChunkSize]
-    chunk = logs
+def send_logs(data_file):
     try:
-        # Format logs to the desired structure
-        formatted_logs = [
-            {
-                "common": {
-                    "attributes": {
-                        "application": "SpeakStick",
-                        "service": service,
-                        "hostname": deviceName,
-                        "version": currentVersion,
-                    }
-                },
-                "logs": format_logs(chunk),
-            }
-        ]
-
-        if len(formatted_logs[0]["logs"]) == 0:
-            return
-
-        # Send formatted logs over HTTP with API key header
-        headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
-        response = requests.post(
-            logsEndpoint, data=json.dumps(formatted_logs), headers=headers
-        )
-
-        if response.status_code % 100 == 2:
-            os.remove(f"{logFilesFolder}/{service}.log.old")
-            logging.debug(f"status code: {response.status_code}")
-        else:
-            logging.debug(
-                f"Failed to send logs. HTTP Status Code: {response.status_code}"
+        with open(data_file, "r", encoding="utf-8") as file:
+            # Send formatted logs over HTTP with API key header
+            headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
+            response = requests.post(
+                logsEndpoint,
+                data=file.read().encode(),
+                headers=headers,
             )
+
+            if response.status_code % 100 == 2:
+                os.remove(data_file)
+                logging.debug(f"status code: {response.status_code}")
+            else:
+                logging.debug(
+                    f"Failed to send logs. HTTP Status Code: {response.status_code}"
+                )
     except Exception as e:
         logging.error(f"Error sending logs: {e}")
 
@@ -125,10 +183,11 @@ def send_logs(logs, service, sampleTime):
 def logLoop():
     while True:
         for service in servicesNames:
-            sampleTime = time.time()
-            logs = get_logs(service)
+            logs, file_path = get_logs(service)
             if logs:
-                send_logs(logs, service, sampleTime)
+                chunks = split_file(file_path, MAX_PAYLOAD_SIZE_BYTES, service)
+                for chunk_file in chunks:
+                    send_logs(chunk_file)
 
         # Wait for 1 minute before fetching and sending logs again
         time.sleep(60)
