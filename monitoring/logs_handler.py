@@ -150,9 +150,7 @@ def format_log(log):
         logParts = json.loads(log)
 
         # Convert the timestamp string to a datetime object
-        timestamp = datetime.strptime(
-            f"{''.join(logParts['asctime'])}", "%Y-%m-%d %H:%M:%S"
-        )
+        timestamp = datetime.strptime(logParts["asctime"], "%Y-%m-%d %H:%M:%S")
 
         # Convert the datetime object to Unix timestamp
         timestamp = int(timestamp.timestamp())
