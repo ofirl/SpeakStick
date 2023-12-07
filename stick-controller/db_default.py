@@ -1,5 +1,6 @@
 import sqlite3
 import time
+import logging
 
 from consts import db_file
 
@@ -66,6 +67,11 @@ advancedConfigs = [
         "key": "DEVICE_NAME",
         "value": "InitialName",
         "description": "Device name for the logs",
+    },
+    {
+        "key": "LOGGING_LEVEL",
+        "value": "INFO",
+        "description": "Application logging level",
     },
 ]
 
@@ -166,7 +172,6 @@ def create_default_db(database_file):
             if libraryWords is None:
                 continue
 
-            print(libraryWords)
             for positions, word in libraryWords.items():
                 cursor.execute(
                     "SELECT * FROM library_items WHERE libraryId = ? AND positions = ?",
@@ -182,10 +187,10 @@ def create_default_db(database_file):
 
         # Commit the changes to the database
         connection.commit()
-        print("Default tables and values created successfully.")
+        logging.info("Default tables and values created successfully")
 
     except sqlite3.Error as e:
-        print("An error occurred:", e)
+        logging.exception("An error occurred")
 
     finally:
         # Close the database connection

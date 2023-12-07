@@ -1,4 +1,5 @@
 import sqlite3
+import logging
 from consts import db_file
 
 
@@ -27,7 +28,7 @@ def get_word_by_position(positions):
             (word,) = row
 
     except sqlite3.Error as e:
-        print("An error occurred:", e)
+        logging.exception("An error occurred")
 
     finally:
         # Close the database connection

@@ -1,9 +1,10 @@
 import time
 
-# import threading
+import logging
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
+
 
 from urllib.parse import urlparse
 
@@ -23,7 +24,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
                 while not messageFuture.done:
                     time.sleep(0.1)
             except tornado.websocket.WebSocketClosedError as e:
-                print(f"connection is already closed")
+                logging.debug(f"connection is already closed")
                 self.running = False
                 return
 
@@ -34,7 +35,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         self.running = False
-        print("connection closed")
+        logging.debug("connection closed")
 
 
 def make_app():
@@ -43,7 +44,7 @@ def make_app():
 
 def startWebSocketServer(port):
     app = make_app()
-    print("Starting websocket server on port", port)
+    logging.info(f"Starting websocket server on {port}")
 
     app.listen(port)
     tornado.ioloop.IOLoop.current().start()

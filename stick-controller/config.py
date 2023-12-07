@@ -1,4 +1,6 @@
 import sqlite3
+import logging
+
 from consts import db_file
 
 
@@ -24,7 +26,7 @@ def read_configs_from_db(database_file):
             configs[row[0]] = row[1]
 
     except sqlite3.Error as e:
-        print("An error occurred:", e)
+        logging.exception("An error occurred")
 
     finally:
         # Close the database connection
