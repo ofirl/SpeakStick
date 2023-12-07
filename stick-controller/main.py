@@ -55,11 +55,6 @@ POSITION_LOW = VREF * 0.33
 POSITION_MEDIUM = VREF * 0.66
 GRID_DEAD_ZONE = VREF * GRID_BORDER_SIZE / 2
 
-logging.debug("Grid configuration:")
-logging.debug("GRID_DEAD_ZONE: ", GRID_DEAD_ZONE)
-logging.debug("POSITION_LOW: ", POSITION_LOW)
-logging.debug("POSITION_MEDIUM: ", POSITION_MEDIUM)
-
 SOURCE_DIR = os.path.dirname(__file__)
 WORDS_SOUND_FILES_DIR = SOURCE_DIR + "/words/"
 
