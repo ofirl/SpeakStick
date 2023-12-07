@@ -79,35 +79,50 @@ def split_file(file_path, target_compressed_size, service):
             ):
                 line = file.readline()
                 if not line:
+                    logging.debug(f"file ended, exiting")
                     break
 
-                logs_chunk["logs"].append(format_log(line))
+                formatted_line = format_log(line)
+                logging.debug(f"adding line to chunk", extra={"line": formatted_line})
+                logs_chunk["logs"].append(formatted_line)
 
             # Break if no more lines
             if not logs_chunk["logs"] or len(logs_chunk["logs"]) == 0:
+                logging.debug(f"no lines in chunk, exiting")
                 break
 
             # limit reached - output to a file
             lastLine = None
             # If we surpassed the limit we need to remove the last element
-            if (
-                len(gzip.compress(json.dumps([logs_chunk]).encode()))
-                >= target_compressed_size
-            ):
+            chunkSize = len(gzip.compress(json.dumps([logs_chunk]).encode()))
+            logging.debug(f"checking chunk size", extra={"chunk_size": chunkSize})
+            if chunkSize >= target_compressed_size:
+                logging.debug(f"we surpassed the limit")
                 lastLine = logs_chunk["logs"][-1]
                 logs_chunk["logs"] = logs_chunk["logs"][:-1]
 
             output_file_path = f"{file_path}_chunk{chunk_number}.gz"
+            logging.debug(
+                f"writing to file", extra={"output_file_path": output_file_path}
+            )
             with gzip.open(output_file_path, "wt", encoding="utf-8") as chunk_file:
-                chunk_file.write(json.dumps([logs_chunk]))
+                chunk_file.writelines(json.dumps([logs_chunk]))
+            logging.debug(
+                f"chunk file created", extra={"output_file_path": output_file_path}
+            )
             created_files.append(output_file_path)
 
             # If we surpassed the limit we need to add the last element to a new chunk
             if lastLine is not None:
+                logging.debug(
+                    f"bring back last line because we surpassed the limit",
+                    extra={"line": lastLine},
+                )
                 logs_chunk["logs"] = [lastLine]
 
             # new chunk
             chunk_number += 1
+            logging.debug("strating a new chunk", extra={"chunk_number": chunk_number})
 
         # last iteration file output
         # Compress the lines and write to a gzip file
