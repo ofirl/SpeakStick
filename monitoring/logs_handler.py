@@ -24,7 +24,7 @@ dummyApiKey = common.config_utils.get_config_value("LOGS_API_KEY")
 deviceName = common.config_utils.get_config_value("DEVICE_NAME")
 lastLogSampleTimeConfigKey = "LAST_LOG_SAMPLE"
 currentVersion = common.versions_utils.get_current_version()
-MAX_PAYLOAD_SIZE_BYTES = 1024
+MAX_PAYLOAD_SIZE_BYTES = 1000000
 
 
 def get_logs(service):
