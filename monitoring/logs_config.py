@@ -17,7 +17,8 @@ class CustomFormatter(logging.Formatter):
 
 
 jsonFormatter = jsonlogger.JsonFormatter(
-    "%(name)s %(asctime)s %(levelname)s %(filename)s %(lineno)s %(process)d %(message)s"
+    "%(name)s %(asctime)s %(levelname)s %(filename)s %(lineno)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 
 
