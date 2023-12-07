@@ -164,7 +164,7 @@ def format_log(log):
         }
 
         reservedKeys = ["asctime", "message", "levelname", "filename", "lineno", "name"]
-        for attr, value in logParts:
+        for attr, value in logParts.items():
             if attr not in reservedKeys:
                 log_entry["message"] = f"{log_entry['message']}, {attr}={value}"
 
