@@ -46,5 +46,8 @@ rm /tmp/management-console.zip
 # Run migrations
 /usr/bin/python3 -u /opt/SpeakStick/migrations/migrate.py ${current_version//v/} ${latest_tag//v/}
 
+# update nginx.conf
+cp /opt/SpeakStick/init/nginx.conf /etc/nginx/sites-enabled/default
+
 # always restart the services last
 sudo systemctl restart speakstick speakstick-management-server
