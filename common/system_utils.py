@@ -5,7 +5,7 @@ import psutil
 import logging
 from git.repo import Repo
 
-from consts import words_directory
+from common.consts import words_directory
 
 
 def runCommand(command):
