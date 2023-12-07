@@ -198,7 +198,7 @@ def format_logs(logs):
 
 def send_logs(data_file):
     try:
-        with open(data_file, "r", encoding="utf-8") as file:
+        with open(data_file, "r") as file:
             # Send formatted logs over HTTP with API key header
             headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
             response = requests.post(
