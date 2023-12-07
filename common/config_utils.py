@@ -2,7 +2,7 @@ import os
 import sqlite3
 import logging
 
-from consts import db_file
+from common.consts import db_file
 
 
 def get_configs(key=None, advanced=0):
