@@ -8,7 +8,7 @@ import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
-from ..monitoring.logs_config import init_logger
+from monitoring.logs_config import init_logger
 
 import utils.response_utils
 import common.system_utils
