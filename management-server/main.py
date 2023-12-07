@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("..")  # Adds higher directory to python modules path.
+sys.path.append("/opt/SpeakStick")  # Adds higher directory to python modules path.
 
 import re
 import threading
