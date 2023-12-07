@@ -21,7 +21,7 @@ monitoring.logs_config.init_logger("logs-handler")
 servicesNames = [
     "stick-controller",
     "management-server",
-    "logs-handler",
+    # "logs-handler",
     "upgrade",
 ]  # TODO: add nginx?
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
