@@ -1,4 +1,7 @@
 import sys
+
+sys.path.append("/opt/SpeakStick")  # Adds higher directory to python modules path.
+
 import requests
 import time
 import json
@@ -12,8 +15,6 @@ import monitoring.logs_config
 
 import common.config_utils
 import common.versions_utils
-
-sys.path.append("/opt/SpeakStick")  # Adds higher directory to python modules path.
 
 monitoring.logs_config.init_logger("logs-handler")
 
