@@ -135,6 +135,8 @@ def split_file(file_path, target_compressed_size, service):
             created_files.append(output_file_path)
 
     logging.debug(f"log file split", extra={"fields": {"created_files": created_files}})
+
+    os.remove(file_path)
     return created_files
 
 
