@@ -119,6 +119,8 @@ def split_file(file_path, target_compressed_size, service):
                     extra={"line": lastLine},
                 )
                 logs_chunk["logs"] = [lastLine]
+            else:
+                logs_chunk["logs"] = []
 
             # new chunk
             chunk_number += 1
