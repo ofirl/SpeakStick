@@ -27,8 +27,10 @@ def init_logger(service):
     file_handler.setFormatter(jsonFormatter)
 
     logger = logging.getLogger()
-    # remove the default StreamHandler
-    logger.removeHandler(logger.handlers[0])
+    # remove the default StreamHandler if exists
+    if len(logger.handlers) > 0:
+        logger.removeHandler(logger.handlers[0])
+
     # add the custom handlers
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
