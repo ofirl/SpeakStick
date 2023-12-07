@@ -148,18 +148,10 @@ def write_file(file, data):
 def format_log(log):
     try:
         logParts = json.loads(log)
-        # logParts = log.split(" - ", 3)
-        # # Extract timestamp and message from the log line
-        # timestamp_str, level, filePath, message = (
-        #     logParts[0],
-        #     logParts[1],
-        #     logParts[2],
-        #     logParts[3],
-        # )
 
         # Convert the timestamp string to a datetime object
         timestamp = datetime.strptime(
-            f"{''.join(logParts['asctim'])}", "%Y-%m-%d %H:%M:%S"
+            f"{''.join(logParts['asctime'])}", "%Y-%m-%d %H:%M:%S"
         )
 
         # Convert the datetime object to Unix timestamp
