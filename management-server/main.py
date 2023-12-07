@@ -316,7 +316,7 @@ def run():
     )
     websocketServerThread.start()
 
-    logging.info("Starting server")
+    logging.info("Starting server", extra={"fields": {"test": "testing"}})
     runHttpServer()
 
 
