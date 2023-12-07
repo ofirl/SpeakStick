@@ -14,7 +14,7 @@ import common.versions_utils
 
 monitoring.logs_config.init_logger("logs-handler")
 
-servicesNames = ["stick-controller", "management-server"]  # TODO: add nginx?
+servicesNames = ["stick-controller", "management-server", "upgrade"]  # TODO: add nginx?
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
 dummyApiKey = common.config_utils.get_config_value("LOGS_API_KEY")
 deviceName = common.config_utils.get_config_value("DEVICE_NAME")
@@ -123,27 +123,31 @@ def write_file(file, data):
 
 
 def format_log(log):
-    logParts = log.split(" - ", 3)
-    # Extract timestamp and message from the log line
-    timestamp_str, level, filePath, message = (
-        logParts[0],
-        logParts[1],
-        logParts[2],
-        logParts[3],
-    )
+    try:
+        logParts = log.split(" - ", 3)
+        # Extract timestamp and message from the log line
+        timestamp_str, level, filePath, message = (
+            logParts[0],
+            logParts[1],
+            logParts[2],
+            logParts[3],
+        )
 
-    # Convert the timestamp string to a datetime object
-    timestamp = datetime.strptime(f"{''.join(timestamp_str)}", "%Y-%m-%d %H:%M:%S")
+        # Convert the timestamp string to a datetime object
+        timestamp = datetime.strptime(f"{''.join(timestamp_str)}", "%Y-%m-%d %H:%M:%S")
 
-    # Convert the datetime object to Unix timestamp
-    timestamp_unix = int(timestamp.timestamp())
-
-    timestamp = int(timestamp_unix)
-    log_entry = {
-        "timestamp": timestamp,
-        "message": message.strip(" \n"),
-        "attributes": {"level": level, "file": filePath},
-    }
+        # Convert the datetime object to Unix timestamp
+        timestamp = int(timestamp.timestamp())
+        log_entry = {
+            "timestamp": timestamp,
+            "message": message.strip(" \n"),
+            "attributes": {"level": level, "file": filePath},
+        }
+    except Exception as e:
+        log_entry = {
+            "timestamp": int(datetime.now().timestamp()),
+            "message": log.strip(" \n"),
+        }
 
     return log_entry
 
