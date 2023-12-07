@@ -1,11 +1,11 @@
 import json
-import utils.system_utils
+import common.system_utils
 import utils.battery_utils
 import utils.response_utils
 
 
 def restartStickController(self, query_parameters, match):
-    return_code, _ = utils.system_utils.restartStickController()
+    return_code, _ = common.system_utils.restartStickController()
     if return_code == 0:
         utils.response_utils.okResponse(self)
     else:
@@ -13,7 +13,7 @@ def restartStickController(self, query_parameters, match):
 
 
 def resetToFactorySettings(self, query_parameters, match):
-    success = utils.system_utils.resetToFactorySettings()
+    success = common.system_utils.resetToFactorySettings()
     if success:
         utils.response_utils.okResponse(self)
     else:
@@ -24,7 +24,7 @@ def setAudioOutput(self, post_data, match):
     json_data = json.loads(post_data.decode("utf-8"))
     card_number = json_data.get("card_number")
 
-    success, error = utils.system_utils.write_default_sound_config(card_number)
+    success, error = common.system_utils.write_default_sound_config(card_number)
     if success:
         utils.response_utils.okResponse(self)
     else:
@@ -52,7 +52,7 @@ def getServiceLogs(self, query_parameters, match):
     else:
         lines = 200
 
-    serviceLogs = utils.system_utils.get_services_logs(service, lines)
+    serviceLogs = common.system_utils.get_services_logs(service, lines)
     if serviceLogs is not None:
         utils.response_utils.okWithData(self, serviceLogs)
     else:

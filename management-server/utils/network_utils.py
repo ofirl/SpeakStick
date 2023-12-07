@@ -2,7 +2,7 @@ import subprocess
 import re
 import logging
 
-import utils.system_utils
+import common.system_utils
 
 
 def signalStrengthToNumber(strength: int):
@@ -131,7 +131,7 @@ def update_network_config(ssid, psk, key_mgmt=None):
         with open("/etc/wpa_supplicant/wpa_supplicant.conf", "w") as f:
             f.writelines(updated_lines)
 
-        utils.system_utils.restartNetworkServices()
+        common.system_utils.restartNetworkServices()
 
         return True
 

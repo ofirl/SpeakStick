@@ -6,20 +6,21 @@ import logging
 import gzip
 
 from datetime import datetime
-from io import BytesIO
 
-import utils.versions_utils
-import utils.system_utils
-import utils.db_utils
+import monitoring.logs_config
+
+import common.config_utils
+import common.versions_utils
+
+monitoring.logs_config.init_logger("logs-handler")
 
 logFilesFolder = "/opt/logs"
-# nginx?
-servicesNames = ["stick-controller", "management-server"]
+servicesNames = ["stick-controller", "management-server"]  # TODO: add nginx?
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
-dummyApiKey = utils.db_utils.get_config_value("LOGS_API_KEY")
-deviceName = utils.db_utils.get_config_value("DEVICE_NAME")
+dummyApiKey = common.config_utils.get_config_value("LOGS_API_KEY")
+deviceName = common.config_utils.get_config_value("DEVICE_NAME")
 lastLogSampleTimeConfigKey = "LAST_LOG_SAMPLE"
-currentVersion = utils.versions_utils.get_current_version()
+currentVersion = common.versions_utils.get_current_version()
 MAX_PAYLOAD_SIZE_BYTES = 1024
 
 
@@ -180,14 +181,10 @@ def send_logs(data_file):
         logging.error(f"Error sending logs: {e}")
 
 
-def logLoop():
-    while True:
-        for service in servicesNames:
-            logs, file_path = get_logs(service)
-            if logs:
-                chunks = split_file(file_path, MAX_PAYLOAD_SIZE_BYTES, service)
-                for chunk_file in chunks:
-                    send_logs(chunk_file)
-
-        # Wait for 1 minute before fetching and sending logs again
-        time.sleep(60)
+for service in servicesNames:
+    logging.info(f"Starting logs collection for ${service}")
+    logs, file_path = get_logs(service)
+    if logs:
+        chunks = split_file(file_path, MAX_PAYLOAD_SIZE_BYTES, service)
+        for chunk_file in chunks:
+            send_logs(chunk_file)

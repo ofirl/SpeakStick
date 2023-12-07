@@ -56,6 +56,15 @@ cp ./init/restart-network-services.service /usr/lib/systemd/system/restart-netwo
 sudo systemctl daemon-reload
 sudo systemctl enable restart-network-services
 
+# logs handlers services
+cp ./init/logs-handler.service /usr/lib/systemd/system/logs-handler.service
+sudo systemctl daemon-reload
+sudo systemctl enable logs-handler.service
+
+cp ./init/logs-handler.timer /usr/lib/systemd/system/logs-handler.timer
+sudo systemctl daemon-reload
+sudo systemctl enable logs-handler.timer
+
 # First Build --- First Build --- First Build --- First Build --- First Build --- First Build --- First Build ---
 # run an upgrade in order to build everything for the first time
 ./upgrade-script.sh

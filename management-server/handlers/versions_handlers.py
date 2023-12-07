@@ -1,4 +1,4 @@
-import utils.versions_utils
+import common.versions_utils
 import utils.response_utils
 
 
@@ -7,7 +7,7 @@ def performUpgrade(self, query_parameters, match):
     if version is not None:
         version = version[0]
 
-    process, err = utils.versions_utils.runUpgrade(version)
+    process, err = common.versions_utils.runUpgrade(version)
     if err is None and process is not None:
         utils.response_utils.okResponse(self)
     else:
@@ -15,7 +15,7 @@ def performUpgrade(self, query_parameters, match):
 
 
 def isUpgradeRunning(self, query_parameters, match):
-    isRunning = utils.versions_utils.isUpgradeRunning()
+    isRunning = common.versions_utils.isUpgradeRunning()
     if isRunning is not None:
         utils.response_utils.okWithData(self, isRunning)
     else:
@@ -23,7 +23,7 @@ def isUpgradeRunning(self, query_parameters, match):
 
 
 def getApplicationVersions(self, query_parameters, match):
-    versions = utils.versions_utils.get_versions()
+    versions = common.versions_utils.get_versions()
     if versions is not None:
         utils.response_utils.okWithData(self, versions)
     else:
@@ -33,7 +33,7 @@ def getApplicationVersions(self, query_parameters, match):
 
 
 def getApplicationCurrentVersion(self, query_parameters, match):
-    version = utils.versions_utils.get_current_version()
+    version = common.versions_utils.get_current_version()
     if version is not None:
         utils.response_utils.okWithData(self, version)
     else:
@@ -43,7 +43,7 @@ def getApplicationCurrentVersion(self, query_parameters, match):
 
 
 def updateApplicationVersions(self, query_parameters, match):
-    success = utils.versions_utils.update_available_versions()
+    success = common.versions_utils.update_available_versions()
     if success is not None:
         utils.response_utils.okResponse(self)
     else:
@@ -53,7 +53,7 @@ def updateApplicationVersions(self, query_parameters, match):
 
 
 def getChageLog(self, query_parameters, match):
-    changeLog, error = utils.versions_utils.get_github_releases()
+    changeLog, error = common.versions_utils.get_github_releases()
     if changeLog is not None:
         utils.response_utils.okWithData(self, changeLog)
     else:

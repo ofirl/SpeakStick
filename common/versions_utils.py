@@ -3,24 +3,24 @@ import requests
 import datetime
 import logging
 
-import utils.system_utils
-import utils.db_utils
+import common.system_utils
+import common.config_utils
 
 
 def runUpgrade(version=""):
-    return utils.system_utils.runCommandBackground(
+    return common.system_utils.runCommandBackground(
         f"/opt/SpeakStick/upgrade-script.sh {version}"
     )
 
 
 def isUpgradeRunning():
-    return utils.system_utils.is_process_running("upgrade-script")
+    return common.system_utils.is_process_running("upgrade-script")
 
 
 def get_versions():
     try:
         development_builds = False
-        configs = utils.db_utils.get_configs(
+        configs = common.config_utils.get_configs(
             advanced=1, key="ENABLE_DEVELOPMENT_BUILDS"
         )
         if configs != None and len(configs) > 0:
