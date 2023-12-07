@@ -43,5 +43,5 @@ def init_logger(service):
 
     logger = logging.getLogger()
     # logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
+    # logger.addHandler(console_handler)
     logger.setLevel(logging.DEBUG)
