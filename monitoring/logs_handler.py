@@ -128,25 +128,37 @@ def write_file(file, data):
 
 def format_log(log):
     try:
-        logParts = log.split(" - ", 3)
-        # Extract timestamp and message from the log line
-        timestamp_str, level, filePath, message = (
-            logParts[0],
-            logParts[1],
-            logParts[2],
-            logParts[3],
-        )
+        logParts = json.loads(log)
+        # logParts = log.split(" - ", 3)
+        # # Extract timestamp and message from the log line
+        # timestamp_str, level, filePath, message = (
+        #     logParts[0],
+        #     logParts[1],
+        #     logParts[2],
+        #     logParts[3],
+        # )
 
         # Convert the timestamp string to a datetime object
-        timestamp = datetime.strptime(f"{''.join(timestamp_str)}", "%Y-%m-%d %H:%M:%S")
+        timestamp = datetime.strptime(
+            f"{''.join(logParts['asctim'])}", "%Y-%m-%d %H:%M:%S"
+        )
 
         # Convert the datetime object to Unix timestamp
         timestamp = int(timestamp.timestamp())
         log_entry = {
             "timestamp": timestamp,
-            "message": message.strip(" \n"),
-            "attributes": {"level": level, "file": filePath},
+            "message": logParts["message"].strip(" \n"),
+            "attributes": {
+                "level": logParts["levelname"],
+                "file": f"{logParts['filename']}:{logParts['lineno']}",
+            },
         }
+
+        reservedKeys = ["asctime", "message", "levelname", "filename", "lineno", "name"]
+        for attr, value in logParts:
+            if attr not in reservedKeys:
+                log_entry["message"] = f"{log_entry['message']}, {attr}={value}"
+
     except Exception as e:
         log_entry = {
             "timestamp": int(datetime.now().timestamp()),
