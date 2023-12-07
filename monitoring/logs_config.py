@@ -27,7 +27,7 @@ def init_logger(service):
     file_handler.setFormatter(jsonFormatter)
 
     logger = logging.getLogger()
-    print(logger.handlers)
+    logger.removeHandler(logger.handlers[0])
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
     logger.setLevel(logging.DEBUG)
