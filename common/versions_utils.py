@@ -5,11 +5,12 @@ import logging
 
 import common.system_utils
 import common.config_utils
+from monitoring.logs_config import logFilesFolder
 
 
 def runUpgrade(version=""):
     return common.system_utils.runCommandBackground(
-        f"/opt/SpeakStick/upgrade-script.sh {version}"
+        f"/opt/SpeakStick/upgrade-script.sh {version} >> {logFilesFolder}/upgrade.log"
     )
 
 

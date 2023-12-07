@@ -14,7 +14,6 @@ import common.versions_utils
 
 monitoring.logs_config.init_logger("logs-handler")
 
-logFilesFolder = "/opt/logs"
 servicesNames = ["stick-controller", "management-server"]  # TODO: add nginx?
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
 dummyApiKey = common.config_utils.get_config_value("LOGS_API_KEY")
@@ -25,7 +24,7 @@ MAX_PAYLOAD_SIZE_BYTES = 1024
 
 
 def get_logs(service):
-    logFilePath = f"{logFilesFolder}/{service}.log"
+    logFilePath = f"{monitoring.logs_config.logFilesFolder}/{service}.log"
     if not os.path.exists(logFilePath):
         return None, None
 
