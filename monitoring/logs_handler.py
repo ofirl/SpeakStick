@@ -171,6 +171,7 @@ def format_log(log):
                 log_entry["message"] = f"{log_entry['message']}, {attr}={value}"
 
     except Exception as e:
+        logging.debug("Error formatting log", extra={"error": e})
         log_entry = {
             "timestamp": int(datetime.now().timestamp()),
             "message": log.strip(" \n"),
