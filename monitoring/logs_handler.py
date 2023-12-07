@@ -114,6 +114,7 @@ def split_file(file_path, target_compressed_size, service):
                 chunk_file.write(json.dumps([logs_chunk]))
             created_files.append(output_file_path)
 
+    logging.debug(f"log file split", extra={"fields": {"created_files": created_files}})
     return created_files
 
 
