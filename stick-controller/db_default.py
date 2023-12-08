@@ -31,11 +31,6 @@ defaultConfigs = [
         "description": "Word will end if no position change is recorded for this duration (in seconds)",
     },
     {
-        "key": "GRID_BORDER_SIZE",
-        "value": "0.1",
-        "description": 'If we think about the grid of numbers, this is the inner border (the border between the cells) width, this will create a "dead zone" in which there are no cells',
-    },
-    {
         "key": "SLEEP_TIMEOUT_M",
         "value": "5",
         "description": "How long without an input should the controller wait untill it enters sleep mode (in minutes)",

@@ -18,3 +18,9 @@ def migrate():
         DELETE FROM configs WHERE key = 'LAST_LOG_SAMPLE'
         """
     )
+
+    cursor.execute(
+        """
+        DELETE FROM configs WHERE key = 'GRID_BORDER_SIZE'
+        """
+    )

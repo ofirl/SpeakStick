@@ -48,12 +48,7 @@ pygame.mixer.init()
 # Define grid layout and cell numbers
 GRID = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]]
 
-# Define stick position thresholds
-GRID_BORDER_SIZE = float(configs["GRID_BORDER_SIZE"])
 VREF = 3.3
-POSITION_LOW = VREF * 0.33
-POSITION_MEDIUM = VREF * 0.66
-GRID_DEAD_ZONE = VREF * GRID_BORDER_SIZE / 2
 
 SOURCE_DIR = os.path.dirname(__file__)
 WORDS_SOUND_FILES_DIR = SOURCE_DIR + "/words/"
