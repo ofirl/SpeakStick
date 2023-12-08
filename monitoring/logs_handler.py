@@ -211,9 +211,7 @@ def send_logs(data_file):
                     f"status code", extra={"responseCode": response.status_code}
                 )
             else:
-                logging.debug(
-                    f"Failed to send logs", extra={"responseCode": response.status_code}
-                )
+                logging.debug(f"Failed to send logs", extra={"response": response})
     except Exception as e:
         logging.error(f"Error sending logs: {e}")
 

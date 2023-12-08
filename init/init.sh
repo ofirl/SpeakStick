@@ -35,6 +35,8 @@ sudo apt -y install nodejs
 # nginx
 sudo apt install nginx -y
 sudo systemctl start nginx
+sudo cp /opt/SpeakStick/init/nginx.conf /etc/nginx/sites-enabled/default
+sudo /etc/init.d/nginx reload
 
 # Automatic Upgrades --- Automatic Upgrades --- Automatic Upgrades --- Automatic Upgrades --- Automatic Upgrades ---
 echo '0 1 * * * speakstickadmin curl localhost:8090/api/upgrade' >> ~/speakstick-upgrade-cron
