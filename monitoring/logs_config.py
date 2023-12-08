@@ -4,6 +4,7 @@ import logging
 import logging.handlers
 from pythonjsonlogger import jsonlogger
 
+import common.config_utils
 
 logFilesFolder = "/opt/logs"
 
@@ -35,4 +36,7 @@ def init_logger(service):
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
     # set log level
-    logger.setLevel(logging.DEBUG)
+    loggingLevel = common.config_utils.get_config_value("LOGGING_LEVEL")
+    if loggingLevel is None:
+        loggingLevel = "INFO"
+    logger.setLevel(logging._nameToLevel[loggingLevel])
