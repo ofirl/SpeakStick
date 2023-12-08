@@ -29,13 +29,14 @@ def get_configs(key=None, advanced=0):
 
         # Populate the configs dictionary with retrieved data
         for row in rows:
-            key, value, description, default_value, _ = row
+            key, value, description, default_value, advanced = row
             configs.append(
                 {
                     "key": key,
                     "value": value,
                     "description": description,
                     "default_value": default_value,
+                    "advanced": advanced,
                 }
             )
 
