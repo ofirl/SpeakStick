@@ -220,6 +220,10 @@ def send_logs(service):
         logging.warning("No logs api key found")
         return
 
+    if not logsEndpoint or logsEndpoint == "":
+        logging.error("No logs api endpoint found")
+        return
+
     chunk_number = 1
     data_file = getChunkFileName(service, chunk_number)
     while os.path.exists(data_file):
@@ -257,7 +261,10 @@ def send_logs(service):
                     )
 
         except Exception as e:
-            logging.error(f"Error sending logs: {e}")
+            logging.exception(
+                f"Error sending logs",
+                extra={"service": service, "data_file": data_file},
+            )
 
         chunk_number += 1
         data_file = getChunkFileName(service, chunk_number)
