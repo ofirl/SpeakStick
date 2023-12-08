@@ -25,7 +25,7 @@ servicesNames = [
     "upgrade",
 ]  # TODO: add nginx?
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
-dummyApiKey = common.config_utils.get_config_value("LOGS_API_KEY")
+logsApiKey = common.config_utils.get_config_value("LOGS_API_KEY")
 deviceName = common.config_utils.get_config_value("DEVICE_NAME")
 lastLogSampleTimeConfigKey = "LAST_LOG_SAMPLE"
 currentVersion = common.versions_utils.get_current_version()
@@ -194,10 +194,14 @@ def format_logs(logs):
 
 
 def send_logs(data_file):
+    if not logsApiKey or logsApiKey == "":
+        logging.debug("No logs api key found")
+        return
+
     try:
         with gzip.open(data_file, "r") as file:
             # Send formatted logs over HTTP with API key header
-            headers = {"API-key": dummyApiKey, "Content-Type": "application/json"}
+            headers = {"API-key": logsApiKey, "Content-Type": "application/json"}
             response = requests.post(
                 logsEndpoint,
                 data=file.read(),
@@ -205,7 +209,6 @@ def send_logs(data_file):
             )
 
             if response.status_code % 100 == 2:
-                os.remove(data_file)
                 logging.debug(
                     f"status code", extra={"responseCode": response.status_code}
                 )
