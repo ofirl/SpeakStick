@@ -1,9 +1,18 @@
+import sys
+
+sys.path.append("/opt/SpeakStick")  # Adds higher directory to python modules path.
+
 import re
 import threading
+import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
+import monitoring.logs_config
+
 import utils.response_utils
+import common.system_utils
+
 import handlers.configs_handlers
 import handlers.library_items_handlers
 import handlers.libraries_handlers
@@ -12,14 +21,12 @@ import handlers.system_handlers
 import handlers.versions_handlers
 import handlers.network_handlers
 
-# try to set the default output device on startup
-import utils.system_utils
-
-import monitoring.logs
-
 import websocket_server
 
-utils.system_utils.set_default_audio_output()
+monitoring.logs_config.init_logger("management-server")
+
+# try to set the default output device on startup
+common.system_utils.set_default_audio_output()
 
 httpPort = 8090
 websocketPort = 8091
@@ -244,11 +251,8 @@ def getRouteHandler(self, method, baseRoute=BASE_ROUTE, routes=routes2):
             if foundHandler is not None:
                 return foundHandler, foundMatch
 
-        print(
-            "Running handler for ",
-            pattern,
-            "with the match groups ",
-            match.groups(),
+        logging.info(
+            f"Running handler for {pattern} with the match groups {match.groups()}"
         )
 
         return routeHandler, match
@@ -299,22 +303,17 @@ class RequestHandler(BaseHTTPRequestHandler):
 def runHttpServer():
     server_address = ("", httpPort)
     httpd = HTTPServer(server_address, RequestHandler)
-    print("Starting server on port", httpPort)
+    logging.info(f"Starting server on port {httpPort}")
     httpd.serve_forever()
 
 
 def run():
-    logThread = threading.Thread(target=monitoring.logs.logLoop)
-    logThread.start()
-
     websocketServerThread = threading.Thread(
         target=websocket_server.startWebSocketServer, args=(websocketPort,)
     )
     websocketServerThread.start()
 
     runHttpServer()
-
-    print("Server started")
 
 
 if __name__ == "__main__":

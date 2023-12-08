@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer to run logs-handler.service
+
+[Timer]
+Unit=logs-handler.service
+OnCalendar=*-*-* *:*:00
+
+[Install]
+WantedBy=timers.target

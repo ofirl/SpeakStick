@@ -1,16 +1,17 @@
 import os
+import logging
 import urllib.parse
 
-import utils.system_utils
+import common.system_utils
 import utils.response_utils
 import utils.db_utils
 
-from consts import words_directory
+from common.consts import words_directory
 from urllib.parse import parse_qs
 
 
 def getWords(self, query_parameters, match):
-    positions = utils.system_utils.getWordFiles()
+    positions = common.system_utils.getWordFiles()
     if positions:
         utils.response_utils.okWithData(self, positions)
     else:
@@ -41,5 +42,5 @@ def deleteWord(self, query_parameters, match):
     if error is None:
         utils.response_utils.okResponse(self)
     else:
-        print(error.__str__().encode())
+        logging.error(error.__str__().encode())
         utils.response_utils.InternalServerError(self, "Error deleting word")

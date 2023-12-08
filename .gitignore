@@ -161,5 +161,4 @@ cython_debug/
 node_modules
 configs.db
 stick-controller/words/
-upgrade-script-linux.sh
 */.vite/deps/

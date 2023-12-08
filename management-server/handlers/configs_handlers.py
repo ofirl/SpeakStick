@@ -2,6 +2,7 @@ import json
 
 import utils.db_utils
 import utils.response_utils
+import common.config_utils
 
 
 def getConfigs(self, query_parameters, match):
@@ -13,7 +14,7 @@ def getConfigs(self, query_parameters, match):
     if key is not None:
         key = key[0]
 
-    configs = utils.db_utils.get_configs(key=key, advanced=advanced)
+    configs = common.config_utils.get_configs(key=key, advanced=advanced)
     if configs:
         utils.response_utils.okWithData(self, configs)
     else:

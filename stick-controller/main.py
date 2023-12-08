@@ -1,3 +1,12 @@
+import sys
+
+sys.path.append("/opt/SpeakStick")  # Adds higher directory to python modules path.
+
+import monitoring.logs_config
+
+monitoring.logs_config.init_logger("stick-controller")
+
+import logging
 import os
 import time
 import threading
@@ -17,7 +26,7 @@ import globals
 from config import configs
 from words import get_word_by_position
 
-print(f"configs: {configs}")
+logging.info("configs dump", extra={"configs": configs})
 
 websocketPort = 8092
 
@@ -39,17 +48,7 @@ pygame.mixer.init()
 # Define grid layout and cell numbers
 GRID = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]]
 
-# Define stick position thresholds
-GRID_BORDER_SIZE = float(configs["GRID_BORDER_SIZE"])
 VREF = 3.3
-POSITION_LOW = VREF * 0.33
-POSITION_MEDIUM = VREF * 0.66
-GRID_DEAD_ZONE = VREF * GRID_BORDER_SIZE / 2
-
-print("Grid configuration:")
-print("GRID_DEAD_ZONE: ", GRID_DEAD_ZONE)
-print("POSITION_LOW: ", POSITION_LOW)
-print("POSITION_MEDIUM: ", POSITION_MEDIUM)
 
 SOURCE_DIR = os.path.dirname(__file__)
 WORDS_SOUND_FILES_DIR = SOURCE_DIR + "/words/"
@@ -137,7 +136,7 @@ def main():
 
     cell_update_time = datetime.datetime.now()
 
-    print("Starting loop")
+    logging.info("Starting loop")
     play_audio(STARTUP_SOUND)
 
     try:
@@ -181,7 +180,9 @@ def main():
             ) > 0 and datetime.datetime.now() > cell_update_time + datetime.timedelta(
                 seconds=float(configs["END_WORD_TIMEOUT_S"])
             ):
-                print(f"word positions: {''.join(recorded_cells)}")
+                logging.debug(
+                    "word ended", extra={"positions": "".join(recorded_cells)}
+                )
 
                 # ignore the last position if it's 5
                 if recorded_cells[-1] == "5":
@@ -190,7 +191,7 @@ def main():
                 # get file to play
                 route_filename = get_word_by_position("".join(recorded_cells))
                 if route_filename is not None:
-                    print("Playing audio:", route_filename)
+                    logging.debug("Playing audio", extra={"file": route_filename})
                     play_audio(WORDS_SOUND_FILES_DIR + route_filename)
 
                 # reset state
@@ -224,13 +225,15 @@ def main():
                 # cell changed
                 recorded_cells.append(globals.current_cell)
                 cell_update_time = datetime.datetime.now()
-                print(f"record new position: {recorded_cells}")
+                logging.debug(
+                    "recorded new position", extra={"recorded_cells": recorded_cells}
+                )
 
     except KeyboardInterrupt:
-        print("Exiting on keyboard interrupt")
+        logging.debug("Exiting on keyboard interrupt")
         play_audio(ERROR_SOUND)
     except Exception as error:
-        print("An exception occurred:", type(error).__name__, ":", error)
+        logging.exception("An exception occurred")
         play_audio(ERROR_SOUND)
 
 

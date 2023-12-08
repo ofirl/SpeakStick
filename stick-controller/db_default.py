@@ -1,5 +1,6 @@
 import sqlite3
 import time
+import logging
 
 from consts import db_file
 
@@ -28,11 +29,6 @@ defaultConfigs = [
         "key": "END_WORD_TIMEOUT_S",
         "value": "1",
         "description": "Word will end if no position change is recorded for this duration (in seconds)",
-    },
-    {
-        "key": "GRID_BORDER_SIZE",
-        "value": "0.1",
-        "description": 'If we think about the grid of numbers, this is the inner border (the border between the cells) width, this will create a "dead zone" in which there are no cells',
     },
     {
         "key": "SLEEP_TIMEOUT_M",
@@ -68,9 +64,19 @@ advancedConfigs = [
         "description": "Device name for the logs",
     },
     {
-        "key": "LAST_LOG_SAMPLE",
-        "value": time.time(),
-        "description": "last time logs were extracted",
+        "key": "LOGGING_LEVEL",
+        "value": "INFO",
+        "description": "Application logging level",
+    },
+    {
+        "key": "LOGS_HANDLER_LOGGING_LEVEL",
+        "value": "INFO",
+        "description": "Logs handler logging level",
+    },
+    {
+        "key": "LOGGER_API_ENDPOINT",
+        "value": "https://log-api.eu.newrelic.com/log/v1",
+        "description": "Endpoint to send the logs to",
     },
 ]
 
@@ -171,7 +177,6 @@ def create_default_db(database_file):
             if libraryWords is None:
                 continue
 
-            print(libraryWords)
             for positions, word in libraryWords.items():
                 cursor.execute(
                     "SELECT * FROM library_items WHERE libraryId = ? AND positions = ?",
@@ -187,10 +192,10 @@ def create_default_db(database_file):
 
         # Commit the changes to the database
         connection.commit()
-        print("Default tables and values created successfully.")
+        logging.info("Default tables and values created successfully")
 
     except sqlite3.Error as e:
-        print("An error occurred:", e)
+        logging.exception("Error creating default db")
 
     finally:
         # Close the database connection

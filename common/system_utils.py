@@ -2,11 +2,10 @@ import subprocess
 import os
 import re
 import psutil
+import logging
 from git.repo import Repo
 
-from consts import words_directory
-
-from utils.versions_utils import update_available_versions
+from common.consts import words_directory
 
 
 def runCommand(command):
@@ -38,7 +37,7 @@ def runCommandBackground(command):
         pid = process.pid
 
         # Print the PID and command
-        print(f"Command '{command}' started in the background with PID: {pid}")
+        logging.debug(f"Command '{command}' started in the background with PID: {pid}")
 
         return process, None
 
@@ -50,7 +49,7 @@ def runCommandBackground(command):
         # print(f"Command output:\n{stdout.decode('utf-8')}")
 
     except Exception as e:
-        print(f"Error running command '{command}': {str(e)}")
+        logging.error(f"Error running command '{command}': {str(e)}")
         return None, e
 
 
@@ -78,14 +77,13 @@ def resetToFactorySettings():
 
         runCommand("cd /opt/SpeakStick && git tag -l | xargs git tag -d")
         runCommand("cd /opt/SpeakStick && git branch -l | xargs git branch -D")
-        update_available_versions()
 
         code, output = restartStickController()
         if code != 0:
             raise BaseException("Error restarting stick controller")
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.exception(f"Error resetting to factory settings")
         return False
 
     return True
@@ -93,7 +91,6 @@ def resetToFactorySettings():
 
 def is_process_running(process_name):
     for process in psutil.process_iter(attrs=["name"]):
-        print(process.name())
         if process_name in process.name():
             return True
     return False
@@ -114,7 +111,7 @@ def get_sound_cards():
 
     except subprocess.CalledProcessError as e:
         # Handle any errors that occur when running the command
-        print(f"Error: {e}")
+        logging.error(f"Error: {e}")
         return None
 
 
@@ -126,19 +123,19 @@ def write_default_sound_config(card_number):
             file.write(f"defaults.pcm.card {card_number}\n")
             file.write(f"defaults.ctl.card {card_number}\n")
 
-        print(f"Configuration written successfully.")
+        logging.info(f"Configuration written successfully.")
         return True, None
 
     except Exception as e:
         # Handle any errors that occur during the file write operation
-        print(f"Error writing: {e}")
+        logging.error(f"Error writing: {e}")
         return False, e
 
 
 def get_usb_sound_card():
     cards = get_sound_cards()
     if cards is None:
-        print("Error getting sound cards")
+        logging.error("Error getting sound cards")
         return None
 
     for card_number, card_name, device_name in cards:
@@ -153,14 +150,14 @@ def set_default_audio_output():
     try:
         card_number = get_usb_sound_card()
         if card_number is None:
-            print("No USB sound card found")
+            logging.error("No USB sound card found")
             return
 
         write_default_sound_config(card_number)
 
     except Exception as e:
         # Handle any errors that occur during the file write operation
-        print(f"Error setting default audio output: {e}")
+        logging.error(f"Error setting default audio output: {e}")
 
 
 def get_services_logs(service, lines=200):
@@ -169,10 +166,12 @@ def get_services_logs(service, lines=200):
             f"journalctl -u {service} -e --no-pager -n {lines}"
         )
         if return_code != 0:
-            print(f"Error getting logs, return code {return_code}, output: {output}")
+            logging.error(
+                f"Error getting logs, return code {return_code}, output: {output}"
+            )
             return None
 
         return output
 
     except Exception as e:
-        print(f"Error getting logs: {e}")
+        logging.error(f"Error getting logs: {e}")

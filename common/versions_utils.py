@@ -1,25 +1,27 @@
 from git.repo import Repo
 import requests
 import datetime
+import logging
 
-import utils.system_utils
-import utils.db_utils
+import common.system_utils
+import common.config_utils
+from monitoring.logs_config import logFilesFolder
 
 
 def runUpgrade(version=""):
-    return utils.system_utils.runCommandBackground(
-        f"/opt/SpeakStick/upgrade-script.sh {version}"
+    return common.system_utils.runCommandBackground(
+        f"/opt/SpeakStick/upgrade-script.sh {version} >> {logFilesFolder}/upgrade.log"
     )
 
 
 def isUpgradeRunning():
-    return utils.system_utils.is_process_running("upgrade-script")
+    return common.system_utils.is_process_running("upgrade-script")
 
 
 def get_versions():
     try:
         development_builds = False
-        configs = utils.db_utils.get_configs(
+        configs = common.config_utils.get_configs(
             advanced=1, key="ENABLE_DEVELOPMENT_BUILDS"
         )
         if configs != None and len(configs) > 0:
@@ -34,7 +36,7 @@ def get_versions():
         return sorted(tags, reverse=True)
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.exception(f"Error getting versions")
         return None
 
 
@@ -44,7 +46,7 @@ def get_current_version():
         return repo.git.describe(tags=True)
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.exception(f"Error getting current version")
         return None
 
 
@@ -55,7 +57,7 @@ def update_available_versions():
         return True
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.exception(f"Error updating available versions")
         return None
 
 
@@ -89,7 +91,9 @@ def get_github_releases():
             return release_info, None
         else:
             error = None
-            print(f"Failed to retrieve releases. Status code: {response.status_code}")
+            logging.error(
+                f"Failed to retrieve releases. Status code: {response.status_code}"
+            )
             if response.status_code == 403:
                 timestamp = response.headers.get("x-ratelimit-reset")
                 if timestamp is not None:
@@ -102,5 +106,5 @@ def get_github_releases():
             return None, error
 
     except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+        logging.exception(f"Error getting github release")
         return None, e.strerror
