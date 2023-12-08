@@ -32,8 +32,16 @@ currentVersion = common.versions_utils.get_current_version()
 MAX_PAYLOAD_SIZE_BYTES = 1000000
 
 
+def getLogFileName(service):
+    return f"{monitoring.logs_config.logFilesFolder}/{service}.log"
+
+
+def getChunkFileName(service, chunk_number):
+    return f"{getLogFileName(service)}.old_chunk{chunk_number}.gz"
+
+
 def get_logs(service):
-    logFilePath = f"{monitoring.logs_config.logFilesFolder}/{service}.log"
+    logFilePath = getLogFileName(service)
     if not os.path.exists(logFilePath):
         return None, None
 
@@ -77,10 +85,10 @@ def split_file(file_path, target_compressed_size, service):
         }
 
         while True:
-            output_file_path = f"{file_path}_chunk{chunk_number}.gz"
+            output_file_path = getChunkFileName(service, chunk_number)
             while os.path.exists(output_file_path):
                 chunk_number += 1
-                output_file_path = f"{file_path}_chunk{chunk_number}.gz"
+                output_file_path = getChunkFileName(service, chunk_number)
 
             # Read lines until the target compressed size is reached
             while (
@@ -138,7 +146,7 @@ def split_file(file_path, target_compressed_size, service):
         # last iteration file output
         # Compress the lines and write to a gzip file
         if logs_chunk["logs"] and len(logs_chunk["logs"]) > 0:
-            output_file_path = f"{file_path}_chunk{chunk_number}.gz"
+            output_file_path = getChunkFileName(service, chunk_number)
             with gzip.open(output_file_path, "wt", encoding="utf-8") as chunk_file:
                 chunk_file.write(json.dumps([logs_chunk]))
             created_files.append(output_file_path)
@@ -197,38 +205,52 @@ def format_logs(logs):
     return formatted_logs
 
 
-def send_logs(data_file):
+def send_logs(service):
     if not logsApiKey or logsApiKey == "":
         logging.debug("No logs api key found")
         return
 
-    try:
-        with gzip.open(data_file, "r") as file:
-            # Send formatted logs over HTTP with API key header
-            headers = {"API-key": logsApiKey, "Content-Type": "application/json"}
-            response = requests.post(
-                logsEndpoint,
-                data=file.read(),
-                headers=headers,
+    chunk_number = 1
+    data_file = getChunkFileName(service, chunk_number)
+    while os.path.exists(data_file):
+        try:
+            logging.debug(
+                f"sending log chunk",
+                extra={
+                    "service": service,
+                    "chunk_number": chunk_number,
+                    "chunk_file": data_file,
+                },
             )
-
-            if response.status_code % 100 == 2:
-                os.remove(data_file)
-                logging.debug(
-                    f"status code", extra={"responseCode": response.status_code}
-                )
-            else:
-                logging.debug(
-                    f"Failed to send logs",
-                    extra={
-                        "responseCode": response.status_code,
-                        "responseText": response.text,
-                        "responseRaw": response.raw,
-                    },
+            with gzip.open(data_file, "r") as file:
+                # Send formatted logs over HTTP with API key header
+                headers = {"API-key": logsApiKey, "Content-Type": "application/json"}
+                response = requests.post(
+                    logsEndpoint,
+                    data=file.read(),
+                    headers=headers,
                 )
 
-    except Exception as e:
-        logging.error(f"Error sending logs: {e}")
+                if response.status_code % 100 == 2:
+                    os.remove(data_file)
+                    logging.debug(
+                        f"status code", extra={"responseCode": response.status_code}
+                    )
+                else:
+                    logging.debug(
+                        f"Failed to send logs",
+                        extra={
+                            "responseCode": response.status_code,
+                            "responseText": response.text,
+                            "responseRaw": response.raw,
+                        },
+                    )
+
+        except Exception as e:
+            logging.error(f"Error sending logs: {e}")
+
+        chunk_number += 1
+        data_file = getChunkFileName(service, chunk_number)
 
 
 for service in servicesNames:
@@ -237,10 +259,5 @@ for service in servicesNames:
     logging.debug(f"log file saved", extra={"service": service})
     if logs and file_path:
         logging.debug(f"splitting log file", extra={"service": service})
-        chunks = split_file(file_path, MAX_PAYLOAD_SIZE_BYTES, service)
-        for chunk_file in chunks:
-            logging.debug(
-                f"sending log chunk",
-                extra={"service": service, "chunk_file": chunk_file},
-            )
-            send_logs(chunk_file)
+        split_file(file_path, MAX_PAYLOAD_SIZE_BYTES, service)
+        send_logs(service)
