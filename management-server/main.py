@@ -308,9 +308,6 @@ def runHttpServer():
 
 
 def run():
-    # logThread = threading.Thread(target=monitoring.logs.logLoop)
-    # logThread.start()
-
     websocketServerThread = threading.Thread(
         target=websocket_server.startWebSocketServer, args=(websocketPort,)
     )
