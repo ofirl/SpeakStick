@@ -172,48 +172,10 @@ def write_file(file, data):
         chunk_file.write(data)
 
 
-def extract_timestamp_from_nginx_log(log_line):
-    log_pattern = re.compile(r"\[([^\]]+)\]")
-
-    match = log_pattern.search(log_line)
-    if match:
-        timestamp_str = match.group(1)
-        # Convert timestamp to ISO format
-        timestamp = datetime.strptime(timestamp_str, "%d/%b/%Y:%H:%M:%S %z")
-        return timestamp
-    else:
-        return None
-
-
-def parse_nginx_log(log_line):
-    log_pattern = re.compile(
-        r'(?P<ip>[\w.:]+) - - \[(?P<timestamp>[^\]]+)\] "(?P<method>[A-Z]+) (?P<path>[^"?]+)\??(?P<query>.*?) (?P<protocol>.*?)" (?P<status>\d+) (?P<size>\d+) "(?P<referrer>[^"]+)" "(?P<user_agent>[^"]+)"'
-    )
-
-    match = log_pattern.match(log_line)
-    if match:
-        log_data = match.groupdict()
-
-        # Convert timestamp to ISO format
-        log_data["timestamp"] = datetime.strptime(
-            log_data["timestamp"], "%d/%b/%Y:%H:%M:%S %z"
-        ).timestamp()
-
-        # Convert size to integer
-        log_data["size"] = int(log_data["size"])
-
-        log_data["logtype"] = "nginx"
-        log_data["message"] = log_line
-        return log_data
-    else:
-        return None
-
-
 def format_log(log, service=None):
     try:
-        # nginx has a special format
+        # nginx has a special format, new relic will handle that
         if service == "nginx":
-            # log_entry = parse_nginx_log(log)
             log_entry = {"message": log.strip(" \n"), "logtype": "nginx"}
             return log_entry
 
