@@ -141,7 +141,6 @@ def split_file(file_path, target_compressed_size, service):
 
     logging.debug(f"log file split", extra={"fields": {"created_files": created_files}})
 
-    os.remove(file_path)
     return created_files
 
 
@@ -210,6 +209,7 @@ def send_logs(data_file):
                 logging.debug(
                     f"status code", extra={"responseCode": response.status_code}
                 )
+                return True
             else:
                 logging.debug(
                     f"Failed to send logs",
@@ -219,15 +219,17 @@ def send_logs(data_file):
                         "responseRaw": response.raw,
                     },
                 )
+                return False
     except Exception as e:
         logging.error(f"Error sending logs: {e}")
+        return False
 
 
 for service in servicesNames:
     logging.info(f"Starting logs collection", extra={"service": service})
     logs, file_path = get_logs(service)
     logging.debug(f"log file saved", extra={"service": service})
-    if logs:
+    if logs and file_path:
         logging.debug(f"splitting log file", extra={"service": service})
         chunks = split_file(file_path, MAX_PAYLOAD_SIZE_BYTES, service)
         for chunk_file in chunks:
@@ -235,4 +237,5 @@ for service in servicesNames:
                 f"sending log chunk",
                 extra={"service": service, "chunk_file": chunk_file},
             )
-            send_logs(chunk_file)
+            if send_logs(chunk_file):
+                os.remove(file_path)
