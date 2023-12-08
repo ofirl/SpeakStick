@@ -16,6 +16,7 @@ import monitoring.logs_config
 
 import common.config_utils
 import common.versions_utils
+import common.system_utils
 
 monitoring.logs_config.init_logger("logs-handler")
 
@@ -65,8 +66,11 @@ def get_logs(service):
         os.rename(logFilePath, renamedLogFilePath)
 
     if service == "nginx":
-        with open(logFilePath, "w") as nginx_new_log_file:
-            logging.debug("Created a new log file for nginx")
+        # reload nginx log files and let it complete the rotation
+        common.system_utils.runCommand("kill -USR1 `cat /var/run/nginx.pid`")
+        time.sleep(1)
+        # with open(logFilePath, "w") as nginx_new_log_file:
+        #     logging.debug("Created a new log file for nginx")
 
     with open(renamedLogFilePath, "r") as log_file:
         lines = log_file.readlines()
@@ -159,6 +163,7 @@ def split_file(file_path, target_compressed_size, service):
 
     logging.debug(f"log file split", extra={"fields": {"created_files": created_files}})
     os.remove(file_path)
+
     return created_files
 
 
