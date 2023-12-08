@@ -64,6 +64,10 @@ def get_logs(service):
     else:
         os.rename(logFilePath, renamedLogFilePath)
 
+    if service == "nginx":
+        with open(logFilePath, "w") as nginx_new_log_file:
+            logging.debug("Created a new log file for nginx")
+
     with open(renamedLogFilePath, "r") as log_file:
         lines = log_file.readlines()
 
