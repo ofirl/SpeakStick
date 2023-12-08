@@ -68,6 +68,11 @@ advancedConfigs = [
         "value": "INFO",
         "description": "Application logging level",
     },
+    {
+        "key": "LOGS_HANDLER_LOGGING_LEVEL",
+        "value": "INFO",
+        "description": "Logs handler logging level",
+    },
 ]
 
 libraries = {

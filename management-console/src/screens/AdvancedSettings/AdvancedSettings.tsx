@@ -8,9 +8,9 @@ import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { Button, FormControl, InputLabel, MenuItem, Select, Tooltip } from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Select, Skeleton, Tooltip } from "@mui/material";
 import { useResetToFactorySettings } from "../../api/system";
-import { AUTOMATIC_UPDATES_CONFIG, DEVELOPMENT_BUILDS_CONFIG, DEVICE_NAME_CONFIG, LOGGING_LEVEL_CONFIG, LOGS_API_KEY_CONFIG, useGetConfigs, useUpdateConfig } from "../../api/configs";
+import { AUTOMATIC_UPDATES_CONFIG, DEVELOPMENT_BUILDS_CONFIG, DEVICE_NAME_CONFIG, LOGGING_LEVEL_CONFIG, LOGS_API_KEY_CONFIG, LOGS_HANDLER_LOGGING_LEVEL_CONFIG, useGetConfigs, useUpdateConfig } from "../../api/configs";
 import { AdvancedSettingsSection } from "./AdvancedSettingsSection";
 
 export const AdvancedSettings = () => {
@@ -43,6 +43,11 @@ export const AdvancedSettings = () => {
 
   const loggingLevel = useMemo(() =>
     configs?.find(c => c.key === LOGGING_LEVEL_CONFIG)?.value || "",
+    [configs]
+  )
+
+  const logsHandlerLoggingLevel = useMemo(() =>
+    configs?.find(c => c.key === LOGS_HANDLER_LOGGING_LEVEL_CONFIG)?.value || "",
     [configs]
   )
 
@@ -96,7 +101,10 @@ export const AdvancedSettings = () => {
           </Button>
         </div>
         <div style={{ display: "flex" }}>
-          <TextField defaultValue={deviceName} inputRef={deviceNameTextFieldRef} style={{ flexGrow: 1 }} label="Device name" />
+          {
+            isLoadingConfigs ? <Skeleton variant="rectangular" width={"100%"} height={"2rem"} /> :
+              <TextField defaultValue={deviceName} inputRef={deviceNameTextFieldRef} style={{ flexGrow: 1 }} label="Device name" />
+          }
           <Button style={{ flexShrink: 1 }} variant="text" onClick={() => deviceNameTextFieldRef.current?.value && updateConfig({ key: DEVICE_NAME_CONFIG, value: deviceNameTextFieldRef.current.value })}>
             Update
           </Button>
@@ -105,7 +113,6 @@ export const AdvancedSettings = () => {
           <InputLabel id="logging-level-select-label">Logging level</InputLabel>
           <Select
             labelId="logging-level-select-label"
-            id="demo-simple-select"
             value={loggingLevel}
             label="Logging level"
             onChange={(e) => updateConfig({ key: LOGGING_LEVEL_CONFIG, value: e.target.value })}
@@ -119,6 +126,21 @@ export const AdvancedSettings = () => {
         </FormControl>
       </AdvancedSettingsSection>
       <AdvancedSettingsSection title="Danger Zone">
+        <FormControl fullWidth>
+          <InputLabel id="logs-handler-logging-level-select-label">Logs handler logging level</InputLabel>
+          <Select
+            labelId="logs-handler-logging-level-select-label"
+            value={logsHandlerLoggingLevel}
+            label="Logs handler logging level"
+            onChange={(e) => updateConfig({ key: LOGS_HANDLER_LOGGING_LEVEL_CONFIG, value: e.target.value })}
+          >
+            {
+              ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"].map(level => (
+                <MenuItem value={level}>{level}</MenuItem>
+              ))
+            }
+          </Select>
+        </FormControl>
         <Button color="error" variant="contained" onClick={() => resetToFactorySettings()}>
           Reset to Factory Settings (NON-REVERSIBLE)
         </Button>

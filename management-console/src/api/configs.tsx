@@ -15,6 +15,7 @@ export const AUTOMATIC_UPDATES_CONFIG = "ENBALE_AUTOMATIC_UPDATES"
 export const LOGS_API_KEY_CONFIG = "LOGS_API_KEY"
 export const DEVICE_NAME_CONFIG = "DEVICE_NAME"
 export const LOGGING_LEVEL_CONFIG = "LOGGING_LEVEL"
+export const LOGS_HANDLER_LOGGING_LEVEL_CONFIG = "LOGS_HANDLER_LOGGING_LEVEL"
 
 export const useGetConfigs = <T extends object | boolean = Config[]>(IncludeAdvanced: boolean = false, options: UseQueryOptions<Config[], unknown, T, string[]> = {}) => {
   return useQuery(

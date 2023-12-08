@@ -23,7 +23,7 @@ monitoring.logs_config.init_logger("logs-handler")
 servicesNames = [
     "stick-controller",
     "management-server",
-    # "logs-handler",
+    "logs-handler",
     "upgrade",
     "nginx",
 ]
@@ -239,7 +239,7 @@ def format_log(log, service=None):
 
 def send_logs(service):
     if not logsApiKey or logsApiKey == "":
-        logging.debug("No logs api key found")
+        logging.warning("No logs api key found")
         return
 
     chunk_number = 1
