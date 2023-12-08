@@ -187,7 +187,7 @@ def extract_timestamp_from_nginx_log(log_line):
 
 def parse_nginx_log(log_line):
     log_pattern = re.compile(
-        r'(?P<ip>[\w.:]+) - - \[(?P<timestamp>[^\]]+)\] "(?P<method>[A-Z]+) (?P<path>[^"]+) (?P<protocol>.*?)" (?P<status>\d+) (?P<size>\d+) "(?P<referrer>[^"]+)" "(?P<user_agent>[^"]+)"'
+        r'(?P<ip>[\w.:]+) - - \[(?P<timestamp>[^\]]+)\] "(?P<method>[A-Z]+) (?P<path>[^"?]+)\??(?P<query>.*?) (?P<protocol>.*?)" (?P<status>\d+) (?P<size>\d+) "(?P<referrer>[^"]+)" "(?P<user_agent>[^"]+)"'
     )
 
     match = log_pattern.match(log_line)
