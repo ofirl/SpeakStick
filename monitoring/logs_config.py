@@ -37,11 +37,11 @@ def init_logger(service):
     logger.addHandler(console_handler)
     # set log level
     if service == "logs-handler":
-        loggingLevel = common.config_utils.get_config_value(
+        loggingLevel = common.config_utils.get_advanced_config_value(
             "LOGS_HANDLER_LOGGING_LEVEL"
         )
     else:
-        loggingLevel = common.config_utils.get_config_value("LOGGING_LEVEL")
+        loggingLevel = common.config_utils.get_advanced_config_value("LOGGING_LEVEL")
     if loggingLevel is None:
         loggingLevel = "INFO"
     logger.setLevel(logging._nameToLevel[loggingLevel])

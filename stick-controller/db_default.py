@@ -73,6 +73,11 @@ advancedConfigs = [
         "value": "INFO",
         "description": "Logs handler logging level",
     },
+    {
+        "key": "LOGGER_API_ENDPOINT",
+        "value": "https://log-api.eu.newrelic.com/log/v1",
+        "description": "Endpoint to send the logs to",
+    },
 ]
 
 libraries = {

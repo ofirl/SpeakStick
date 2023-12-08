@@ -27,10 +27,9 @@ servicesNames = [
     "upgrade",
     "nginx",
 ]
-logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
-logsApiKey = common.config_utils.get_config_value("LOGS_API_KEY")
-deviceName = common.config_utils.get_config_value("DEVICE_NAME")
-lastLogSampleTimeConfigKey = "LAST_LOG_SAMPLE"
+logsEndpoint = common.config_utils.get_advanced_config_value("LOGGER_API_ENDPOINT")
+logsApiKey = common.config_utils.get_advanced_config_value("LOGS_API_KEY")
+deviceName = common.config_utils.get_advanced_config_value("DEVICE_NAME")
 currentVersion = common.versions_utils.get_current_version()
 MAX_PAYLOAD_SIZE_BYTES = 1000000
 
