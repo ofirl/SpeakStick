@@ -209,7 +209,6 @@ def send_logs(data_file):
                 logging.debug(
                     f"status code", extra={"responseCode": response.status_code}
                 )
-                return True
             else:
                 logging.debug(
                     f"Failed to send logs",
@@ -219,10 +218,10 @@ def send_logs(data_file):
                         "responseRaw": response.raw,
                     },
                 )
-                return False
+
+            os.remove(data_file)
     except Exception as e:
         logging.error(f"Error sending logs: {e}")
-        return False
 
 
 for service in servicesNames:
@@ -237,5 +236,4 @@ for service in servicesNames:
                 f"sending log chunk",
                 extra={"service": service, "chunk_file": chunk_file},
             )
-            if send_logs(chunk_file):
-                os.remove(file_path)
+            send_logs(chunk_file)
