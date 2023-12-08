@@ -2,6 +2,7 @@ import sys
 
 sys.path.append("/opt/SpeakStick")  # Adds higher directory to python modules path.
 
+import re
 import requests
 import time
 import json
@@ -101,7 +102,7 @@ def split_file(file_path, target_compressed_size, service):
                     logging.debug(f"file ended, exiting")
                     break
 
-                formatted_line = format_log(line)
+                formatted_line = format_log(line, service)
                 logging.debug(f"adding line to chunk", extra={"line": formatted_line})
                 logs_chunk["logs"].append(formatted_line)
 
@@ -162,8 +163,40 @@ def write_file(file, data):
         chunk_file.write(data)
 
 
-def format_log(log):
+def extract_timestamp_from_nginx_log(log_line):
+    log_pattern = re.compile(r"\[([^\]]+)\]")
+
+    match = log_pattern.search(log_line)
+    if match:
+        timestamp_str = match.group(1)
+        # Convert timestamp to ISO format
+        timestamp = datetime.strptime(timestamp_str, "%d/%b/%Y:%H:%M:%S %z")
+        return timestamp
+    else:
+        return None
+
+
+def format_log(log, service=None):
     try:
+        # nginx has a special format, we only need the timestamp for now
+        # TODO: add the method, path, and status code to the log
+        if service == "nginx":
+            timestamp = extract_timestamp_from_nginx_log(log)
+            if timestamp is None:
+                raise RuntimeError("Error getting timestamp from nginx log")
+            log_entry = {
+                "timestamp": int(timestamp.timestamp()),
+                "message": log.strip(" \n"),
+            }
+            return log_entry
+
+        if service == "upgrade":
+            log_entry = {
+                "timestamp": int(datetime.now().timestamp()),
+                "message": log.strip(" \n"),
+            }
+            return log_entry
+
         logParts = json.loads(log)
 
         # Convert the timestamp string to a datetime object
@@ -193,17 +226,6 @@ def format_log(log):
         }
 
     return log_entry
-
-
-def format_logs(logs):
-    formatted_logs = []
-
-    # Replace this with your logic to parse and format the raw logs
-    # The following is just a placeholder, modify it according to your log structure
-    for line in logs:
-        formatted_logs.append(format_log(line))
-
-    return formatted_logs
 
 
 def send_logs(service):
