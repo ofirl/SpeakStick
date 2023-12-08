@@ -77,6 +77,11 @@ def split_file(file_path, target_compressed_size, service):
         }
 
         while True:
+            output_file_path = f"{file_path}_chunk{chunk_number}.gz"
+            while os.path.exists(output_file_path):
+                chunk_number += 1
+                output_file_path = f"{file_path}_chunk{chunk_number}.gz"
+
             # Read lines until the target compressed size is reached
             while (
                 len(gzip.compress(json.dumps([logs_chunk]).encode()))
@@ -106,7 +111,6 @@ def split_file(file_path, target_compressed_size, service):
                 lastLine = logs_chunk["logs"][-1]
                 logs_chunk["logs"] = logs_chunk["logs"][:-1]
 
-            output_file_path = f"{file_path}_chunk{chunk_number}.gz"
             logging.debug(
                 f"writing to file", extra={"output_file_path": output_file_path}
             )
@@ -140,7 +144,7 @@ def split_file(file_path, target_compressed_size, service):
             created_files.append(output_file_path)
 
     logging.debug(f"log file split", extra={"fields": {"created_files": created_files}})
-
+    os.remove(file_path)
     return created_files
 
 
@@ -209,6 +213,7 @@ def send_logs(data_file):
             )
 
             if response.status_code % 100 == 2:
+                os.remove(data_file)
                 logging.debug(
                     f"status code", extra={"responseCode": response.status_code}
                 )
@@ -222,7 +227,6 @@ def send_logs(data_file):
                     },
                 )
 
-            os.remove(data_file)
     except Exception as e:
         logging.error(f"Error sending logs: {e}")
 
