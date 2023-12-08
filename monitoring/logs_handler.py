@@ -215,6 +215,23 @@ def format_log(log, service=None):
     return log_entry
 
 
+def get_matching_files(service):
+    pattern = rf"{service}\.log\.old_chunk\d+\.gz"
+    matching_files = []
+
+    # List all files in the specified folder
+    all_files = os.listdir(monitoring.logs_config.logFilesFolder)
+
+    # Filter files based on the provided pattern
+    for file_name in all_files:
+        if re.match(pattern, file_name):
+            matching_files.append(
+                os.path.join(monitoring.logs_config.logFilesFolder, file_name)
+            )
+
+    return matching_files
+
+
 def send_logs(service):
     if not logsApiKey or logsApiKey == "":
         logging.warning("No logs api key found")
@@ -224,15 +241,13 @@ def send_logs(service):
         logging.error("No logs api endpoint found")
         return
 
-    chunk_number = 1
-    data_file = getChunkFileName(service, chunk_number)
-    while os.path.exists(data_file):
+    chunk_files = get_matching_files(service)
+    for data_file in chunk_files:
         try:
             logging.debug(
                 f"sending log chunk",
                 extra={
                     "service": service,
-                    "chunk_number": chunk_number,
                     "chunk_file": data_file,
                 },
             )
@@ -265,9 +280,6 @@ def send_logs(service):
                 f"Error sending logs",
                 extra={"service": service, "data_file": data_file},
             )
-
-        chunk_number += 1
-        data_file = getChunkFileName(service, chunk_number)
 
 
 for service in servicesNames:
