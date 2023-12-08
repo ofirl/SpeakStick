@@ -42,7 +42,7 @@ def get_library_items(libraryId):
             )
 
     except sqlite3.Error as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error get library items", extra={"libraryId": libraryId})
 
     finally:
         # Close the database connection
@@ -82,7 +82,7 @@ def get_libraries():
             )
 
     except sqlite3.Error as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error getting libraries")
 
     finally:
         # Close the database connection
@@ -123,7 +123,7 @@ def get_library_by_id(libraryId):
         }
 
     except sqlite3.Error as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error getting library", extra={"libraryId": libraryId})
 
     finally:
         # Close the database connection
@@ -182,7 +182,10 @@ def update_library_item(libraryId, positions, new_word):
 
     except sqlite3.Error as e:
         output = False
-        logging.error(f"An error occurred: {e}")
+        logging.exception(
+            f"Error updating library item",
+            extra={"libraryId": libraryId, "positions": positions, "word": new_word},
+        )
 
     finally:
         # Close the database connection
@@ -227,7 +230,7 @@ def add_library(name, description):
 
     except sqlite3.Error as e:
         output = False
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error adding library", extra={"name": name})
 
     finally:
         # Close the database connection
@@ -272,7 +275,10 @@ def update_library(libraryId, name, description):
 
     except sqlite3.Error as e:
         output = False
-        logging.error(f"An error occurred: {e}")
+        logging.exception(
+            f"Error updating library",
+            extra={"libraryId": libraryId, "name": name, "description": description},
+        )
 
     finally:
         # Close the database connection
@@ -337,7 +343,14 @@ def duplicate_library(name, description, baseLibraryId):
 
     except sqlite3.Error as e:
         output = False
-        logging.error(f"An error occurred: {e}")
+        logging.exception(
+            f"Error duplicating library",
+            extra={
+                "baseLibraryId": baseLibraryId,
+                "name": name,
+                "description": description,
+            },
+        )
 
     finally:
         # Close the database connection
@@ -374,7 +387,10 @@ def delete_library_item(libraryId, position):
 
     except sqlite3.Error as e:
         output = False
-        logging.error(f"An error occurred: {e}")
+        logging.exception(
+            f"Error deleting library item",
+            extra={"libraryId": libraryId, "position": position},
+        )
 
     finally:
         # Close the database connection
@@ -417,7 +433,7 @@ def delete_library(libraryId):
 
     except sqlite3.Error as e:
         output = False
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error deleting library", extra={"libraryId": libraryId})
 
     finally:
         # Close the database connection
@@ -445,7 +461,9 @@ def delete_library_items_for_word(word):
 
     except sqlite3.Error as e:
         output = False
-        logging.error(f"An error occurred: {e}")
+        logging.exception(
+            f"Error deleting library items for word", extra={"word": word}
+        )
 
     finally:
         # Close the database connection
@@ -496,7 +514,7 @@ def activate_library(
 
     except sqlite3.Error as e:
         output = False
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error activating library", extra={"libraryId": libraryId})
 
     finally:
         # Close the database connection

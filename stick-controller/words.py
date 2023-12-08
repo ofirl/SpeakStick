@@ -28,7 +28,7 @@ def get_word_by_position(positions):
             (word,) = row
 
     except sqlite3.Error as e:
-        logging.exception("An error occurred")
+        logging.exception("Error getting word", extra={"positions": positions})
 
     finally:
         # Close the database connection

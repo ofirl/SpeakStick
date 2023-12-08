@@ -36,7 +36,7 @@ def get_versions():
         return sorted(tags, reverse=True)
 
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error getting versions")
         return None
 
 
@@ -46,7 +46,7 @@ def get_current_version():
         return repo.git.describe(tags=True)
 
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error getting current version")
         return None
 
 
@@ -57,7 +57,7 @@ def update_available_versions():
         return True
 
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error updating available versions")
         return None
 
 
@@ -106,5 +106,5 @@ def get_github_releases():
             return None, error
 
     except requests.exceptions.RequestException as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error getting github release")
         return None, e.strerror

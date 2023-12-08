@@ -190,7 +190,7 @@ def create_default_db(database_file):
         logging.info("Default tables and values created successfully")
 
     except sqlite3.Error as e:
-        logging.exception("An error occurred")
+        logging.exception("Error creating default db")
 
     finally:
         # Close the database connection

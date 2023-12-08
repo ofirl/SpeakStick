@@ -41,7 +41,7 @@ def get_configs(key=None, advanced=0):
             )
 
     except sqlite3.Error as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error to get configs")
 
     finally:
         # Close the database connection
@@ -86,7 +86,7 @@ def update_config(key, value):
 
     except sqlite3.Error as e:
         output = False
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error updating configs")
 
     finally:
         # Close the database connection

@@ -83,7 +83,7 @@ def resetToFactorySettings():
             raise BaseException("Error restarting stick controller")
 
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"Error resetting to factory settings")
         return False
 
     return True
