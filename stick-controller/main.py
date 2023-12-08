@@ -26,7 +26,7 @@ import globals
 from config import configs
 from words import get_word_by_position
 
-logging.debug("configs dump", extra={"configs": configs})
+logging.info("configs dump", extra={"configs": configs})
 
 websocketPort = 8092
 

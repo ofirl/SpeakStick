@@ -8,7 +8,7 @@ import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
-from monitoring.logs_config import init_logger
+import monitoring.logs_config
 
 import utils.response_utils
 import common.system_utils
@@ -23,7 +23,7 @@ import handlers.network_handlers
 
 import websocket_server
 
-init_logger("management-server")
+monitoring.logs_config.init_logger("management-server")
 
 # try to set the default output device on startup
 common.system_utils.set_default_audio_output()
