@@ -202,6 +202,7 @@ def parse_nginx_log(log_line):
         # Convert size to integer
         log_data["size"] = int(log_data["size"])
 
+        log_data["logtype"] = "nginx"
         log_data["message"] = log_line
         return log_data
     else:
@@ -212,7 +213,8 @@ def format_log(log, service=None):
     try:
         # nginx has a special format
         if service == "nginx":
-            log_entry = parse_nginx_log(log)
+            # log_entry = parse_nginx_log(log)
+            log_entry = {"message": log.strip(" \n"), "logtype": "nginx"}
             return log_entry
 
         # upgrade is a shell script without any special formatting
