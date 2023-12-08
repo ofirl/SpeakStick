@@ -23,7 +23,8 @@ servicesNames = [
     "management-server",
     # "logs-handler",
     "upgrade",
-]  # TODO: add nginx?
+    "nginx",
+]
 logsEndpoint = "https://log-api.eu.newrelic.com/log/v1"
 logsApiKey = common.config_utils.get_config_value("LOGS_API_KEY")
 deviceName = common.config_utils.get_config_value("DEVICE_NAME")
