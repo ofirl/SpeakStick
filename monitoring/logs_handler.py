@@ -69,8 +69,6 @@ def get_logs(service):
         # reload nginx log files and let it complete the rotation
         common.system_utils.runCommand("kill -USR1 `cat /var/run/nginx.pid`")
         time.sleep(1)
-        # with open(logFilePath, "w") as nginx_new_log_file:
-        #     logging.debug("Created a new log file for nginx")
 
     with open(renamedLogFilePath, "r") as log_file:
         lines = log_file.readlines()
