@@ -24,6 +24,7 @@ def version_key(tag):
     match = re.match(r"v(\d+)\.(\d+)\.(\d+)(-(rc\d+))?(\+.+)?", tag)
 
     if match:
+        logging.info("match groups", extra={"groups": match.groups()})
         major, minor, patch, pre_release, build = match.groups()
 
         # Convert major, minor, and patch to integers
