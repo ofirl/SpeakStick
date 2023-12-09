@@ -2,6 +2,7 @@ from git.repo import Repo
 import requests
 import datetime
 import logging
+import re
 
 import common.system_utils
 import common.config_utils
@@ -16,6 +17,29 @@ def runUpgrade(version=""):
 
 def isUpgradeRunning():
     return common.system_utils.is_process_running("upgrade-script")
+
+
+# version key for sorting version tags
+def version_key(tag):
+    # Split the tag into components: major, minor, patch, pre-release
+    # version tag should be in the format: v<major>.<minor>.<patch>-rc<pre_release>
+    match = re.match(r"v(\d+)\.(\d+)\.(\d+)(?:-rc(\d+))?", tag)
+
+    if match:
+        major, minor, patch, pre_release = match.groups()
+
+        # Convert major, minor, and patch to integers
+        version_numbers = tuple(map(int, (major, minor, patch)))
+
+        # Pre-release tags should come before actual releases
+        # If there is a pre-release tag, add it to the tuple for sorting
+        if pre_release:
+            return version_numbers, (0, int(pre_release))
+        else:
+            return version_numbers, (1,)
+
+    # If the tag doesn't match the expected pattern, return a high value
+    return (float("inf"),)
 
 
 def get_versions():
@@ -33,7 +57,8 @@ def get_versions():
         if not development_builds:
             tags = [tag for tag in tags if "rc" not in tag and "dev" not in tag]
 
-        return sorted(tags, reverse=True)
+        tags.reverse()
+        return sorted(tags, reverse=True, key=version_key)
 
     except Exception as e:
         logging.exception(f"Error getting versions")

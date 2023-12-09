@@ -1,11 +1,21 @@
 import { Skeleton, Typography } from "@mui/material";
 import { useApplicationCurrentVersion, useVersionsChangeLog } from "../../api/versions"
 import { ChangeLogItem } from "./ChangeLogItem";
+import { DEVELOPMENT_BUILDS_CONFIG, useGetConfigs } from "../../api/configs";
+import { useMemo } from "react";
 
 export const ChangeLog = () => {
   const { data: changeLog = [], isPending: isLoadingChangeLog } = useVersionsChangeLog();
   const { data: currentVersion, isPending: isLoadingCurrentVersion } = useApplicationCurrentVersion();
   const isLoading = isLoadingChangeLog || isLoadingCurrentVersion;
+
+  const { data: configs } = useGetConfigs(true);
+  const developmentBuilds = useMemo(() =>
+    configs?.find(c => c.key === DEVELOPMENT_BUILDS_CONFIG)?.value === "1",
+    [configs]
+  )
+
+  const filteredChangeLog = useMemo(() => developmentBuilds ? changeLog : changeLog.filter(c => !c.title.includes("rc")), [changeLog, developmentBuilds])
 
   return (
     <div style={{ maxWidth: "70rem", gap: "1rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>
@@ -19,7 +29,7 @@ export const ChangeLog = () => {
             </div>
             :
             (
-              changeLog.length > 0 || false ? changeLog.map(c => (
+              filteredChangeLog.length > 0 ? filteredChangeLog.map(c => (
                 <ChangeLogItem key={c.title} defaultExpanded={currentVersion === c.title} {...c} />
               ))
                 :
