@@ -1,0 +1,55 @@
+on:
+  pull_request:
+    types:
+      - closed
+      - synchronize
+      - opened
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    outputs:
+      new_tag: ${{ steps.increment_version.outputs.new_tag }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Get Latest Tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git tag -l --sort=-v:refname | grep -v rc | head -n 1)
+          echo "latest_tag=${latest_tag}" >> $GITHUB_OUTPUT
+          echo "latest_tag=\`${latest_tag}\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Increment Version
+        id: increment_version
+        run: |
+          tag=${{ steps.get_latest_tag.outputs.latest_tag }}
+          tag=${tag#v}
+          echo ${{ github.event.pull_request.labels }}
+          major=$(echo $version | cut -d. -f1)
+          minor=$(echo $version | cut -d. -f2)
+          patch=$(echo $version | cut -d. -f3)
+
+          new_tag="${major}.${minor}.${patch}"
+
+          echo "new_tag=${new_tag}" >> $GITHUB_OUTPUT
+          echo "new_tag=\`${new_tag}\`" >> $GITHUB_STEP_SUMMARY
+
+      # - name: Create Tag
+      #   run: |
+      #     new_tag=${{ steps.increment_version.outputs.new_tag }}
+      #     git tag $new_tag
+      #     git push origin $new_tag
+
+  # build_and_release:
+  #   needs: create_tag
+  #   uses: ofirl/SpeakStick/.github/workflows/build_and_release.yml@master
+  #   with:
+  #     tag: ${{ needs.create_tag.outputs.new_tag }}
+  #   secrets: inherit
