@@ -191,7 +191,7 @@ def main():
                 # get file to play
                 route_filename = get_word_by_position("".join(recorded_cells))
                 if route_filename is not None:
-                    logging.debug("Playing audio", extra={"file": route_filename})
+                    logging.info("Playing audio", extra={"file": route_filename})
                     play_audio(WORDS_SOUND_FILES_DIR + route_filename)
 
                 # reset state
@@ -230,7 +230,7 @@ def main():
                 )
 
     except KeyboardInterrupt:
-        logging.debug("Exiting on keyboard interrupt")
+        logging.info("Exiting on keyboard interrupt")
         play_audio(ERROR_SOUND)
     except Exception as error:
         logging.exception("An exception occurred")
