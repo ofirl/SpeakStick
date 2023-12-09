@@ -5,8 +5,8 @@ import { DEVELOPMENT_BUILDS_CONFIG, useGetConfigs } from "../../api/configs";
 import { useMemo } from "react";
 
 export const ChangeLog = () => {
-  const { data: changeLog = [], isLoading: isLoadingChangeLog } = useVersionsChangeLog();
-  const { data: currentVersion, isLoading: isLoadingCurrentVersion } = useApplicationCurrentVersion();
+  const { data: changeLog = [], isPending: isLoadingChangeLog } = useVersionsChangeLog();
+  const { data: currentVersion, isPending: isLoadingCurrentVersion } = useApplicationCurrentVersion();
   const isLoading = isLoadingChangeLog || isLoadingCurrentVersion;
 
   const { data: configs } = useGetConfigs(true);
@@ -29,7 +29,7 @@ export const ChangeLog = () => {
             </div>
             :
             (
-              filteredChangeLog.length > 0 || false ? filteredChangeLog.map(c => (
+              filteredChangeLog.length > 0 ? filteredChangeLog.map(c => (
                 <ChangeLogItem key={c.title} defaultExpanded={currentVersion === c.title} {...c} />
               ))
                 :

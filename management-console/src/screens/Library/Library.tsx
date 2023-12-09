@@ -24,14 +24,14 @@ export const Library = () => {
   const [filter, setFilter] = useState("");
   const [selectedLibrary, setSelectedLibrary] = useState<LibraryT | undefined>();
 
-  const { data: libraryItems = [], isLoading } = useGetLibraryItems(selectedLibrary?.id || 1);
+  const { data: libraryItems = [], isPending } = useGetLibraryItems(selectedLibrary?.id || 1);
 
   const onFilterChange = useCallback((value: string) => {
     setFilter(value.toLowerCase())
   }, [])
   const onFilterChangeDebounced = useDebounce(onFilterChange, 200)
 
-  const { mutateAsync: deletePosition, isLoading: isDeleting } = useDeleteLibraryItem();
+  const { mutateAsync: deletePosition, isPending: isDeleting } = useDeleteLibraryItem();
 
   return (
     <div style={{ maxWidth: "50rem", gap: "1rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>
@@ -57,7 +57,7 @@ export const Library = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isLoading ?
+            {isPending ?
               [1, 2].map(i => (
                 <TableRow
                   key={"row" + i}

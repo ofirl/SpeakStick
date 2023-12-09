@@ -4,12 +4,14 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+import { toast } from "react-toastify";
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Settings } from './screens/Settings/Settings';
 import { Library } from './screens/Library/Library';
 import { TopBar } from './components/TopBar/TopBar';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Words } from './screens/Words/Words';
@@ -20,7 +22,36 @@ import { CheckUpdates } from './screens/CheckUpdates/CheckUpdates';
 import { Logs } from './screens/Logs/Logs';
 import { StickVisualization } from './screens/StickVisualization/StickVisualization';
 
-const queryClient = new QueryClient()
+declare module '@tanstack/react-query' {
+  interface Register {
+    queryMeta: { errorMsg: string },
+    mutationMeta: { errorMsg: string, successMsg: string, invalidateQueries?: string[] }
+  }
+}
+
+const queryClient = new QueryClient({
+  mutationCache: new MutationCache({
+    onError: (_error, _variables, _context, mutation) => {
+      if (mutation.meta?.errorMsg) {
+        toast.error(mutation.meta.errorMsg)
+      }
+    },
+    onSuccess: (_data, _variables, _context, mutation) => {
+      if (mutation.meta?.successMsg) {
+        toast.success(mutation.meta.successMsg)
+      }
+      if (mutation.meta?.invalidateQueries)
+        queryClient.invalidateQueries({ queryKey: mutation.meta?.invalidateQueries })
+    },
+  }),
+  queryCache: new QueryCache({
+    onError: (_error, query) => {
+      if (query.meta?.errorMsg) {
+        toast.error(query.meta.errorMsg)
+      }
+    },
+  }),
+})
 
 function App() {
   return (

@@ -1,47 +1,38 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { baseUrl } from "./consts";
+import { UseCreateMutationWrapperOptions, UseCreateQueryWrapperOptionsShort, axiosClient, useCreateMutation, useCreateQuery } from "./helpers";
 
-import { toast } from "react-toastify";
-
-export const useGetWords = () => {
-  return useQuery(['words'], () => axios.get(baseUrl + "/words").then(value => (value.data as string[]).map(w => decodeURIComponent(w))))
+export const useGetWords = (options?: UseCreateQueryWrapperOptionsShort<string[]>) => {
+  return useCreateQuery({
+    queryKey: ['words'],
+    queryFn: () => axiosClient.get("/words").then(value => (value.data as string[]).map(w => decodeURIComponent(w))),
+    errorMsg: "Error getting words",
+    ...options
+  })
 };
 
 type DeleteWordParams = { word: string };
-export const useDeleteWord = () => {
-  const queryClient = useQueryClient();
-  return useMutation(({ word }: DeleteWordParams) =>
-    axios.delete(baseUrl + "/words", { params: { word: encodeURIComponent(word) } }).then(value => value.status === 200),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["words"]);
-        toast.success("Word Deleted")
-      },
-      onError: () => {
-        toast.error("Error deleting word")
-      }
-    }
-  )
+export const useDeleteWord = (options?: UseCreateMutationWrapperOptions<boolean, DeleteWordParams>) => {
+  return useCreateMutation({
+    mutationFn: ({ word }: DeleteWordParams) =>
+      axiosClient.delete("/words", { params: { word: encodeURIComponent(word) } }).then(value => value.status === 200),
+    successMsg: "Word Deleted",
+    errorMsg: "Error deleting word",
+    invalidateQueries: ["words"],
+    ...options
+  })
 };
 
 type UploadWordParams = { file: File, fileName: string };
-export const useUploadWord = () => {
-  const queryClient = useQueryClient();
-  return useMutation(({ file, fileName }: UploadWordParams) =>
-    axios.post(baseUrl + "/words", file, {
-      headers: {
-        filename: encodeURIComponent(fileName)
-      }
-    }).then(value => value.status === 200),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["words"]);
-        toast.success("Word Uploaded")
-      },
-      onError: () => {
-        toast.error("Error uploading word")
-      }
-    }
-  )
+export const useUploadWord = (options?: UseCreateMutationWrapperOptions<boolean, UploadWordParams>) => {
+  return useCreateMutation({
+    mutationFn: ({ file, fileName }: UploadWordParams) =>
+      axiosClient.post("/words", file, {
+        headers: {
+          filename: encodeURIComponent(fileName)
+        }
+      }).then(value => value.status === 200),
+    successMsg: "Word Uploaded",
+    errorMsg: "Error uploading word",
+    invalidateQueries: ["words"],
+    ...options
+  })
 };

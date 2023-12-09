@@ -12,46 +12,46 @@ import { NetworkIcon } from './NetworkIcon';
 import { BatteryIcon } from './BatteryIcon';
 
 export const TopBar = () => {
-    const [drawerOpen, setDrawerOpen] = useState(false)
-    const { mutate: restartStickController } = useRestartStickController()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const { mutate: restartStickController } = useRestartStickController()
 
-    return <>
-        <AppBar position="sticky" sx={{ height: "4rem" }}>
-            <Toolbar>
-                <IconButton
-                    size="large"
-                    edge="start"
-                    color="inherit"
-                    aria-label="open drawer"
-                    sx={{ mr: 2 }}
-                    onClick={() => setDrawerOpen(true)}
-                >
-                    <MenuIcon />
-                </IconButton>
-                <Typography
-                    variant="h6"
-                    noWrap
-                    component="div"
-                    sx={{ flexGrow: 1, textAlign: "center" }}
-                >
-                    Speak Stick
-                </Typography>
-                <div style={{ textAlign: "end" }}>
-                    <NetworkIcon />
-                    <Tooltip title="Restart stick controller">
-                        <IconButton
-                            size="large"
-                            color="inherit"
-                            aria-label="restart"
-                            onClick={() => restartStickController()}
-                        >
-                            <RestartAltIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <BatteryIcon />
-                </div>
-            </Toolbar>
-        </AppBar>
-        <NavigationDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
-    </>
+  return <>
+    <AppBar position="sticky" sx={{ height: "4rem" }}>
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="open drawer"
+          sx={{ mr: 2 }}
+          onClick={() => setDrawerOpen(true)}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{ flexGrow: 1, textAlign: "center" }}
+        >
+          Speak Stick
+        </Typography>
+        <div style={{ textAlign: "end" }}>
+          <NetworkIcon />
+          <Tooltip title="Restart stick controller">
+            <IconButton
+              size="large"
+              color="inherit"
+              aria-label="restart"
+              onClick={() => restartStickController()}
+            >
+              <RestartAltIcon />
+            </IconButton>
+          </Tooltip>
+          <BatteryIcon />
+        </div>
+      </Toolbar>
+    </AppBar>
+    <NavigationDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
+  </>
 };
