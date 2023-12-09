@@ -19,13 +19,14 @@ def isUpgradeRunning():
     return common.system_utils.is_process_running("upgrade-script")
 
 
+# version key for sorting version tags
 def version_key(tag):
-    # Split the tag into components: major, minor, patch, pre-release, and build
-    match = re.match(r"v(\d+)\.(\d+)\.(\d+)(?:-rc(\d+))?(?:\-(.+))?", tag)
+    # Split the tag into components: major, minor, patch, pre-release
+    # version tag should be in the format: v<major>.<minor>.<patch>-rc<pre_release>
+    match = re.match(r"v(\d+)\.(\d+)\.(\d+)(?:-rc(\d+))?", tag)
 
     if match:
-        logging.info("match groups", extra={"groups": match.groups()})
-        major, minor, patch, pre_release, build = match.groups()
+        major, minor, patch, pre_release = match.groups()
 
         # Convert major, minor, and patch to integers
         version_numbers = tuple(map(int, (major, minor, patch)))
