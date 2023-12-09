@@ -119,7 +119,7 @@ export const AdvancedSettings = () => {
           >
             {
               ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"].map(level => (
-                <MenuItem value={level}>{level}</MenuItem>
+                <MenuItem key={level} value={level}>{level}</MenuItem>
               ))
             }
           </Select>
@@ -136,7 +136,7 @@ export const AdvancedSettings = () => {
           >
             {
               ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"].map(level => (
-                <MenuItem value={level}>{level}</MenuItem>
+                <MenuItem key={level} value={level}>{level}</MenuItem>
               ))
             }
           </Select>
