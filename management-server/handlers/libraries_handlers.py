@@ -22,6 +22,9 @@ def addLibrary(self, post_data, match):
         utils.response_utils.okResponse(self)
     else:
         utils.response_utils.InternalServerError(self)
+        
+def importLibrary(self, post_data, match):
+    success = True
 
 
 def duplicateLibrary(self, post_data, match):
