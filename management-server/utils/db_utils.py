@@ -41,7 +41,7 @@ def get_library_items(libraryId):
                 }
             )
 
-    except sqlite3.Error as e:
+    except Exception as e:
         logging.exception(f"Error get library items", extra={"libraryId": libraryId})
 
     finally:
@@ -81,7 +81,7 @@ def get_libraries():
                 }
             )
 
-    except sqlite3.Error as e:
+    except Exception as e:
         logging.exception(f"Error getting libraries")
 
     finally:
@@ -122,7 +122,7 @@ def get_library_by_id(libraryId):
             "editable": editable == 1,
         }
 
-    except sqlite3.Error as e:
+    except Exception as e:
         logging.exception(f"Error getting library", extra={"libraryId": libraryId})
 
     finally:
@@ -180,7 +180,7 @@ def update_library_item(libraryId, positions, new_word):
             # Commit the changes to the database
             connection.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         output = False
         logging.exception(
             f"Error updating library item",
@@ -228,7 +228,7 @@ def add_library(name, description):
         # Commit the changes to the database
         connection.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         output = False
         logging.exception(f"Error adding library", extra={"name": name})
 
@@ -273,7 +273,7 @@ def update_library(libraryId, name, description):
         # Commit the changes to the database
         connection.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         output = False
         logging.exception(
             f"Error updating library",
@@ -341,7 +341,7 @@ def duplicate_library(name, description, baseLibraryId):
         # Commit the changes to the database
         connection.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         output = False
         logging.exception(
             f"Error duplicating library",
@@ -385,7 +385,7 @@ def delete_library_item(libraryId, position):
         if affected_rows != 1:
             raise BaseException("Updated ", affected_rows, " rows. Expected 1.")
 
-    except sqlite3.Error as e:
+    except Exception as e:
         output = False
         logging.exception(
             f"Error deleting library item",
@@ -431,7 +431,7 @@ def delete_library(libraryId):
         # Commit the changes to the database
         connection.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         output = False
         logging.exception(f"Error deleting library", extra={"libraryId": libraryId})
 
@@ -459,7 +459,7 @@ def delete_library_items_for_word(word):
         # Commit the changes to the database
         connection.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         output = False
         logging.exception(
             f"Error deleting library items for word", extra={"word": word}
@@ -512,7 +512,7 @@ def activate_library(
         # Commit the changes to the database
         connection.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         output = False
         logging.exception(f"Error activating library", extra={"libraryId": libraryId})
 

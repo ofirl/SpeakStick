@@ -74,6 +74,11 @@ routes2 = [
                         "method": "POST",
                         "handler": handlers.libraries_handlers.editLibrary,
                     },
+                    {
+                        "path": "",
+                        "method": "GET",
+                        "handler": handlers.libraries_handlers.exportLibrary,
+                    },
                 ],
             },
             {

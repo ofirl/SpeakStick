@@ -62,3 +62,6 @@ def activateLibrary(self, query_parameters, match):
         utils.response_utils.okResponse(self)
     else:
         utils.response_utils.InternalServerError(self)
+        
+def exportLibrary(self, query_parameters, match):
+    success = True

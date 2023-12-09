@@ -66,12 +66,24 @@ export const useDeleteLibrary = (options?: UseCreateMutationWrapperOptions<boole
 };
 
 type ActivateLibraryParams = { libraryId: number };
-export const useActivateLibrary = (options?: UseCreateMutationWrapperOptions<boolean, DeleteLibraryParams>) => {
+export const useActivateLibrary = (options?: UseCreateMutationWrapperOptions<boolean, ActivateLibraryParams>) => {
   return useCreateMutation({
     mutationFn: (params: ActivateLibraryParams) =>
       axiosClient.get(`/libraries/${params.libraryId}/activate`).then(value => value.status === 200),
     successMsg: "Library activated",
     errorMsg: "Error activating library",
+    invalidateQueries: ["libraries"],
+    ...options
+  })
+};
+
+type ExportLibraryParams = { libraryId: number };
+export const useExportLibrary = (options?: UseCreateMutationWrapperOptions<boolean, ExportLibraryParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: ExportLibraryParams) =>
+      axiosClient.get(`/libraries/${params.libraryId}/export`).then(value => value.status === 200),
+    successMsg: "Library exported",
+    errorMsg: "Error exporting library",
     invalidateQueries: ["libraries"],
     ...options
   })
