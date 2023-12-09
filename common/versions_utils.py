@@ -33,7 +33,9 @@ def get_versions():
         if not development_builds:
             tags = [tag for tag in tags if "rc" not in tag and "dev" not in tag]
 
-        return sorted(tags, reverse=True)
+        tags.reverse()
+        return tags
+        # return sorted(tags, reverse=True)
 
     except Exception as e:
         logging.exception(f"Error getting versions")
