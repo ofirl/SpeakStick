@@ -1,14 +1,16 @@
+name: Create Version
+
 on:
   pull_request:
     types:
       - closed
-      - synchronize
-      - opened
+    branches:
+      - "master"
 
 jobs:
   create_tag:
     runs-on: ubuntu-latest
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     outputs:
       new_tag: ${{ steps.increment_version.outputs.new_tag }}
 
@@ -62,15 +64,17 @@ jobs:
           echo "new_tag=${new_tag}" >> $GITHUB_OUTPUT
           echo "new_tag=\`${new_tag}\`" >> $GITHUB_STEP_SUMMARY
 
-      # - name: Create Tag
-      #   run: |
-      #     new_tag=${{ steps.increment_version.outputs.new_tag }}
-      #     git tag $new_tag
-      #     git push origin $new_tag
+      - name: Create Tag
+        if: ${{ steps.increment_version.outputs.new_tag != '' }}
+        run: |
+          new_tag=${{ steps.increment_version.outputs.new_tag }}
+          git tag $new_tag
+          git push origin $new_tag
 
-  # build_and_release:
-  #   needs: create_tag
-  #   uses: ofirl/SpeakStick/.github/workflows/build_and_release.yml@master
-  #   with:
-  #     tag: ${{ needs.create_tag.outputs.new_tag }}
-  #   secrets: inherit
+  build_and_release:
+    needs: create_tag
+    if: ${{ needs.create_tag.outputs.new_tag != '' }}
+    uses: ofirl/SpeakStick/.github/workflows/build_and_release.yml@master
+    with:
+      tag: ${{ needs.create_tag.outputs.new_tag }}
+    secrets: inherit
