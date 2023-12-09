@@ -21,7 +21,7 @@ def isUpgradeRunning():
 
 def version_key(tag):
     # Split the tag into components: major, minor, patch, pre-release, and build
-    match = re.match(r"v(\d+)\.(\d+)\.(\d+)(-(rc\d+))?(\+.+)?", tag)
+    match = re.match(r"v(\d+)\.(\d+)\.(\d+)(?:-rc(\d+))?(?:\-(.+))?", tag)
 
     if match:
         logging.info("match groups", extra={"groups": match.groups()})
