@@ -8,7 +8,7 @@ on:
 jobs:
   create_tag:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     outputs:
       new_tag: ${{ steps.increment_version.outputs.new_tag }}
 
