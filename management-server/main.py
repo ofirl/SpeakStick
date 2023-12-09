@@ -75,7 +75,7 @@ routes2 = [
                         "handler": handlers.libraries_handlers.editLibrary,
                     },
                     {
-                        "path": "",
+                        "path": "/export",
                         "method": "GET",
                         "handler": handlers.libraries_handlers.exportLibrary,
                     },
