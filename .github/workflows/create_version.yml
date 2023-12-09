@@ -31,10 +31,13 @@ jobs:
         run: |
           tag=${{ steps.get_latest_tag.outputs.latest_tag }}
           tag=${tag#v}
-          echo ${{ toJson(github.event.pull_request.labels.*.name) }}
           major=$(echo $version | cut -d. -f1)
           minor=$(echo $version | cut -d. -f2)
           patch=$(echo $version | cut -d. -f3)
+
+          if [ -n $(echo ${{ toJson(github.event.pull_request.labels.*.name) }}) | grep "Major") ] then;
+            echo "Bumping major version"
+          fi;
 
           new_tag="${major}.${minor}.${patch}"
 
