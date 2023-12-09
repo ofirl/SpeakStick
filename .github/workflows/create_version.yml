@@ -47,14 +47,13 @@ jobs:
           then
             echo "Bumping patch version"
             patch=$((patch + 1))
-          else
-
           fi
 
           new_tag="v${major}.${minor}.${patch}"
           if [ "$new_tag" = "v$tag" ]
           then
-            
+            echo "PR does not contain version tags" >> $GITHUB_STEP_SUMMARY
+            exit 0
           fi
 
           echo "new_tag=${new_tag}" >> $GITHUB_OUTPUT
