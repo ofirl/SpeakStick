@@ -31,17 +31,23 @@ jobs:
         run: |
           tag=${{ steps.get_latest_tag.outputs.latest_tag }}
           tag=${tag#v}
-          major=$(echo $version | cut -d. -f1)
-          minor=$(echo $version | cut -d. -f2)
-          patch=$(echo $version | cut -d. -f3)
+          major=$(echo $tag | cut -d. -f1)
+          minor=$(echo $tag | cut -d. -f2)
+          patch=$(echo $tag | cut -d. -f3)
 
           if ${{ contains(github.event.pull_request.labels.*.name, 'Major') }}
           then
             echo "Bumping major version"
             major=$((major + 1))
+          elif ${{ contains(github.event.pull_request.labels.*.name, 'Minor') }}
+            echo "Bumping minor version"
+            minor=$((minor + 1))
+          elif ${{ contains(github.event.pull_request.labels.*.name, 'Patch') }}
+            echo "Bumping patch version"
+            patch=$((patch + 1))
           fi
 
-          new_tag="${major}.${minor}.${patch}"
+          new_tag="v${major}.${minor}.${patch}"
 
           echo "new_tag=${new_tag}" >> $GITHUB_OUTPUT
           echo "new_tag=\`${new_tag}\`" >> $GITHUB_STEP_SUMMARY
