@@ -37,7 +37,7 @@ jobs:
 
           if [ ${{ contains(github.event.pull_request.labels.*.name, 'Major') }} ] then;
             echo "Bumping major version"
-          fi;
+          fi
 
           new_tag="${major}.${minor}.${patch}"
 
