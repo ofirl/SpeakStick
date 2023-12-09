@@ -34,6 +34,7 @@ def get_versions():
             tags = [tag for tag in tags if "rc" not in tag and "dev" not in tag]
 
         tags.reverse()
+        logging.info("tags", extra={"repo.tags": repo.tags, "tags": tags})
         return tags
         # return sorted(tags, reverse=True)
 
