@@ -33,9 +33,9 @@ def version_key(tag):
         # Pre-release tags should come before actual releases
         # If there is a pre-release tag, add it to the tuple for sorting
         if pre_release:
-            return version_numbers, int(pre_release)
+            return version_numbers, (0, int(pre_release))
         else:
-            return version_numbers, ()
+            return version_numbers, (1,)
 
     # If the tag doesn't match the expected pattern, return a high value
     return (float("inf"),)
