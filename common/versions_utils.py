@@ -33,7 +33,7 @@ def version_key(tag):
         # Pre-release tags should come before actual releases
         # If there is a pre-release tag, add it to the tuple for sorting
         if pre_release:
-            return version_numbers, pre_release
+            return version_numbers, int(pre_release)
         else:
             return version_numbers, ()
 
