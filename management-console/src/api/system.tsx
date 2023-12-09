@@ -1,57 +1,48 @@
-import { UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { baseUrl } from "./consts";
+import { UseCreateMutationWrapperOptions, UseCreateQueryWrapperOptionsShort, axiosClient, useCreateMutation, useCreateQuery } from "./helpers";
 
-import { toast } from "react-toastify";
-
-export const useRestartStickController = () => {
-  return useMutation(() =>
-    axios.get(baseUrl + "/restart/stick-controller").then(value => value.status === 200),
+export const useRestartStickController = (options?: UseCreateMutationWrapperOptions<boolean, void>) => {
+  return useCreateMutation(
     {
-      onSuccess: () => {
-        toast.success("Stick controller restarted")
-      },
-      onError: () => {
-        toast.error("Error restarting stick controller")
-      }
+      mutationFn: () =>
+        axiosClient.get("/restart/stick-controller").then(value => value.status === 200),
+      successMsg: "Stick controller restarted",
+      errorMsg: "Error restarting stick controller",
+      ...options
     }
   )
 };
 
-export const useResetToFactorySettings = () => {
-  return useMutation(() =>
-    axios.get(baseUrl + "/reset_factory_settings").then(value => value.status === 200),
+export const useResetToFactorySettings = (options?: UseCreateMutationWrapperOptions<boolean, void>) => {
+  return useCreateMutation(
     {
-      onSuccess: () => {
-        toast.success("Application is resetting to factory settings, this might take a few seconds")
-      },
-      onError: () => {
-        toast.error("Error resetting application to factory settings")
-      }
+      mutationFn: () => axiosClient.get("/reset_factory_settings").then(value => value.status === 200),
+      successMsg: "Application is resetting to factory settings, this might take a few seconds",
+      errorMsg: "Error resetting application to factory settings",
+      ...options
     }
   )
 };
 
 export type BatteryPercentResult = { percent: number, isCharging: boolean };
-export const useGetBatteryPercent = (options: UseQueryOptions<BatteryPercentResult, unknown, BatteryPercentResult, string[]> = {}) => {
-  return useQuery(
-    ['battery', 'percent'],
-    () => axios.get(baseUrl + "/battery/percent").then(value => value.data as BatteryPercentResult),
-    {
-      refetchInterval: 30000,
-      ...options
-    },
-  )
+export const useGetBatteryPercent = (options?: UseCreateQueryWrapperOptionsShort<BatteryPercentResult>) => {
+  return useCreateQuery({
+    queryKey: ['battery', 'percent'],
+    queryFn: () => axiosClient.get("/battery/percent").then(value => value.data as BatteryPercentResult),
+    refetchInterval: 30000,
+    errorMsg: "Error getting battery percentage",
+    ...options
+  })
 };
 
 export const servicesOptions = ["speakstick", "speakstick-management-server", "nginx"] as const;
 export type Services = typeof servicesOptions[number];
-export const useGetServiceLogs = (service: Services, options: UseQueryOptions<string, unknown, string, string[]> = {}) => {
-  return useQuery(
-    ['logs', service],
-    () => axios.get(baseUrl + `/logs/${service}`).then(value => value.data as string),
+export const useGetServiceLogs = (service: Services, options?: UseCreateQueryWrapperOptionsShort<string>) => {
+  return useCreateQuery(
     {
+      queryKey: ['logs', service],
+      queryFn: () => axiosClient.get(`/logs/${service}`).then(value => value.data as string),
       refetchInterval: 10000,
+      errorMsg: "Error getting service logs",
       ...options
     },
   )

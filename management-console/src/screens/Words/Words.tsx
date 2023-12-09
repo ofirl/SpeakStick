@@ -38,7 +38,7 @@ const VisuallyHiddenInputStyle: CSSProperties = {
 export const Words = () => {
   const [filter, setFilter] = useState("");
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-  const { data: words = [], isLoading } = useGetWords();
+  const { data: words = [], isPending } = useGetWords();
 
   const [deletionModalProps, setDeletionModalProps] = useState<Omit<ComponentProps<typeof DeleteWordModal>, "open" | "onDecline">>({} as ComponentProps<typeof DeleteWordModal>);
 
@@ -47,8 +47,8 @@ export const Words = () => {
   }, [])
   const onFilterChangeDebounced = useDebounce(onFilterChange, 200)
 
-  const { mutateAsync: uploadWord, isLoading: isUploading } = useUploadWord();
-  const { mutateAsync: deleteWord, isLoading: isDeleting } = useDeleteWord();
+  const { mutateAsync: uploadWord, isPending: isUploading } = useUploadWord();
+  const { mutateAsync: deleteWord, isPending: isDeleting } = useDeleteWord();
   const { data: libraryItems = [] } = useGetLibraryItems();
 
   const onDeleteWord = (word: string) => {
@@ -116,7 +116,7 @@ export const Words = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isLoading ?
+            {isPending ?
               [1, 2].map(i => (
                 <TableRow
                   key={"row" + i}

@@ -14,7 +14,7 @@ const LogViewer = ({ logs = "" }: LogViewerProps) => {
 
 export const Logs = () => {
   const [selectedService, setSelectedService] = useState<Services>(servicesOptions[0])
-  const { data: serviceLogs, isLoading: isLoadingServiceLogs } = useGetServiceLogs(selectedService)
+  const { data: serviceLogs, isPending: isLoadingServiceLogs } = useGetServiceLogs(selectedService)
 
   return (
     <div style={{ maxWidth: "50rem", gap: "1rem", display: "flex", flexDirection: "column", height: "100%", flexGrow: 1 }}>

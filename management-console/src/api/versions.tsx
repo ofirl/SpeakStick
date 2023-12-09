@@ -1,81 +1,71 @@
-import { UseQueryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { baseUrl } from "./consts";
-import { toast } from "react-toastify";
+import { UseCreateMutationWrapperOptions, UseCreateQueryWrapperOptions, UseCreateQueryWrapperOptionsShort, axiosClient, useCreateMutation, useCreateQuery } from "./helpers";
 
-export const useApplicationVersions = <T extends object | string = string[]>(options: UseQueryOptions<string[], unknown, T, string[]> = {}) => {
-    return useQuery(
-        ['versions'],
-        () => axios.get(baseUrl + "/versions").then(value => value.data as string[]),
-        options
-    )
+export const useApplicationVersions = <T extends string[] | string = string[]>(options?: UseCreateQueryWrapperOptions<string[], T>) => {
+  return useCreateQuery({
+    queryKey: ['versions'],
+    queryFn: () => axiosClient.get("/versions").then(value => value.data as string[]),
+    errorMsg: "Error getting application version",
+    ...options,
+  }
+  )
 };
 
 export const useLatestVersion = () => {
-    return useApplicationVersions({ select: (data) => data[0] });
+  return useApplicationVersions({ select: (data) => data[0], errorMsg: "Error getting latest version" });
 };
 
 export type ChangeLog = {
-    title: string,
-    description: string
+  title: string,
+  description: string
 }
-export const useVersionsChangeLog = (options: UseQueryOptions<ChangeLog[], unknown, ChangeLog[], string[]> = {}) => {
-    return useQuery(
-        ['versions', 'changeLog'],
-        () => axios.get(baseUrl + "/versions/change_log").then(value => value.data as ChangeLog[]),
-        {
-            staleTime: 1000 * 60 * 2, // 2 minutes - there is an API rate limit on this request
-            ...options,
-        }
-    )
+export const useVersionsChangeLog = (options?: UseCreateQueryWrapperOptionsShort<ChangeLog[]>) => {
+  return useCreateQuery({
+    queryKey: ['versions', 'changeLog'],
+    queryFn: () => axiosClient.get("/versions/change_log").then(value => value.data as ChangeLog[]),
+    staleTime: 1000 * 60 * 2, // 2 minutes - there is an API rate limit on this request
+    errorMsg: "Error getting change log",
+    ...options,
+  })
 };
 
-export const useApplicationCurrentVersion = (options: UseQueryOptions<string, unknown, string, string[]> = {}) => {
-    return useQuery(
-        ['current_version'],
-        () => axios.get(baseUrl + "/versions/current").then(value => value.data as string),
-        options
-    )
+export const useApplicationCurrentVersion = (options?: UseCreateQueryWrapperOptionsShort<string>) => {
+  return useCreateQuery({
+    queryKey: ['current_version'],
+    queryFn: () => axiosClient.get("/versions/current").then(value => value.data as string),
+    errorMsg: "Error getting application current version",
+    ...options
+  })
 };
 
 type UpgradeApplicationParams = {
-    version: string
+  version: string
 }
-export const useUpgradeApplication = () => {
-    return useMutation((params: UpgradeApplicationParams) =>
-        axios.get(baseUrl + "/upgrade", { params }).then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                toast.success("Application is upgrading, this might take a few seconds")
-            },
-            onError: () => {
-                toast.error("Error starting application upgrade")
-            }
-        }
-    )
+export const useUpgradeApplication = (options?: UseCreateMutationWrapperOptions<boolean, UpgradeApplicationParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: UpgradeApplicationParams) =>
+      axiosClient.get("/upgrade", { params }).then(value => value.status === 200),
+    successMsg: "Application is upgrading, this might take a few seconds",
+    errorMsg: "Error starting application upgrade",
+    ...options
+  })
 };
 
-export const useUpgradeStatus = (options: UseQueryOptions<boolean, unknown, boolean, string[]> = {}) => {
-    return useQuery(
-        ["upgrade", "status"],
-        () => axios.get(baseUrl + "/upgrade/status").then(value => value.data as boolean),
-        options
-    )
+export const useUpgradeStatus = (options?: UseCreateQueryWrapperOptionsShort<boolean>) => {
+  return useCreateQuery({
+    queryKey: ["upgrade", "status"],
+    queryFn: () => axiosClient.get("/upgrade/status").then(value => value.data as boolean),
+    errorMsg: "", // this query has no error message on purpse, it supposed to fail (waiting for upgrade to finish)
+    ...options
+  })
 };
 
-export const useUpdateApplicationVersions = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation(() =>
-        axios.get(baseUrl + "/versions/update").then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries(['versions'])
-                toast.success("Application versions were updated")
-            },
-            onError: () => {
-                toast.error("Error upgrading application")
-            }
-        }
-    )
+export const useUpdateApplicationVersions = (options?: UseCreateMutationWrapperOptions<boolean, void>) => {
+  return useCreateMutation({
+    mutationFn: () =>
+      axiosClient.get("/versions/update").then(value => value.status === 200),
+    successMsg: "Application versions were updated",
+    errorMsg: "Error upgrading application",
+    invalidateQueries: ['versions'],
+    ...options
+  })
 };

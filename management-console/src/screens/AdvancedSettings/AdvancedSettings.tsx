@@ -18,10 +18,10 @@ export const AdvancedSettings = () => {
   const { data: currentVersion = "" } = useApplicationCurrentVersion();
 
   const { mutateAsync: upgradeApplication } = useUpgradeApplication();
-  const { mutateAsync: updateApplicationVersions, isLoading: isUpdatingApplicationVersions } = useUpdateApplicationVersions();
+  const { mutateAsync: updateApplicationVersions, isPending: isUpdatingApplicationVersions } = useUpdateApplicationVersions();
   const { mutateAsync: resetToFactorySettings } = useResetToFactorySettings()
-  const { data: configs, isLoading: isLoadingConfigs } = useGetConfigs(true)
-  const { mutateAsync: updateConfig, isLoading: isUpdatingConfig } = useUpdateConfig()
+  const { data: configs, isPending: isLoadingConfigs } = useGetConfigs(true)
+  const { mutateAsync: updateConfig, isPending: isUpdatingConfig } = useUpdateConfig()
 
   const logsApiKeyTextFieldRef = useRef<HTMLInputElement>();
   const deviceNameTextFieldRef = useRef<HTMLInputElement>();

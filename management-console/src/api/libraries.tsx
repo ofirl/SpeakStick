@@ -1,102 +1,78 @@
-import { UseQueryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { baseUrl } from "./consts";
-
-import { toast } from "react-toastify";
+import { UseCreateMutationWrapperOptions, UseCreateQueryWrapperOptionsShort, axiosClient, useCreateMutation, useCreateQuery } from "./helpers";
 
 export type Library = {
-    id: number,
-    name: string,
-    description: string,
-    active: boolean,
-    editable: boolean
+  id: number,
+  name: string,
+  description: string,
+  active: boolean,
+  editable: boolean
 }
 
-export const useGetLibraries = (options: UseQueryOptions<Library[], unknown, Library[], string[]> = {}) => {
-    return useQuery(['libraries'], () => axios.get(`${baseUrl}/libraries`).then(value => value.data as Library[]), options)
+export const useGetLibraries = (options?: UseCreateQueryWrapperOptionsShort<Library[]>) => {
+  return useCreateQuery({
+    queryKey: ['libraries'],
+    queryFn: () => axiosClient.get(`/libraries`).then(value => value.data as Library[]),
+    errorMsg: "Error getting libraries",
+    ...options
+  })
 };
 
 type DuplicateLibraryParams = { name: string, description: string, baseLibraryId: number };
-export const useDuplicateLibrary = () => {
-    const queryClient = useQueryClient();
-    return useMutation((params: DuplicateLibraryParams) =>
-        axios.post(`${baseUrl}/libraries/${params.baseLibraryId}/duplicate`, { name: params.name, description: params.description }).then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries(["libraries"]);
-                toast.success("Library duplicated")
-            },
-            onError: () => {
-                toast.error("Error duplicating library")
-            }
-        }
-    )
+export const useDuplicateLibrary = (options?: UseCreateMutationWrapperOptions<boolean, DuplicateLibraryParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: DuplicateLibraryParams) =>
+      axiosClient.post(`/libraries/${params.baseLibraryId}/duplicate`, { name: params.name, description: params.description }).then(value => value.status === 200),
+    successMsg: "Library duplicated",
+    errorMsg: "Error duplicating library",
+    invalidateQueries: ["libraries"],
+    ...options
+  })
 };
 
 type CreateLibraryParams = { name: string, description: string };
-export const useCreateLibrary = () => {
-    const queryClient = useQueryClient();
-    return useMutation((params: CreateLibraryParams) =>
-        axios.post(`${baseUrl}/libraries`, params).then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries(["libraries"]);
-                toast.success("Library created")
-            },
-            onError: () => {
-                toast.error("Error creating library")
-            }
-        }
-    )
+export const useCreateLibrary = (options?: UseCreateMutationWrapperOptions<boolean, CreateLibraryParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: CreateLibraryParams) =>
+      axiosClient.post(`/libraries`, params).then(value => value.status === 200),
+    successMsg: "Library created",
+    errorMsg: "Error creating library",
+    invalidateQueries: ["libraries"],
+    ...options
+  })
 };
 
 type EditLibraryParams = { libraryId: number, name: string, description: string };
-export const useEditLibrary = () => {
-    const queryClient = useQueryClient();
-    return useMutation((params: EditLibraryParams) =>
-        axios.post(`${baseUrl}/libraries/${params.libraryId}`, { name: params.name, description: params.description }).then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries(["libraries"]);
-                toast.success("Library updated")
-            },
-            onError: () => {
-                toast.error("Error updating library")
-            }
-        }
-    )
+export const useEditLibrary = (options?: UseCreateMutationWrapperOptions<boolean, EditLibraryParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: EditLibraryParams) =>
+      axiosClient.post(`/libraries/${params.libraryId}`, { name: params.name, description: params.description }).then(value => value.status === 200),
+    successMsg: "Library updated",
+    errorMsg: "Error updating library",
+    invalidateQueries: ["libraries"],
+    ...options
+  })
 };
 
 type DeleteLibraryParams = { libraryId: number };
-export const useDeleteLibrary = () => {
-    const queryClient = useQueryClient();
-    return useMutation((params: DeleteLibraryParams) =>
-        axios.delete(`${baseUrl}/libraries/${params.libraryId}`).then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries(["libraries"]);
-                toast.success("Library deleted")
-            },
-            onError: () => {
-                toast.error("Error deleting library")
-            }
-        }
-    )
+export const useDeleteLibrary = (options?: UseCreateMutationWrapperOptions<boolean, DeleteLibraryParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: DeleteLibraryParams) =>
+      axiosClient.delete(`/libraries/${params.libraryId}`).then(value => value.status === 200),
+    successMsg: "Library deleted",
+    errorMsg: "Error deleting library",
+    invalidateQueries: ["libraries"],
+    ...options
+  })
 };
 
 type ActivateLibraryParams = { libraryId: number };
-export const useActivateLibrary = () => {
-    const queryClient = useQueryClient();
-    return useMutation((params: ActivateLibraryParams) =>
-        axios.get(`${baseUrl}/libraries/${params.libraryId}/activate`).then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries(["libraries"]);
-                toast.success("Library activated")
-            },
-            onError: () => {
-                toast.error("Error activating library")
-            }
-        }
-    )
+export const useActivateLibrary = (options?: UseCreateMutationWrapperOptions<boolean, DeleteLibraryParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: ActivateLibraryParams) =>
+      axiosClient.get(`/libraries/${params.libraryId}/activate`).then(value => value.status === 200),
+    successMsg: "Library activated",
+    errorMsg: "Error activating library",
+    invalidateQueries: ["libraries"],
+    ...options
+  })
 };

@@ -1,46 +1,39 @@
-import { UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { baseUrl } from "./consts";
-import { toast } from "react-toastify";
+import { UseCreateMutationWrapperOptions, UseCreateQueryWrapperOptionsShort, axiosClient, useCreateMutation, useCreateQuery } from "./helpers";
 
 export type NetworkStatusResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string };
-export const useGetNetworkStatus = (options: UseQueryOptions<NetworkStatusResult, unknown, NetworkStatusResult, string[]> = {}) => {
-    return useQuery(
-        ['network', 'status'],
-        () => axios.get(baseUrl + "/network/status").then(value => value.data as NetworkStatusResult),
-        {
-            refetchInterval: 10000,
-            ...options
-        },
-    )
+export const useGetNetworkStatus = (options?: UseCreateQueryWrapperOptionsShort<NetworkStatusResult>) => {
+  return useCreateQuery({
+    queryKey: ['network', 'status'],
+    queryFn: () => axiosClient.get("/network/status").then(value => value.data as NetworkStatusResult),
+    refetchInterval: 10000,
+    errorMsg: "Error getting network status",
+    ...options
+  })
 };
 
 export type NetowrkScanResult = { ssid: string, signal_strength: number, secured: boolean, key_mgmt: string };
-export const useScanNetworks = (options: UseQueryOptions<NetowrkScanResult[], unknown, NetowrkScanResult[], string[]> = {}) => {
-    return useQuery(
-        ['network', 'scan'],
-        () => axios.get(baseUrl + "/network/scan").then(value => value.data as NetowrkScanResult[]),
-        options
-    )
+export const useScanNetworks = (options: UseCreateQueryWrapperOptionsShort<NetowrkScanResult[]>) => {
+  return useCreateQuery({
+    queryKey: ['network', 'scan'],
+    queryFn: () => axiosClient.get("/network/scan").then(value => value.data as NetowrkScanResult[]),
+    errorMsg: "Error scanning fpr networks",
+    ...options
+  })
 };
 
 type NetworkConfiguration = {
-    ssid: string,
-    psk?: string,
-    key_mgmt: string
+  ssid: string,
+  psk?: string,
+  key_mgmt: string
 }
-export const useUpdateNetworkConfiguration = () => {
-    return useMutation(({ ssid, psk, key_mgmt }: NetworkConfiguration) =>
-        axios.post(baseUrl + "/network", {
-            ssid, psk, key_mgmt
-        }).then(value => value.status === 200),
-        {
-            onSuccess: () => {
-                toast.success("Network configuration updated")
-            },
-            onError: () => {
-                toast.error("Error updating network configuration")
-            }
-        }
-    )
+export const useUpdateNetworkConfiguration = (options?: UseCreateMutationWrapperOptions<boolean, NetworkConfiguration>) => {
+  return useCreateMutation({
+    mutationFn: ({ ssid, psk, key_mgmt }: NetworkConfiguration) =>
+      axiosClient.post("/network", {
+        ssid, psk, key_mgmt
+      }).then(value => value.status === 200),
+    successMsg: "Network configuration updated",
+    errorMsg: "Error updating network configuration",
+    ...options
+  })
 };
