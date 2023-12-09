@@ -35,8 +35,10 @@ jobs:
           minor=$(echo $version | cut -d. -f2)
           patch=$(echo $version | cut -d. -f3)
 
-          if [ ${{ contains(github.event.pull_request.labels.*.name, 'Major') }} ] then;
+          if ${{ contains(github.event.pull_request.labels.*.name, 'Major') }}
+          then
             echo "Bumping major version"
+            major=$((major + 1))
           fi
 
           new_tag="${major}.${minor}.${patch}"
