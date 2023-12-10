@@ -65,12 +65,12 @@ jobs:
           owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
           repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
 
-          # --jq '.data.repository.PullRequest.timelineItems.nodes | map(.source.labels.nodes) | map(.name) | join(",")'
+          # --jq '.data.repository.pullRequest.timelineItems.nodes | map(.source.labels.nodes) | map(.name) | join(",")'
           issueLabels=$(gh api graphql -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
                 # ${{ github.event.number }}
-                PullRequest(number: 33) {
+                pullRequest(number: 33) {
                   timelineItems(first: 100) {
                     nodes {
                       ... on CrossReferencedEvent {
