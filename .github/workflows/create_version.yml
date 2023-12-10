@@ -1,0 +1,80 @@
+name: Create Version
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - "master"
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    outputs:
+      new_tag: ${{ steps.increment_version.outputs.new_tag }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Get Latest Tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git tag -l --sort=-v:refname | grep -v rc | head -n 1)
+          echo "latest_tag=${latest_tag}" >> $GITHUB_OUTPUT
+          echo "latest_tag=\`${latest_tag}\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Increment Version
+        id: increment_version
+        run: |
+          tag=${{ steps.get_latest_tag.outputs.latest_tag }}
+          tag=${tag#v}
+          major=$(echo $tag | cut -d. -f1)
+          minor=$(echo $tag | cut -d. -f2)
+          patch=$(echo $tag | cut -d. -f3)
+
+          if ${{ contains(github.event.pull_request.labels.*.name, 'Major') }}
+          then
+            echo "Bumping major version"
+            major=$((major + 1))
+            minor=0
+            patch=0
+          elif ${{ contains(github.event.pull_request.labels.*.name, 'Minor') }}
+          then
+            echo "Bumping minor version"
+            minor=$((minor + 1))
+            patch=0
+          elif ${{ contains(github.event.pull_request.labels.*.name, 'Patch') }}
+          then
+            echo "Bumping patch version"
+            patch=$((patch + 1))
+          fi
+
+          new_tag="v${major}.${minor}.${patch}"
+          if [ "$new_tag" = "v$tag" ]
+          then
+            echo "PR does not contain version tags" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          echo "new_tag=${new_tag}" >> $GITHUB_OUTPUT
+          echo "new_tag=\`${new_tag}\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create Tag
+        if: ${{ steps.increment_version.outputs.new_tag != '' }}
+        run: |
+          new_tag=${{ steps.increment_version.outputs.new_tag }}
+          git tag $new_tag
+          git push origin $new_tag
+
+  build_and_release:
+    needs: create_tag
+    if: ${{ needs.create_tag.outputs.new_tag != '' }}
+    uses: ofirl/SpeakStick/.github/workflows/build_and_release.yml@master
+    with:
+      tag: ${{ needs.create_tag.outputs.new_tag }}
+    secrets: inherit
