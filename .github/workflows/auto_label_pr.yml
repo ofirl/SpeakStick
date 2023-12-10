@@ -65,7 +65,7 @@ jobs:
           owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
           repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
 
-          issueLabels=$(gh api graphql --jq '.data.repository.pullRequest.closingIssuesReferences.edges | map(.node.labels.nodes) | map(.name) | join(",")' -f query='
+          issueLabels=$(gh api graphql --jq '.data.repository.pullRequest.closingIssuesReferences.edges[].node.labels.nodes | map(.name) | join(",")' -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
                 # ${{ github.event.number }}
