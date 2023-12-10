@@ -74,15 +74,16 @@ jobs:
                   timelineItems(first: 100) {
                     nodes {
                       ... on CrossReferencedEvent {
-                        source {
-                          ... on issue {
-                            labels(first: 100) {
-                              nodes {
-                                name
-                              }
-                            }
-                          }
-                        }
+                          source
+                        # source {
+                        #   ... on issue {
+                        #     labels(first: 100) {
+                        #       nodes {
+                        #         name
+                        #       }
+                        #     }
+                        #   }
+                        # }
                       }
                     }
                   }
