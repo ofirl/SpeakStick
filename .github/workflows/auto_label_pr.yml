@@ -78,7 +78,7 @@ jobs:
           ')
           echo $issueLabels
 
-          if [ -z "$test" ]
+          if [ -z "$issueLabels" ]
           then
             echo "no labels found"
           else
