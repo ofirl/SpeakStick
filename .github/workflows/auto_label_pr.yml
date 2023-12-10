@@ -26,11 +26,16 @@ jobs:
           owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
           repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
 
-          gh api graphql --jq '.data.repository.issue.timelineItems.nodes.[] | .source.number' -f query='
+          prNumber=$(gh api graphql --jq '.data.repository.issue.timelineItems.nodes.[] | .source.number' -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
                 # ${{ github.event.issue.number }}
                 issue(number: 31) {
+                  labels {
+                    nodes {
+                      name
+                    }
+                  }
                   timelineItems(first: 100) {
                     nodes {
                       ... on CrossReferencedEvent {
@@ -45,6 +50,24 @@ jobs:
                 }
               }
             }
-          '
+          ' | grep -v -e '^$')
+
+          # --jq '.data.repository.issue.labels.nodes.[] | .name'
+          labels=$(gh api graphql -f query='
+            query {
+              repository(owner: "ofirl", name: "SpeakStick") {
+                # ${{ github.event.issue.number }}
+                issue(number: 31) {
+                  labels {
+                    nodes {
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          ')
+
+          echo $labels
         env:
           GITHUB_TOKEN: ${{ github.token }}
