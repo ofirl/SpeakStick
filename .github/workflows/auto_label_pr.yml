@@ -17,6 +17,12 @@ jobs:
   label_pr:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
       - run: |
           owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
           repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
