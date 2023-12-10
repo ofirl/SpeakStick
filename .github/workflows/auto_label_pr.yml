@@ -5,13 +5,13 @@ on:
     types:
       - labeled
       - unlabeled
-  pull_request:
-    types:
-      - opened
-      - edited
-  # push:
-  #   branches:
-  #     - auto-label-pr
+  # pull_request:
+  #   types:
+  #     - opened
+  #     - edited
+  push:
+    branches:
+      - auto-label-pr
 
 jobs:
   label_pr:
@@ -29,7 +29,8 @@ jobs:
           prNumber=$(gh api graphql --jq '.data.repository.issue.timelineItems.nodes.[] | .source.number' -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
-                issue(number: ${{ github.event.issue.number }}) {
+                # ${{ github.event.issue.number }}
+                issue(number: 31) {
                   timelineItems(first: 100) {
                     nodes {
                       ... on CrossReferencedEvent {
@@ -47,10 +48,11 @@ jobs:
           ' | grep -v -e '^$')
           echo $prNumber
 
-          labels=$(gh api graphql --jq '.data.repository.issue.labels.nodes | map(.name) | join(",")' -f query='
+          issueLabels=$(gh api graphql --jq '.data.repository.issue.labels.nodes | map(.name) | join(",")' -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
-                issue(number: ${{ github.event.issue.number }}) {
+                # ${{ github.event.issue.number }}
+                issue(number: 31) {
                   labels(first: 100) {
                     nodes {
                       name
@@ -60,8 +62,8 @@ jobs:
               }
             }
           ')
-          echo $labels
+          echo $issueLabels
 
-          gh pr edit $prNumber --add-label $labels
+          gh pr edit $prNumber --add-label $issueLabels
         env:
           GITHUB_TOKEN: ${{ github.token }}
