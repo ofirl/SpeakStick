@@ -8,6 +8,8 @@
 # git clone https://github.com/ofirl/SpeakStick.git
 # cd SpeakStick
 
+sudo mkdir -p /opt/logs
+
 git config --global --add safe.directory /opt/SpeakStick
 
 sudo apt update
