@@ -75,9 +75,14 @@ jobs:
                 }
               }
             }
-          ' | grep -v -e '^$')
+          ')
           echo $issueLabels
 
-          gh pr edit ${{ github.event.number }} --add-label $issueLabels
+          if [ -z "$test" ]
+          then
+            echo "no labels found"
+          else
+            gh pr edit ${{ github.event.number }} --add-label $issueLabels
+          fi
         env:
           GITHUB_TOKEN: ${{ github.token }}
