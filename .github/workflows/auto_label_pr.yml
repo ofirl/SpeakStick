@@ -48,7 +48,7 @@ jobs:
           ' | grep -v -e '^$')
           echo $prNumber
 
-          labels=$(gh api graphql --jq '.data.repository.issue.labels.nodes.[] | join(",")' -f query='
+          labels=$(gh api graphql --jq '.data.repository.issue.labels.nodes | map(.name) | join(",")' -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
                 # ${{ github.event.issue.number }}
