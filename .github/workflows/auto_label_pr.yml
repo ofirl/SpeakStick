@@ -65,7 +65,8 @@ jobs:
           owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
           repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
 
-          issueLabels=$(gh api graphql --jq '.data.repository.pullRequest.closingIssuesReferences.edges | map(.node.number)' -f query='
+          # --jq '.data.repository.pullRequest.closingIssuesReferences.edges | map(.node.number) | join(" ")'
+          issueLabels=$(gh api graphql -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
                 # ${{ github.event.number }}
@@ -74,6 +75,11 @@ jobs:
                     edges {
                       node {
                         number
+                        labels(first: 100) {
+                          nodes {
+                            name
+                          }
+                        }
                       }
                     }
                   }
