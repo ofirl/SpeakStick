@@ -46,9 +46,9 @@ jobs:
 
           if ${{ github.event.action == 'labeled' }}
           then
-            gh pr edit $prNumber --add-label ${{ github.event.label }}
+            gh pr edit $prNumber --add-label ${{ github.event.label.name }}
           else
-            gh pr edit $prNumber --remove-label ${{ github.event.label }}
+            gh pr edit $prNumber --remove-label ${{ github.event.label.name }}
           fi
         env:
           GITHUB_TOKEN: ${{ github.token }}
