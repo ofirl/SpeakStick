@@ -1,4 +1,4 @@
-name: Auto Label PR
+name: PR Auto Labeler
 
 on:
   issues:
@@ -9,9 +9,6 @@ on:
     types:
       - opened
       - edited
-  push:
-    branches:
-      - auto-label-pr
 
 jobs:
   label_pr:
@@ -25,9 +22,6 @@ jobs:
       - name: "Issue updated"
         if: ${{ github.event_name == 'issues' }}
         run: |
-          owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
-          repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
-
           prNumber=$(gh api graphql --jq '.data.repository.issue.timelineItems.nodes.[] | .source.number' -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
@@ -60,16 +54,12 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: "PR updated"
-        # if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
-          owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
-          repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
-
           issueLabels=$(gh api graphql --jq '.data.repository.pullRequest.closingIssuesReferences.edges[].node.labels.nodes | map(.name) | join(",")' -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
-                # ${{ github.event.number }}
-                pullRequest(number: 33) {
+                pullRequest(number: ${{ github.event.number }}) {
                   closingIssuesReferences (first: 50) {
                     edges {
                       node {
@@ -88,22 +78,6 @@ jobs:
           ' | grep -v -e '^$')
           echo $issueLabels
 
-          # issueLabels=$(gh api graphql --jq '.data.repository.issue.labels.nodes | map(.name) | join(",")' -f query='
-          #   query {
-          #     repository(owner: "ofirl", name: "SpeakStick") {
-          #       # ${{ github.event.issue.number }}
-          #       issue(number: 31) {
-          #         labels(first: 100) {
-          #           nodes {
-          #             name
-          #           }
-          #         }
-          #       }
-          #     }
-          #   }
-          # ')
-          # echo $issueLabels
-
-          # gh pr edit ${{ github.event.number }} --add-label $issueLabels
+          gh pr edit ${{ github.event.number }} --add-label $issueLabels
         env:
           GITHUB_TOKEN: ${{ github.token }}
