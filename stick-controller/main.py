@@ -64,6 +64,10 @@ SLEEPING = False
 
 
 def play_audio(file):
+    if (not os.path.exists(file) or not os.path.isfile(file)) and file != ERROR_SOUND:
+        play_audio(ERROR_SOUND)
+        return
+
     sound = pygame.mixer.Sound(file)
     sound.set_volume(1)
     sound.play()
