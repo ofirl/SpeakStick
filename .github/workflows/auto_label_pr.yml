@@ -5,10 +5,10 @@ on:
     types:
       - labeled
       - unlabeled
-  # pull_request:
-  #   types:
-  #     - opened
-  #     - edited
+  pull_request:
+    types:
+      - opened
+      - edited
   push:
     branches:
       - auto-label-pr
@@ -22,7 +22,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - run: |
+      - name: "Issue updated"
+        if: ${{ github.event_name == 'issues' }}
+        run: |
           owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
           repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
 
@@ -48,22 +50,64 @@ jobs:
           ' | grep -v -e '^$')
           echo $prNumber
 
-          issueLabels=$(gh api graphql --jq '.data.repository.issue.labels.nodes | map(.name) | join(",")' -f query='
+          if ${{ github.event.action == 'labeled' }}
+          then
+            gh pr edit $prNumber --add-label ${{ github.event.label }}
+          else
+            gh pr edit $prNumber --remove-label ${{ github.event.label }}
+          fi
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: "PR updated"
+        # if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
+          repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
+
+          # --jq '.data.repository.PullRequest.timelineItems.nodes | map(.source.labels.nodes) | map(.name) | join(",")'
+          issueLabels=$(gh api graphql -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
-                # ${{ github.event.issue.number }}
-                issue(number: 31) {
-                  labels(first: 100) {
+                # ${{ github.event.number }}
+                PullRequest(number: 33) {
+                  timelineItems(first: 100) {
                     nodes {
-                      name
+                      ... on CrossReferencedEvent {
+                        source {
+                          ... on issue {
+                            labels(first: 100) {
+                              nodes {
+                                name
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
               }
             }
-          ')
+          ' | grep -v -e '^$')
           echo $issueLabels
 
-          gh pr edit $prNumber --add-label $issueLabels
+          # issueLabels=$(gh api graphql --jq '.data.repository.issue.labels.nodes | map(.name) | join(",")' -f query='
+          #   query {
+          #     repository(owner: "ofirl", name: "SpeakStick") {
+          #       # ${{ github.event.issue.number }}
+          #       issue(number: 31) {
+          #         labels(first: 100) {
+          #           nodes {
+          #             name
+          #           }
+          #         }
+          #       }
+          #     }
+          #   }
+          # ')
+          # echo $issueLabels
+
+          # gh pr edit ${{ github.event.number }} --add-label $issueLabels
         env:
           GITHUB_TOKEN: ${{ github.token }}
