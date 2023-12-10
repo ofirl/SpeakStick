@@ -28,7 +28,7 @@ jobs:
 
           gh api graphql -f query='
             query {
-              repository(owner: $owner, name: $repo) {
+              repository(owner: "$owner", name: "$repo") {
                 # ${{ github.event.issue.number }}
                 issue(number: 31) {
                   timelineItems(first: 100) {
