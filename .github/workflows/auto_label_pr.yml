@@ -81,7 +81,7 @@ jobs:
             }
           ')
           echo "issues labels:"
-          test=$(echo $issueLabels | jq '.data.repository.pullRequest.closingIssuesReferences.edges')
+          test=$(echo $issueLabels | jq '.data.repository.pullRequest.closingIssuesReferences')
           echo "test:"
           echo $test
           if [ -z "$test" ]
