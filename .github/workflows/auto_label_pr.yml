@@ -60,7 +60,7 @@ jobs:
         # if: ${{ github.event_name == 'pull_request' }}
         run: |
           # --jq '.data.repository.pullRequest.closingIssuesReferences.edges[].node.labels.nodes | map(.name) | join(",")'
-          issueLabels=$(gh api graphql --jq '.data.repository.pullRequest.closingIssuesReferences.edges[].node.labels.nodes | map(.name) | join(",")' -f query='
+          issueLabels=$(gh api graphql -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
                 pullRequest(number: ${{ github.event.number }}) {
@@ -79,9 +79,17 @@ jobs:
                 }
               }
             }
-          ' | grep -v -e '^$')
+          ')
           echo "issues labels:"
-          echo $issueLabels
+          test=$(echo $issueLabels | jq '.data.repository.pullRequest.closingIssuesReferences.edges[].node.labels.nodes | map(.name) | join(",")')
+          echo "test:"
+          echo $test
+          if [ -z "$test" ]
+          then
+            echo "not empty"
+          else
+            echo "empty"
+          fi
 
           # gh pr edit ${{ github.event.number }} --add-label $issueLabels
         env:
