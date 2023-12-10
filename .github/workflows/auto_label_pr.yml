@@ -9,6 +9,9 @@ on:
     types:
       - opened
       - edited
+  push:
+    branches:
+      - fix-auto-labeler-no-issue
 
 jobs:
   label_pr:
@@ -54,9 +57,10 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: "PR updated"
-        if: ${{ github.event_name == 'pull_request' }}
+        # if: ${{ github.event_name == 'pull_request' }}
         run: |
-          issueLabels=$(gh api graphql --jq '.data.repository.pullRequest.closingIssuesReferences.edges[].node.labels.nodes | map(.name) | join(",")' -f query='
+          # --jq '.data.repository.pullRequest.closingIssuesReferences.edges[].node.labels.nodes | map(.name) | join(",")'
+          issueLabels=$(gh api graphql -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
                 pullRequest(number: ${{ github.event.number }}) {
@@ -78,6 +82,6 @@ jobs:
           ' | grep -v -e '^$')
           echo $issueLabels
 
-          gh pr edit ${{ github.event.number }} --add-label $issueLabels
+          # gh pr edit ${{ github.event.number }} --add-label $issueLabels
         env:
           GITHUB_TOKEN: ${{ github.token }}
