@@ -65,8 +65,7 @@ jobs:
           owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
           repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
 
-          # --jq '.data.repository.pullRequest.closingIssuesReferences.edges.node | map(.number) | join(",")'
-          issueLabels=$(gh api graphql -f query='
+          issueLabels=$(gh api graphql --jq '.data.repository.pullRequest.closingIssuesReferences.edges | map(.node.number)' -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
                 # ${{ github.event.number }}
@@ -78,21 +77,6 @@ jobs:
                       }
                     }
                   }
-                  # timelineItems(first: 100) {
-                  #   nodes {
-                  #     ... on CrossReferencedEvent {
-                  #       source {
-                  #         ... on issue {
-                  #           labels(first: 100) {
-                  #             nodes {
-                  #               name
-                  #             }
-                  #           }
-                  #         }
-                  #       }
-                  #     }
-                  #   }
-                  # }
                 }
               }
             }
