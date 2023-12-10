@@ -1,0 +1,45 @@
+name: Auto Label PR
+
+on:
+  issues:
+    types:
+      - labeled
+      - unlabeled
+  # pull_request:
+  #   types:
+  #     - opened
+  #     - edited
+  push:
+    branches:
+      - auto-label-pr
+
+jobs:
+  label_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          owner=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
+          repo=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
+
+          gh api graphql -F owner='{owner}' -F name='{repo}' -f query='
+            query {
+              repository(owner: $owner, name: $repo) {
+                # ${{ github.event.issue.number }}
+                issue(number: 31) {
+                  timelineItems(first: 100) {
+                    nodes {
+                      ... on CrossReferencedEvent {
+                        source {
+                          ... on PullRequest {
+                            number
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          '
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
