@@ -63,7 +63,8 @@ jobs:
           issueLabels=$(gh api graphql -f query='
             query {
               repository(owner: "ofirl", name: "SpeakStick") {
-                pullRequest(number: ${{ github.event.number }}) {
+                # ${{ github.event.number }}
+                pullRequest(number: 36) {
                   closingIssuesReferences (first: 50) {
                     edges {
                       node {
@@ -81,7 +82,7 @@ jobs:
             }
           ')
           echo "issues labels:"
-          test=$(echo $issueLabels | jq '.data.repository.pullRequest.closingIssuesReferences')
+          test=$(echo $issueLabels | jq '.data.repository.pullRequest.closingIssuesReferences.edges[].node.labels.nodes | map(.name) | join(",")')
           echo "test:"
           echo $test
           if [ -z "$test" ]
