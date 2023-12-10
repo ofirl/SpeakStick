@@ -46,6 +46,7 @@ jobs:
               }
             }
           ' | grep -v -e '^$')
+          echo $prNumber
 
           labels=$(gh api graphql --jq '.data.repository.issue.labels.nodes.[] | .name' -f query='
             query {
