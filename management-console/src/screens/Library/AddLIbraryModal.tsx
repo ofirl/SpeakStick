@@ -63,6 +63,12 @@ export const AddLibraryModal = ({ baseLibraryId, libraryPath, closeMenu }: AddLi
   const { mutateAsync: importLibrary, isPending: isImportingLibrary } = useImportLibrary();
   const isLoading = isCreatingLibrary || isDuplicatingLibrary || isImportingLibrary;
 
+  const onClose = () => {
+    setLibraryName("");
+    setLibaryFile(undefined);
+    setModalOpen(false);
+  };
+
   const onSave = () => {
     if (!libraryName || !descriptionRef.current)
       return;
@@ -102,7 +108,7 @@ export const AddLibraryModal = ({ baseLibraryId, libraryPath, closeMenu }: AddLi
       </MenuItem>
       <Modal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={onClose}
       >
         <Box sx={modalBoxStyle}>
           <Typography variant="h6" component="h2">
@@ -122,7 +128,7 @@ export const AddLibraryModal = ({ baseLibraryId, libraryPath, closeMenu }: AddLi
           />
           <TextField fullWidth label="Description" variant="outlined" inputRef={descriptionRef} />
           <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-            Upload file
+            {libraryFile?.name || "Import"}
             <VisuallyHiddenInput type="file" accept=".zip" value={libraryPath} onChange={onFileSelect} />
           </Button>
           <Button disabled={isLoading || !!nameError} variant="contained" style={{ marginTop: "1rem", alignSelf: "end" }} onClick={onSave}>
