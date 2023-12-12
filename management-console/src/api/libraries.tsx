@@ -41,11 +41,15 @@ export const useCreateLibrary = (options?: UseCreateMutationWrapperOptions<boole
   })
 };
 
-type ImportLibraryParams = { name: string, description: string, libraryFile: string };
+type ImportLibraryParams = { name: string, description: string, libraryFile: File };
 export const useImportLibrary = (options?: UseCreateMutationWrapperOptions<boolean, ImportLibraryParams>) => {
   return useCreateMutation({
     mutationFn: (params: ImportLibraryParams) =>
-      axiosClient.post(`/libraries/import`, params).then(value => value.status === 200),
+      axiosClient.post(`/libraries/import`, params, {
+        headers: {
+          filename: encodeURIComponent(params.libraryFile.name)
+        }
+      }).then(value => value.status === 200),
     successMsg: "Library imported",
     errorMsg: "Error importing library",
     invalidateQueries: ["libraries"],

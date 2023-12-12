@@ -50,6 +50,7 @@ type AddLibraryModalProps = {
 export const AddLibraryModal = ({ baseLibraryId, libraryPath, closeMenu }: AddLibraryModalProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [libraryName, setLibraryName] = useState("");
+  const [libraryFile, setLibaryFile] = useState<File>();
   const descriptionRef = useRef<HTMLInputElement>(null);
 
   const { data: libraries = [] } = useGetLibraries();
@@ -69,9 +70,8 @@ export const AddLibraryModal = ({ baseLibraryId, libraryPath, closeMenu }: AddLi
     let promise;
     if (baseLibraryId != null) {
       promise = duplicateLibrary({ baseLibraryId, name: libraryName, description: descriptionRef.current.value });
-    } else if (libraryPath != null) {
-      //libraryFile = file-content from libraryPath
-      promise = importLibrary({ name: libraryName, description: descriptionRef.current.value, libraryFile: "" });
+    } else if (libraryFile != null) {
+      promise = importLibrary({ name: libraryName, description: descriptionRef.current.value, libraryFile });
     } else {
       promise = createLibrary({ name: libraryName, description: descriptionRef.current.value });
     }
@@ -80,6 +80,14 @@ export const AddLibraryModal = ({ baseLibraryId, libraryPath, closeMenu }: AddLi
       setModalOpen(false);
       closeMenu();
     })
+  };
+
+  const onFileSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (!e.target.files || e.target.files.length < 1) {
+      return null;
+    }
+    
+    setLibaryFile(e.target.files[0]);
   };
 
   return (
@@ -115,7 +123,7 @@ export const AddLibraryModal = ({ baseLibraryId, libraryPath, closeMenu }: AddLi
           <TextField fullWidth label="Description" variant="outlined" inputRef={descriptionRef} />
           <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
             Upload file
-            <VisuallyHiddenInput type="file" accept=".zip" value={libraryPath}/>
+            <VisuallyHiddenInput type="file" accept=".zip" value={libraryPath} onChange={onFileSelect} />
           </Button>
           <Button disabled={isLoading || !!nameError} variant="contained" style={{ marginTop: "1rem", alignSelf: "end" }} onClick={onSave}>
             {isLoading ? <CircularProgress /> : "Save"}
