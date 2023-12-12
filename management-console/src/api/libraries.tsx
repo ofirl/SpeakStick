@@ -41,6 +41,18 @@ export const useCreateLibrary = (options?: UseCreateMutationWrapperOptions<boole
   })
 };
 
+type ImportLibraryParams = { name: string, description: string, libraryFile: string };
+export const useImportLibrary = (options?: UseCreateMutationWrapperOptions<boolean, ImportLibraryParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: ImportLibraryParams) =>
+      axiosClient.post(`/libraries/import`, params).then(value => value.status === 200),
+    successMsg: "Library imported",
+    errorMsg: "Error importing library",
+    invalidateQueries: ["libraries"],
+    ...options
+  })
+};
+
 type EditLibraryParams = { libraryId: number, name: string, description: string };
 export const useEditLibrary = (options?: UseCreateMutationWrapperOptions<boolean, EditLibraryParams>) => {
   return useCreateMutation({

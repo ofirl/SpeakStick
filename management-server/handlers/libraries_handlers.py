@@ -24,6 +24,11 @@ def addLibrary(self, post_data, match):
         utils.response_utils.InternalServerError(self)
         
 def importLibrary(self, post_data, match):
+    json_data = json.loads(post_data.decode("utf-8"))
+    name = json_data.get("name")
+    description = json_data.get("description")
+    content = json_data.get("libraryFile")
+    # logic
     success = True
 
 
@@ -67,4 +72,5 @@ def activateLibrary(self, query_parameters, match):
         utils.response_utils.InternalServerError(self)
         
 def exportLibrary(self, query_parameters, match):
+    # logic
     success = True
