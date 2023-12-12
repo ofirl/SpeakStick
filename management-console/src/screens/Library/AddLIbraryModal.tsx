@@ -74,13 +74,13 @@ export const AddLibraryModal = ({ baseLibraryId, libraryPath, closeMenu }: AddLi
       return;
 
     let promise;
-    if (baseLibraryId != null) {
+    if (baseLibraryId != null)
       promise = duplicateLibrary({ baseLibraryId, name: libraryName, description: descriptionRef.current.value });
-    } else if (libraryFile != null) {
+    else if (libraryFile != null)
       promise = importLibrary({ name: libraryName, description: descriptionRef.current.value, libraryFile });
-    } else {
+    else
       promise = createLibrary({ name: libraryName, description: descriptionRef.current.value });
-    }
+    
 
     promise.then(() => {
       setModalOpen(false);
