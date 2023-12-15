@@ -32,6 +32,7 @@ def make_app():
 def handle_websocket_connections():
     while True:
         stickEvent = globals.stick_events.get()
+        logging.debug("handling event", extra={"event": stickEvent})
         for connection in connections:
             try:
                 connection.write_message(stickEvent)
