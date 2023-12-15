@@ -17,7 +17,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
         return True
 
     def open(self):
-        connections.append(self)
+        connections.append((self, self.write_message))
 
     def on_message(self, message):
         self.write_message(message=message)
@@ -31,15 +31,15 @@ def make_app():
     return tornado.web.Application([(r"/ws/stick-position", SimpleWebSocket)])
 
 
-async def handle_websocket_connections():
+def handle_websocket_connections():
     logging.debug("stick events websocket handler started")
 
     while True:
         stickEvent = globals.stick_events.get()
         logging.debug("handling event", extra={"event": stickEvent})
-        for connection in connections:
+        for connection, write_message in connections:
             try:
-                messageFuture = connection.write_message(stickEvent)
+                messageFuture = write_message(stickEvent)
                 while not messageFuture.done:
                     time.sleep(0.1)
             except tornado.websocket.WebSocketClosedError as e:
@@ -51,11 +51,11 @@ async def handle_websocket_connections():
 
 
 def startWebSocketServer(port):
-    # webscoketConnectionHandler = threading.Thread(
-    #     target=handle_websocket_connections, args=()
-    # )
-    # webscoketConnectionHandler.start()
-    asyncio.run(handle_websocket_connections())
+    webscoketConnectionHandler = threading.Thread(
+        target=handle_websocket_connections, args=()
+    )
+    webscoketConnectionHandler.start()
+    # asyncio.run(handle_websocket_connections())
 
     app = make_app()
     logging.info(f"Starting websocket server on {port}")
