@@ -30,7 +30,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
 
 
 def make_app():
-    return tornado.web.Application([(r"/ws/stick-position", SimpleWebSocket)])
+    return tornado.web.Application([(r"/ws/stick-events", SimpleWebSocket)])
 
 
 def handle_websocket_connections():
