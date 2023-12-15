@@ -69,7 +69,7 @@ def play_audio(file):
         return
 
     sound = pygame.mixer.Sound(file)
-    sound.set_volume(0)
+    sound.set_volume(1)
     sound.play()
 
 
