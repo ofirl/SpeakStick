@@ -33,6 +33,8 @@ def make_app():
 
 def handle_websocket_connections():
     logging.debug("stick events websocket handler started")
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
 
     while True:
         stickEvent = globals.stick_events.get()
