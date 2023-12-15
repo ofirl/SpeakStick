@@ -20,7 +20,8 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
         connections.append((self, self.write_message))
 
     def on_message(self, message):
-        self.write_message(message=message)
+        if message != "keep-alive":
+            self.write_message(message=message)
 
     def on_close(self):
         if connections.__contains__(self):
