@@ -1,8 +1,17 @@
+import sys
+
+sys.path.append("/opt/SpeakStick")  # Adds higher directory to python modules path.
+
+import monitoring.logs_config
+
 import os
+import logging
 import importlib.util
 import traceback
 import semver
 import argparse
+
+monitoring.logs_config.init_logger("migrations")
 
 
 def run_migrations(from_version, to_version):
@@ -18,11 +27,11 @@ def run_migrations(from_version, to_version):
             # Step 2: Parse the migration file
             spec = importlib.util.spec_from_file_location(module_name, module_path)
             if spec is None:
-                print(f"Error getting spec for {filename}, skipping")
+                logging.debug(f"Error getting spec for {filename}, skipping")
                 continue
             module = importlib.util.module_from_spec(spec)
             if spec.loader is None:
-                print(f"Error getting loader for {filename}, skipping")
+                logging.debug(f"Error getting loader for {filename}, skipping")
                 continue
             spec.loader.exec_module(module)
 
@@ -35,22 +44,30 @@ def run_migrations(from_version, to_version):
                     < 0
                     <= semver.compare(to_version, migration_version)
                 ):
-                    migrations.append((migration_version, module.migrate))
+                    migrations.append((migration_version, module))
 
     # Step 3: Sort migrations by version
     migrations.sort(key=lambda x: semver.VersionInfo.parse(x[0]))
 
     # Step 4: Execute the relevant migrations
-    for version, migrate_func in migrations:
+    for version, module in migrations:
         try:
-            print(f"Running migration {version}...")
-            migrate_func()
-            print(f"Migration {version} completed successfully.")
+            logging.info(
+                f"Running migration...",
+                extra={"version": version, "module": module.__name__},
+            )
+            module.migrate()
+            logging.info(
+                f"Migration completed successfully",
+                extra={"version": version, module: module.__name__},
+            )
         except Exception as e:
-            print(f"Error running migration {version}: {str(e)}")
-            traceback.print_exc()
+            logging.exception(
+                f"Error running migration",
+                extra={"version": version, module: module.__name__},
+            )
 
-    print("Successfully ran migrations")
+    logging.info("Successfully ran migrations")
 
 
 def main():

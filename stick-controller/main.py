@@ -132,6 +132,10 @@ def get_cell_number(xAbs, yAbs):
             return "5"  # center cell
 
 
+def send_stick_event(event):
+    globals.stick_events.put_nowait(event)
+
+
 def main():
     global SLEEPING
 
@@ -171,6 +175,7 @@ def main():
                     SLEEPING = False
 
             globals.current_cell = new_current_cell
+            send_stick_event({"type": "cellChange", "value": new_current_cell})
 
             if wait_for_reset:
                 if globals.current_cell == "5":
@@ -187,6 +192,9 @@ def main():
                 logging.debug(
                     "word ended", extra={"positions": "".join(recorded_cells)}
                 )
+                send_stick_event(
+                    {"type": "wordEnded", "value": "".join(recorded_cells)}
+                )
 
                 # ignore the last position if it's 5
                 if recorded_cells[-1] == "5":
@@ -196,6 +204,7 @@ def main():
                 route_filename = get_word_by_position("".join(recorded_cells))
                 if route_filename is not None:
                     logging.info("Playing audio", extra={"file": route_filename})
+                    send_stick_event({"type": "playingWord", "value": route_filename})
                     play_audio(WORDS_SOUND_FILES_DIR + route_filename)
 
                 # reset state
