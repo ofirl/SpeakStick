@@ -1,3 +1,4 @@
+import time
 import threading
 import logging
 import tornado.ioloop
@@ -21,7 +22,7 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
         self.write_message(message=message)
 
     def on_close(self):
-        self.running = False
+        connections.remove(self)
         logging.debug("connection closed")
 
 
@@ -37,7 +38,9 @@ def handle_websocket_connections():
         logging.debug("handling event", extra={"event": stickEvent})
         for connection in connections:
             try:
-                connection.write_message(stickEvent)
+                messageFuture = connection.write_message(stickEvent)
+                while not messageFuture.done:
+                    time.sleep(0.1)
             except tornado.websocket.WebSocketClosedError as e:
                 logging.debug(f"connection is already closed")
             except Exception as e:
