@@ -23,7 +23,8 @@ class SimpleWebSocket(tornado.websocket.WebSocketHandler):
         self.write_message(message=message)
 
     def on_close(self):
-        connections.remove(self)
+        if connections.__contains__(self):
+            connections.remove(self)
         logging.debug("connection closed")
 
 
