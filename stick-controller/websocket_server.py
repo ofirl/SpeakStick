@@ -30,7 +30,7 @@ def make_app():
     return tornado.web.Application([(r"/ws/stick-position", SimpleWebSocket)])
 
 
-def handle_websocket_connections():
+async def handle_websocket_connections():
     logging.debug("stick events websocket handler started")
 
     while True:
