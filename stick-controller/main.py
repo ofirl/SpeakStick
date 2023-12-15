@@ -175,7 +175,6 @@ def main():
                     SLEEPING = False
 
             globals.current_cell = new_current_cell
-            send_stick_event({"type": "cellChange", "value": new_current_cell})
 
             if wait_for_reset:
                 if globals.current_cell == "5":
@@ -237,6 +236,7 @@ def main():
 
                 # cell changed
                 recorded_cells.append(globals.current_cell)
+                send_stick_event({"type": "cellChange", "value": globals.current_cell})
                 cell_update_time = datetime.datetime.now()
                 logging.debug(
                     "recorded new position", extra={"recorded_cells": recorded_cells}
