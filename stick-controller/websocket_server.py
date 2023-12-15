@@ -4,6 +4,7 @@ import logging
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
+import asyncio
 
 
 import globals
@@ -50,10 +51,11 @@ async def handle_websocket_connections():
 
 
 def startWebSocketServer(port):
-    webscoketConnectionHandler = threading.Thread(
-        target=handle_websocket_connections, args=()
-    )
-    webscoketConnectionHandler.start()
+    # webscoketConnectionHandler = threading.Thread(
+    #     target=handle_websocket_connections, args=()
+    # )
+    # webscoketConnectionHandler.start()
+    asyncio.run(handle_websocket_connections())
 
     app = make_app()
     logging.info(f"Starting websocket server on {port}")
