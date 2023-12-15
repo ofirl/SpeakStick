@@ -41,7 +41,7 @@ def handle_websocket_connections():
     while True:
         stickEvent = globals.stick_events.get()
         logging.debug("handling event", extra={"event": stickEvent})
-        for connection, write_message in connections:
+        for _, write_message in connections:
             try:
                 messageFuture = write_message(stickEvent)
                 while not messageFuture.done:
@@ -59,7 +59,6 @@ def startWebSocketServer(port):
         target=handle_websocket_connections, args=()
     )
     webscoketConnectionHandler.start()
-    # asyncio.run(handle_websocket_connections())
 
     app = make_app()
     logging.info(f"Starting websocket server on {port}")
