@@ -1,12 +1,12 @@
 import json
-import os
 import csv
-from zipfile import ZipFile
 import io
-from common.system_utils import getWordFiles
+from zipfile import ZipFile
 
 import utils.db_utils
 import utils.response_utils
+
+from common.system_utils import getWordFiles
 from common.consts import words_directory
 
 
