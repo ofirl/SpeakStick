@@ -1,7 +1,13 @@
 import json
+import os
+import csv
+from zipfile import ZipFile
+import io
+from common.system_utils import getWordFiles
 
 import utils.db_utils
 import utils.response_utils
+from common.consts import words_directory
 
 
 def getLibraries(self, query_parameters, match):
@@ -22,14 +28,6 @@ def addLibrary(self, post_data, match):
         utils.response_utils.okResponse(self)
     else:
         utils.response_utils.InternalServerError(self)
-        
-def importLibrary(self, post_data, match):
-    json_data = json.loads(post_data.decode("utf-8"))
-    name = json_data.get("name")
-    description = json_data.get("description")
-    content = json_data.get("libraryFile")
-    # logic
-    success = True
 
 
 def duplicateLibrary(self, post_data, match):
@@ -72,5 +70,60 @@ def activateLibrary(self, query_parameters, match):
         utils.response_utils.InternalServerError(self)
         
 def exportLibrary(self, query_parameters, match):
-    # logic
-    success = True
+    libraryId = match.group("id")
+
+    libraryZipContent = io.BytesIO()
+    with ZipFile(libraryZipContent, 'w') as zip_file:
+        csvFileData = ''
+        csvFileData += 'word,positions\n'
+
+        # Add the words files to the zip
+        for wordFilePath in getWordFiles():
+            zip_file.write(wordFilePath)
+        
+        # Add the words data to a csv file
+        for libraryId, positions, word in  utils.db_utils.get_library_items(libraryId):
+            csvFileData += f'{word},{positions}\n'
+            
+        # Add the csv file to the zip
+        zip_file.writestr('library.csv', csvFileData)
+
+    # Seek to the beginning of the BytesIO object
+    libraryZipContent.seek(0)
+    
+    utils.response_utils.okWithData(self, libraryZipContent.getvalue())
+
+        
+def importLibrary(self, post_data, match):
+    json_data = json.loads(post_data.decode("utf-8"))
+    name = json_data.get("name")
+    description = json_data.get("description")
+    libraryZipFile = json_data.get("libraryFile")
+    
+    zip_file_content_io = io.BytesIO(libraryZipFile)
+    success = utils.db_utils.add_library(name, description)
+    if success == False:
+        utils.response_utils.InternalServerError(self, "error creating new library")
+        
+    # Where do I get that from??
+    libraryId = ''
+
+    # Create a ZipFile object to extract the contents of the zip file
+    with ZipFile(zip_file_content_io, 'r') as zip_file:
+        # Read the CSV file data
+        csvData = zip_file.read('library.csv').decode('utf-8').splitlines()
+        csvReader = csv.reader(csvData)
+        next(csvReader)  # Skip the header
+
+        for row in csvReader:
+            word, positions = row
+            
+            # Add word to words_directory            
+            zip_file.extract(word, words_directory)
+            
+            # Add library item
+            success = utils.db_utils.update_library_item(libraryId, positions, word)
+            if success == False:
+                utils.response_utils.InternalServerError(self, "error adding word to library")
+
+    utils.response_utils.okResponse(self)
