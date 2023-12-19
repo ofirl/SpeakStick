@@ -10,6 +10,7 @@ import { useRestartStickController } from '../../api/system';
 import Tooltip from '@mui/material/Tooltip';
 import { NetworkIcon } from './NetworkIcon';
 import { BatteryIcon } from './BatteryIcon';
+import { VolumeIcon } from './VolumeIcon';
 
 export const TopBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -37,6 +38,7 @@ export const TopBar = () => {
           Speak Stick
         </Typography>
         <div style={{ textAlign: "end" }}>
+          <VolumeIcon />
           <NetworkIcon />
           <Tooltip title="Restart stick controller">
             <IconButton
