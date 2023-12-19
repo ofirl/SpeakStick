@@ -15,7 +15,11 @@ export const VolumeIcon = () => {
   const anchorElement = useRef<HTMLButtonElement>(null);
 
   const { data: configs, isPending: isPendingConfigs } = useGetConfigs();
-  const { mutateAsync: updateConfig, isPending: isUpdatingConfig } = useUpdateConfig();
+  const { mutateAsync: updateConfig, isPending: isUpdatingConfig } = useUpdateConfig({
+    onSuccess: () => {
+      setVolumeControlOpen(false)
+    }
+  });
 
   const volume = useMemo(() =>
     parseInt(configs?.find(c => c.key === SOUND_VOLUME_CONFIG)?.value || "1"),
@@ -55,7 +59,7 @@ export const VolumeIcon = () => {
               {isPendingConfigs || isUpdatingConfig ? <LinearProgress style={{ width: "100%" }} /> :
                 <>
                   <VolumeDownIcon />
-                  <Slider defaultValue={volume} style={{ width: "10rem" }} aria-label="Volume" onChange={(_e, value) => onVolumeChange(typeof value === "number" ? value : value[0])} />
+                  <Slider valueLabelDisplay="auto" defaultValue={volume} style={{ width: "10rem" }} aria-label="Volume" onChange={(_e, value) => onVolumeChange(typeof value === "number" ? value : value[0])} />
                   <VolumeUpIcon />
                 </>
               }

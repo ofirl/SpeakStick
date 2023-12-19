@@ -69,7 +69,8 @@ def play_audio(file):
         return
 
     sound = pygame.mixer.Sound(file)
-    sound.set_volume(float(configs["VOLUME"]) / 100)
+    # clamp the volume to 0-1
+    sound.set_volume(max(0, min(1, float(configs["VOLUME"]) / 100)))
     sound.play()
 
 
