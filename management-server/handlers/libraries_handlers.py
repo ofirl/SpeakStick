@@ -89,13 +89,12 @@ def exportLibrary(self, query_parameters, match):
             
         # Add the csv file to the zip
         print('library.csv', csvFileData)
-        zip_file.writestr('library.csv', csvFileData)
-        zipContent = libraryZipContent.getvalue()
+        zip_file.writestr('library.txt', csvFileData)
 
     # Seek to the beginning of the BytesIO object
-    # libraryZipContent.seek(0)
+    libraryZipContent.seek(0)
     
-    utils.response_utils.okWithFile(self, libraryExportFileName, zipContent)
+    utils.response_utils.okWithFile(self, libraryExportFileName, libraryZipContent.getvalue())
 
         
 def importLibrary(self, post_data, match):
