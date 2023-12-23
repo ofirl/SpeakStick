@@ -14,7 +14,7 @@ def okWithText(self, data: str):
     self.wfile.write(data.encode())
 
 def okWithFile(self, filename, data):
-    okResponse(self)
+    self.send_response(200)
     self.send_header('Content-Type', 'application/zip')
     self.send_header('Content-Disposition', 'attachment; filename={filename}'.format(filename=filename))
     self.send_header('Content-Length', len(data))
