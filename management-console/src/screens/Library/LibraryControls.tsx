@@ -42,7 +42,8 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
   });
   const { mutateAsync: exportLibrary, isPending: isExportingLibrary } = useExportLibrary({
     onSuccess: (data) => {
-      saveAs(data, 'fileName.zip');
+      console.log(data)
+      saveAs(data);
       closeMenu();
     }
   });
