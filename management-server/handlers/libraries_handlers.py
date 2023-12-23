@@ -75,19 +75,18 @@ def exportLibrary(self, query_parameters, match):
     libraryExportFileName = 'library{libraryId}.zip'.format(libraryId=libraryId)
 
     libraryZipContent = io.BytesIO()
-    with ZipFile(libraryZipContent, 'w', ZIP_DEFLATED) as zip_file:
-        csvFileData = ''
-        csvFileData += 'word,positions\n'
+    with ZipFile(libraryZipContent, 'w') as zip_file:
+        csvData = 'word,positions\n'
 
         # Add the words files to the zip
         # Add the words data to a csv file
         for libraryItem in  utils.db_utils.get_library_items(libraryId):
             word = libraryItem["word"]
-            csvFileData += f'{word},{libraryItem["positions"]}\n'
+            csvData += f'{word},{libraryItem["positions"]}\n'
             zip_file.write(os.path.join(words_directory, word), word)
             
         # Add the csv file to the zip
-        zip_file.writestr('library.csv', csvFileData)
+        zip_file.writestr('library.csv', csvData)
 
     # Seek to the beginning of the BytesIO object
     libraryZipContent.seek(0)
