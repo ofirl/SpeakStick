@@ -75,7 +75,7 @@ def exportLibrary(self, query_parameters, match):
     libraryExportFileName = 'library{libraryId}.zip'.format(libraryId=libraryId)
 
     libraryZipContent = io.BytesIO()
-    with ZipFile(libraryZipContent, 'w', ZIP_DEFLATED, False) as zip_file:
+    with ZipFile(libraryZipContent, 'w', ZIP_DEFLATED) as zip_file:
         csvFileData = ''
         csvFileData += 'word,positions\n'
 
@@ -93,7 +93,7 @@ def exportLibrary(self, query_parameters, match):
     # Seek to the beginning of the BytesIO object
     libraryZipContent.seek(0)
     
-    utils.response_utils.okWithFile(self, libraryExportFileName, libraryZipContent.getvalue())
+    utils.response_utils.okWithFile(self, libraryExportFileName, libraryZipContent.getbuffer())
 
         
 def importLibrary(self, post_data, match):
