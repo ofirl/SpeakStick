@@ -72,7 +72,7 @@ def activateLibrary(self, query_parameters, match):
         
 def exportLibrary(self, query_parameters, match):
     libraryId = match.group("id")
-    print("library id", libraryId)
+    libraryExportFileName = 'library{libraryId}.zip'.format(libraryId=libraryId)
 
     libraryZipContent = io.BytesIO()
     with ZipFile(libraryZipContent, 'w') as zip_file:
@@ -82,17 +82,16 @@ def exportLibrary(self, query_parameters, match):
         # Add the words files to the zip
         # Add the words data to a csv file
         for libraryItem in  utils.db_utils.get_library_items(libraryId):
-            print("libraryItem", libraryItem)
             csvFileData += f'{libraryItem["word"]},{libraryItem["positions"]}\n'
             zip_file.write(os.path.join(words_directory, libraryItem["word"]))
             
         # Add the csv file to the zip
-        zip_file.writestr('library.csv', csvFileData)
+        zip_file.writestr(libraryExportFileName, csvFileData)
 
     # Seek to the beginning of the BytesIO object
     libraryZipContent.seek(0)
     
-    utils.response_utils.okWithData(self, libraryZipContent.getvalue())
+    utils.response_utils.okWithFile(self, libraryExportFileName, libraryZipContent.getvalue())
 
         
 def importLibrary(self, post_data, match):
