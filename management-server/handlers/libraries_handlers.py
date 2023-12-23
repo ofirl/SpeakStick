@@ -2,7 +2,7 @@ import json
 import csv
 import io
 import os
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZIP_DEFLATED, ZipInfo
 
 import utils.db_utils
 import utils.response_utils
@@ -75,7 +75,7 @@ def exportLibrary(self, query_parameters, match):
     libraryExportFileName = 'library{libraryId}.zip'.format(libraryId=libraryId)
 
     libraryZipContent = io.BytesIO()
-    with ZipFile(libraryZipContent, 'w') as zip_file:
+    with ZipFile(libraryZipContent, 'w', ZIP_DEFLATED) as zip_file:
         csvData = 'word,positions\n'
 
         # Add the words files to the zip
@@ -83,11 +83,13 @@ def exportLibrary(self, query_parameters, match):
         for libraryItem in  utils.db_utils.get_library_items(libraryId):
             word = libraryItem["word"]
             csvData += f'{word},{libraryItem["positions"]}\n'
-            zip_file.write(os.path.join(words_directory, word), f'library/{word}')
+            # zip_file.write(os.path.join(words_directory, word), word)
             
         # Add the csv file to the zip
-        zip_file.writestr('library/library.csv', csvData)
-
+        # zip_file.writestr('library.csv', csvData)
+        zif = ZipInfo('folder' + "/")  
+        zip_file.writestr(zif, "") 
+        
     # Seek to the beginning of the BytesIO object
     libraryZipContent.seek(0)
     
