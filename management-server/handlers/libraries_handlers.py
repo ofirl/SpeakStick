@@ -90,7 +90,7 @@ def exportLibrary(self, query_parameters, match):
         zip_file.writestr('library.csv', csvFileData)
 
     # Seek to the beginning of the BytesIO object
-    # libraryZipContent.seek(0)
+    libraryZipContent.seek(0)
     
     utils.response_utils.okWithFile(self, libraryExportFileName, libraryZipContent.getvalue())
 
