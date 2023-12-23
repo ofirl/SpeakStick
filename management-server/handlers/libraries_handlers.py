@@ -1,6 +1,7 @@
 import json
 import csv
 import io
+import os
 from zipfile import ZipFile
 
 import utils.db_utils
@@ -78,12 +79,10 @@ def exportLibrary(self, query_parameters, match):
         csvFileData += 'word,positions\n'
 
         # Add the words files to the zip
-        for wordFilePath in getWordFiles():
-            zip_file.write(wordFilePath)
-        
         # Add the words data to a csv file
         for libraryId, positions, word in  utils.db_utils.get_library_items(libraryId):
             csvFileData += f'{word},{positions}\n'
+            zip_file.write(os.path.join(words_directory, word))
             
         # Add the csv file to the zip
         zip_file.writestr('library.csv', csvFileData)
