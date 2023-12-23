@@ -82,9 +82,10 @@ def exportLibrary(self, query_parameters, match):
         # Add the words files to the zip
         # Add the words data to a csv file
         for libraryItem in  utils.db_utils.get_library_items(libraryId):
-            csvFileData += f'{libraryItem["word"]},{libraryItem["positions"]}\n'
-            print('word-path', os.path.join(words_directory, libraryItem["word"]))
-            zip_file.write(os.path.join(words_directory, libraryItem["word"]))
+            word = libraryItem["word"]
+            csvFileData += f'{word},{libraryItem["positions"]}\n'
+            print('word-path', os.path.join(words_directory, word))
+            zip_file.write(os.path.join(words_directory, word), word)
             
         # Add the csv file to the zip
         zip_file.writestr('library.csv', csvFileData)
