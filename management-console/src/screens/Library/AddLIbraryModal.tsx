@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { styled } from '@mui/material/styles';
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -8,8 +9,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import { useCreateLibrary, useDuplicateLibrary, useGetLibraries } from "../../api/libraries";
+import { useCreateLibrary, useDuplicateLibrary, useGetLibraries, useImportLibrary } from "../../api/libraries";
 import MenuItem from "@mui/material/MenuItem";
 
 const modalBoxStyle = {
@@ -28,13 +30,27 @@ const modalBoxStyle = {
   gap: "0.5rem"
 };
 
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
 type AddLibraryModalProps = {
   baseLibraryId?: number,
+  libraryPath?: string,
   closeMenu: () => void
 }
-export const AddLibraryModal = ({ baseLibraryId, closeMenu }: AddLibraryModalProps) => {
+export const AddLibraryModal = ({ baseLibraryId, libraryPath, closeMenu }: AddLibraryModalProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [libraryName, setLibraryName] = useState("");
+  const [libraryFile, setLibaryFile] = useState<File>();
   const descriptionRef = useRef<HTMLInputElement>(null);
 
   const { data: libraries = [] } = useGetLibraries();
@@ -44,7 +60,14 @@ export const AddLibraryModal = ({ baseLibraryId, closeMenu }: AddLibraryModalPro
 
   const { mutateAsync: createLibrary, isPending: isCreatingLibrary } = useCreateLibrary();
   const { mutateAsync: duplicateLibrary, isPending: isDuplicatingLibrary } = useDuplicateLibrary();
-  const isLoading = isCreatingLibrary || isDuplicatingLibrary;
+  const { mutateAsync: importLibrary, isPending: isImportingLibrary } = useImportLibrary();
+  const isLoading = isCreatingLibrary || isDuplicatingLibrary || isImportingLibrary;
+
+  const onClose = () => {
+    setLibraryName("");
+    setLibaryFile(undefined);
+    setModalOpen(false);
+  };
 
   const onSave = () => {
     if (!libraryName || !descriptionRef.current)
@@ -53,13 +76,24 @@ export const AddLibraryModal = ({ baseLibraryId, closeMenu }: AddLibraryModalPro
     let promise;
     if (baseLibraryId != null)
       promise = duplicateLibrary({ baseLibraryId, name: libraryName, description: descriptionRef.current.value });
+    else if (libraryFile != null)
+      promise = importLibrary({ name: libraryName, description: descriptionRef.current.value, libraryFile });
     else
       promise = createLibrary({ name: libraryName, description: descriptionRef.current.value });
+    
 
     promise.then(() => {
       setModalOpen(false);
       closeMenu();
     })
+  };
+
+  const onFileSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (!e.target.files || e.target.files.length < 1) {
+      return null;
+    }
+    
+    setLibaryFile(e.target.files[0]);
   };
 
   return (
@@ -74,7 +108,7 @@ export const AddLibraryModal = ({ baseLibraryId, closeMenu }: AddLibraryModalPro
       </MenuItem>
       <Modal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={onClose}
       >
         <Box sx={modalBoxStyle}>
           <Typography variant="h6" component="h2">
@@ -93,6 +127,10 @@ export const AddLibraryModal = ({ baseLibraryId, closeMenu }: AddLibraryModalPro
             helperText={nameError || undefined}
           />
           <TextField fullWidth label="Description" variant="outlined" inputRef={descriptionRef} />
+          <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+            {libraryFile?.name || "Import"}
+            <VisuallyHiddenInput type="file" accept=".zip" value={libraryPath} onChange={onFileSelect} />
+          </Button>
           <Button disabled={isLoading || !!nameError} variant="contained" style={{ marginTop: "1rem", alignSelf: "end" }} onClick={onSave}>
             {isLoading ? <CircularProgress /> : "Save"}
           </Button>

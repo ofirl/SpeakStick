@@ -1,5 +1,6 @@
 #! /bin/bash
 
+# ssh login: speakstickadmin@speakstick.local
 # default admin password: SpeakStick4U!
 # logs can be viewed here: https://one.eu.newrelic.com/logger
 

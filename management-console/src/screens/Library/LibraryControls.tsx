@@ -10,10 +10,12 @@ import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
 import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
 import CheckIcon from '@mui/icons-material/Check';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
-import { Library, useActivateLibrary, useDeleteLibrary, useGetLibraries } from "../../api/libraries";
+import { Library, useActivateLibrary, useDeleteLibrary, useGetLibraries, useExportLibrary } from "../../api/libraries";
 import { useEffect, useRef, useState } from 'react';
 import { Menu, MenuItem, Tooltip } from '@mui/material';
+import { saveAs } from 'file-saver';
 import { AddLibraryModal } from './AddLIbraryModal';
 import { EditLibraryModal } from './EditLIbraryModal';
 
@@ -28,8 +30,23 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
       onChange(libraries.find(l => l.active))
   }, [libraries, onChange]);
 
-  const { mutateAsync: deleteLibrary, isPending: isDeletingLibrary } = useDeleteLibrary();
-  const { mutateAsync: activateLibrary, isPending: isActivatingLibrary } = useActivateLibrary();
+  const { mutateAsync: deleteLibrary, isPending: isDeletingLibrary } = useDeleteLibrary({
+    onSuccess: () => {
+      closeMenu();
+    }
+  });
+  const { mutateAsync: activateLibrary, isPending: isActivatingLibrary } = useActivateLibrary({
+    onSuccess: () => {
+      closeMenu();
+    }
+  });
+  const { mutateAsync: exportLibrary, isPending: isExportingLibrary } = useExportLibrary({
+    onSuccess: (data) => {
+      console.log(data)
+      saveAs(data);
+      closeMenu();
+    }
+  });
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuAnchorRef = useRef(null);
@@ -118,9 +135,7 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
               <MenuItem
                 disabled={isActivatingLibrary || selectedLibrary?.active}
                 onClick={() => {
-                  selectedLibrary && activateLibrary({ libraryId: selectedLibrary.id }).then(() => {
-                    closeMenu();
-                  })
+                  selectedLibrary && activateLibrary({ libraryId: selectedLibrary.id })
                 }}
                 sx={{ gap: "0.5rem" }}
                 disableRipple
@@ -128,14 +143,22 @@ export const LibraryControls = ({ selectedLibrary, onChange }: LibraryControlsPr
                 <FolderSpecialIcon />
                 Activate
               </MenuItem>
+              <MenuItem  
+                disabled={isExportingLibrary}
+                onClick={() => {
+                  selectedLibrary && exportLibrary({ libraryId: selectedLibrary.id })
+                }}
+                sx={{ gap: "0.5rem" }}
+                disableRipple>
+                <FileDownloadIcon />
+                Export
+              </MenuItem>
               <AddLibraryModal closeMenu={closeMenu} baseLibraryId={selectedLibrary?.id} />
               <MenuItem
                 disabled={!selectedLibrary || isDeletingLibrary || selectedLibrary.active || !selectedLibrary.editable}
                 onClick={() => {
-                  selectedLibrary && deleteLibrary({ libraryId: selectedLibrary.id }).then(() => {
-                    closeMenu();
-                  });
-                }}
+                  selectedLibrary && deleteLibrary({ libraryId: selectedLibrary.id })}
+                }
                 sx={{ gap: "0.5rem" }}
                 disableRipple
               >

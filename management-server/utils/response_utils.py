@@ -13,6 +13,14 @@ def okWithText(self, data: str):
     okResponse(self)
     self.wfile.write(data.encode())
 
+def okWithFile(self, filename, data):
+    self.send_response(200)
+    self.send_header('Content-Type', 'application/zip')
+    self.send_header('Content-Disposition', 'attachment; filename={filename}'.format(filename=filename))
+    self.send_header('Content-Length', len(data))
+    self.end_headers()
+    self.wfile.write(data)
+    
 def InternalServerError(self, message: str = "500 internal server error"):
     self.send_response(500)
     self.send_header("Content-type", "text/html")

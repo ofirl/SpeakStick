@@ -41,6 +41,22 @@ export const useCreateLibrary = (options?: UseCreateMutationWrapperOptions<boole
   })
 };
 
+type ImportLibraryParams = { name: string, description: string, libraryFile: File };
+export const useImportLibrary = (options?: UseCreateMutationWrapperOptions<boolean, ImportLibraryParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: ImportLibraryParams) =>
+      axiosClient.post(`/libraries/import`, params, {
+        headers: {
+          filename: encodeURIComponent(params.libraryFile.name)
+        }
+      }).then(value => value.status === 200),
+    successMsg: "Library imported",
+    errorMsg: "Error importing library",
+    invalidateQueries: ["libraries"],
+    ...options
+  })
+};
+
 type EditLibraryParams = { libraryId: number, name: string, description: string };
 export const useEditLibrary = (options?: UseCreateMutationWrapperOptions<boolean, EditLibraryParams>) => {
   return useCreateMutation({
@@ -66,12 +82,26 @@ export const useDeleteLibrary = (options?: UseCreateMutationWrapperOptions<boole
 };
 
 type ActivateLibraryParams = { libraryId: number };
-export const useActivateLibrary = (options?: UseCreateMutationWrapperOptions<boolean, DeleteLibraryParams>) => {
+export const useActivateLibrary = (options?: UseCreateMutationWrapperOptions<boolean, ActivateLibraryParams>) => {
   return useCreateMutation({
     mutationFn: (params: ActivateLibraryParams) =>
       axiosClient.get(`/libraries/${params.libraryId}/activate`).then(value => value.status === 200),
     successMsg: "Library activated",
     errorMsg: "Error activating library",
+    invalidateQueries: ["libraries"],
+    ...options
+  })
+};
+
+type ExportLibraryParams = { libraryId: number };
+export const useExportLibrary = (options?: UseCreateMutationWrapperOptions<Blob, ExportLibraryParams>) => {
+  return useCreateMutation({
+    mutationFn: (params: ExportLibraryParams) =>
+      axiosClient.get(`/libraries/${params.libraryId}/export`).then(value => {
+        console.log(value);
+        return new Blob([value.data], { type: "application/zip" })}),
+    successMsg: "Library exported",
+    errorMsg: "Error exporting library",
     invalidateQueries: ["libraries"],
     ...options
   })
