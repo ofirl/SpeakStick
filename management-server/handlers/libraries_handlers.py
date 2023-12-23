@@ -2,7 +2,7 @@ import json
 import csv
 import io
 import os
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 
 import utils.db_utils
 import utils.response_utils
@@ -75,7 +75,7 @@ def exportLibrary(self, query_parameters, match):
     libraryExportFileName = 'library{libraryId}.zip'.format(libraryId=libraryId)
 
     libraryZipContent = io.BytesIO()
-    with ZipFile(libraryZipContent, 'w') as zip_file:
+    with ZipFile(libraryZipContent, 'w', ZIP_DEFLATED, False) as zip_file:
         csvFileData = ''
         csvFileData += 'word,positions\n'
 

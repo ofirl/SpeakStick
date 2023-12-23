@@ -97,7 +97,9 @@ type ExportLibraryParams = { libraryId: number };
 export const useExportLibrary = (options?: UseCreateMutationWrapperOptions<Blob, ExportLibraryParams>) => {
   return useCreateMutation({
     mutationFn: (params: ExportLibraryParams) =>
-      axiosClient.get(`/libraries/${params.libraryId}/export`).then(value => new Blob([value.data], { type: "application/zip" })),
+      axiosClient.get(`/libraries/${params.libraryId}/export`).then(value => {
+        console.log(value);
+        return new Blob([value.data], { type: "application/zip" })}),
     successMsg: "Library exported",
     errorMsg: "Error exporting library",
     invalidateQueries: ["libraries"],
