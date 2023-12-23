@@ -88,6 +88,7 @@ def exportLibrary(self, query_parameters, match):
             # zip_file.write(os.path.join(words_directory, word), word)
             
         # Add the csv file to the zip
+        print('library.csv', csvFileData)
         zip_file.writestr('library.csv', csvFileData)
 
     # Seek to the beginning of the BytesIO object
