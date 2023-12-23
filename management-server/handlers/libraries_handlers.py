@@ -91,7 +91,7 @@ def exportLibrary(self, query_parameters, match):
     # Seek to the beginning of the BytesIO object
     libraryZipContent.seek(0)
     
-    utils.response_utils.okWithFile(self, libraryExportFileName, libraryZipContent.read())
+    utils.response_utils.okWithFile(self, libraryExportFileName, "libraryZipContent.read()")
 
         
 def importLibrary(self, post_data, match):
