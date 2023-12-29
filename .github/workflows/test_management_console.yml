@@ -1,0 +1,26 @@
+name: Test Management Console
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  test_management-console:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Build Management Console
+        run: |
+          npm install -g pnpm
+          cd management-console
+          pnpm install
+          pnpm run build
