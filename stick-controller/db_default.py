@@ -40,6 +40,11 @@ defaultConfigs = [
         "value": "0.25",
         "description": "Side length of the center cell octagon (recommended values are 0.15-0.3)",
     },
+    {
+        "key": "VOLUME",
+        "value": "100",
+        "description": "Sound volume (values can be 0-100)",
+    },
 ]
 
 advancedConfigs = [

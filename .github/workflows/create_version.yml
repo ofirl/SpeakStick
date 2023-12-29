@@ -7,6 +7,9 @@ on:
     branches:
       - "master"
 
+concurrency:
+  group: create-version
+
 jobs:
   create_tag:
     runs-on: ubuntu-latest
