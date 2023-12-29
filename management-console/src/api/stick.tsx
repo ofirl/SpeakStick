@@ -1,13 +1,20 @@
 import { useEffect, useRef, useState } from "react"
 import { websocketBaseUrl } from "./consts"
 
-type StickPosition = {
-  cell: string;
-}
-export const useGetStickPosistion = () => {
-  const [stickPosition, setStickPosition] = useState<StickPosition>();
+export type StickEvent = {
+  type: "cellChange" | "wordEnded" | "playingWord"
+  value: string
+};
+
+export const useGetStickEvents = (eventHandler: (msg: StickEvent) => void) => {
   const [connected, setConnected] = useState(false);
   const websocketRef = useRef<WebSocket>();
+  const eventHandlerRef = useRef(eventHandler)
+
+  // this is done to ensure consistent websocket connection, even if the calback changes the connection will persist
+  useEffect(() => {
+    eventHandlerRef.current = eventHandler
+  }, [eventHandler])
 
   useEffect(() => {
     const websocket = new WebSocket(`${websocketBaseUrl}`)
@@ -15,10 +22,13 @@ export const useGetStickPosistion = () => {
     websocket.onopen = () => {
       setConnected(true);
       websocketRef.current = websocket;
+      setInterval(() => {
+        websocket.send("keep-alive")
+      }, 10000)
     }
 
-    websocket.onmessage = (msg) => {
-      setStickPosition({ cell: msg.data });
+    websocket.onmessage = (msg: MessageEvent<string>) => {
+      eventHandlerRef.current.call(this, JSON.parse(msg.data))
     }
 
     websocket.onclose = () => {
@@ -30,5 +40,5 @@ export const useGetStickPosistion = () => {
     }
   }, [])
 
-  return { stickPosition, connected, websocket: websocketRef };
+  return { connected, websocket: websocketRef };
 }

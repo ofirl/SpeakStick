@@ -26,6 +26,7 @@ servicesNames = [
     "logs-handler",
     "upgrade",
     "nginx",
+    "migrations",
 ]
 logsEndpoint = common.config_utils.get_advanced_config_value("LOGGER_API_ENDPOINT")
 logsApiKey = common.config_utils.get_advanced_config_value("LOGS_API_KEY")

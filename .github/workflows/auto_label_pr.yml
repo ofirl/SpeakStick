@@ -82,7 +82,10 @@ jobs:
           then
             echo "no labels found"
           else
-            gh pr edit ${{ github.event.number }} --add-label $issueLabels
+            for label in $issueLabels
+            do
+              gh pr edit ${{ github.event.number }} --add-label $label
+            done
           fi
         env:
           GITHUB_TOKEN: ${{ github.token }}

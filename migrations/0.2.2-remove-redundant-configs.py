@@ -3,7 +3,8 @@ import sqlite3
 # Define the migration version
 version = "0.2.2"
 
-from consts import db_file
+from common.consts import db_file
+import common.system_utils
 
 
 def migrate():
@@ -24,3 +25,5 @@ def migrate():
         DELETE FROM configs WHERE key = 'GRID_BORDER_SIZE'
         """
     )
+
+    common.system_utils.runCommand("mkdir -p /opt/logs")
