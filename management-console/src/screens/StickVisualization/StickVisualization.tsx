@@ -15,7 +15,7 @@ export const StickVisualization = () => {
       setCellSequence(prev => [...prev, newCell])
     }
     else if (msg.type === "wordEnded") {
-      setStickLog(prev => [`Word Ended with cells ${msg.value}`, ...prev])
+      setStickLog(prev => [`Sequence recorded with cells ${msg.value}`, ...prev])
       setCellSequence([])
     }
     else if (msg.type === "playingWord")
